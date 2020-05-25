@@ -37,7 +37,7 @@ Download the repository and open the terminal in the folder of the repository an
 or in your terminal you can write
 
 ```bash
-deno install --allow-read --allow-write --unstable https://raw.githubusercontent.com/Crew-Dev/Trex/master/Trex.ts
+deno install --allow-read --allow-write --unstable https://raw.githubusercontent.com/crewdevio/Trex/master/Trex.ts
 ```
 check for the installation of the Trex tool writing in the terminal:
 
