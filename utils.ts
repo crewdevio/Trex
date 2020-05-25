@@ -28,10 +28,28 @@ export const STD = [
   "ws",
 ];
 
-export const VERSION = "Trex Version v0.0.1";
+export const VERSION = "Trex:\n Version v0.0.1 \n";
 
 export const helpsInfo = [
-  "--map: for install a library",
-  "--version: logs version",
-  "--update: Update Trex"
+  "* flags",
+  "   --map: for install a library",
+  "   --version: logs version",
+  "   --custom: for install custom package \n",
+
+  "* install module using: ",
+  "   Trex install --map fs http \n",
+  "* install custom module usig: ",
+  "   Trex --custom [module_name]=[module_url] \n",
+  "* uninstall module using: ",
+  "   Trex delete [module_name]"
 ];
+
+export const flags = {
+  map: "--map",
+  version: "--version",
+  custom: "--custom",
+  help: "--help",
+  all: ["--map", "--version", "--custom", "--help"],
+};
+
+export const keyWords = { install: "install", i: "i", uninstall: "delete" };

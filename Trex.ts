@@ -1,40 +1,63 @@
 import { existsSync, writeJson } from "https://deno.land/std/fs/mod.ts";
-import { green, red, yellow, white, cyan } from "https://deno.land/std/fmt/colors.ts";
-import { STD, URI_STD, URI_X, VERSION, helpsInfo } from "./utils.ts";
+import { green, yellow, white, cyan } from "https://deno.land/std/fmt/colors.ts";
+import { STD, URI_STD, URI_X, VERSION, helpsInfo, flags, keyWords } from "./utils.ts";
 
 const input = Deno.args;
 
-const map = {};
-
-if (input[0] === "install" || input[0] === "i") {
+if (input[0] === keyWords.install || input[0] === keyWords.i) {
   if (existsSync("./import_map.json")) {
     const data = JSON.parse(checkPackage());
     const oldPackage = updatePackages(data);
-    const newPAckage = installPakages();
+    const newPAckage = installPakages(input);
     // @ts-ignore
     if (oldPackage?.error) {
       // @ts-ignore
-      console.log(yellow(`in: ${white(`${oldPackage.were}`)}`));
+      console.error(yellow(`in: ${white(`${oldPackage.were}`)}`));
       //@ts-ignore
-      console.log(yellow(`error: ${white(`${oldPackage.error}`)}`));
+      console.error(yellow(`error: ${white(`${oldPackage.error}`)}`));
     } else {
       await createPackage({ ...oldPackage, ...newPAckage });
     }
   } else {
-    await createPackage(installPakages());
+    await createPackage(installPakages(input));
   }
-} else if (input[0] === "--version") {
+} else if (input[0] === flags.version) {
   Version();
-} else if (input[0] === "--help") {
+} else if (input[0] === flags.help) {
   LogHelp();
+} else if (input[0] === flags.custom) {
+  const data = input[1].includes("=")
+    ? input[1].split("=")
+    : ['Error', 'Add a valid package'];
+  const custom = {};
+  //@ts-ignore
+  custom[data[0]] = data[1];
+  // * if import_map exists update it
+  if (existsSync("./import_map.json")) {
+    const data = JSON.parse(checkPackage());
+    const oldPackage = updatePackages(data);
+
+    await createPackage({ ...custom, ...oldPackage });
+  } else {
+    // * else create package
+    await createPackage(custom);
+  }
+} else if (input[0] === keyWords.uninstall) {
+  const pkg: string | Error = input[1]
+    ? input[1].trim()
+    : new Deno.errors.InvalidData("no valid module");
+
+  console.log(pkg);
 }
 
 async function createPackage(template: Object) {
+  // * create import_map.json
   await Deno.createSync("./import_map.json");
+  // * write import config inside import_map.json
   await writeJson("./import_map.json", { imports: template }, { spaces: 2 });
-  console.group("Packages: ")
+  console.group("Packages list: ");
   for (const pkg in template) {
-    console.log(('|- '), cyan(pkg));
+    console.log("|- ", cyan(pkg));
   }
   console.groupEnd();
   console.log(green("Happy Coding"));
@@ -42,8 +65,10 @@ async function createPackage(template: Object) {
 
 function updatePackages(Package: { imports: Object }) {
   if (Package?.imports) {
+    // * if exist in import_map the key import return all modules
     return Package.imports;
   } else {
+    // * else return error obj
     return {
       error: "imports not found",
       were: "import_map.json",
@@ -53,23 +78,30 @@ function updatePackages(Package: { imports: Object }) {
 
 function checkPackage() {
   const decoder = new TextDecoder("utf-8");
+
+  // * get data from import_map and return data
   const Package = Deno.readFileSync("./import_map.json");
 
   return decoder.decode(Package);
 }
 
-function installPakages() {
-  if (input[1] === "--map") {
-    for (let index = 2; index < input.length; index++) {
-      if (STD.includes(input[index])) {
+function installPakages(args: string[]) {
+  const map = {};
+  if (args[1] === flags.map) {
+    for (let index = 2; index < args.length; index++) {
+      if (STD.includes(args[index])) {
         // @ts-ignore
-        map[input[index] + "/"] = URI_STD + input[index].trim() + "/";
+
+        // * if is a std lib create a uri std
+        map[args[index] + "/"] = URI_STD + args[index].trim() + "/";
       } else {
         // @ts-ignore
-        map[input[index]] = URI_X + input[index].trim() + "/" + "mod.ts";
+
+        // * create Third Party Modules uri and log warning
+        map[args[index]] = URI_X + args[index].trim() + "/" + "mod.ts";
         console.log(
           yellow("warning: "),
-          red(input[index]),
+          cyan(args[index]),
           " not is a std module, added as third party modules"
         );
       }
@@ -88,5 +120,5 @@ function LogHelp() {
 }
 
 function Version() {
-  console.log(green(VERSION));
+  console.log(green(VERSION), cyan("༼ つ ◕_◕ ༽つ"));
 }
