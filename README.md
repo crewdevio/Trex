@@ -13,7 +13,7 @@
 
 is a "Package management" for deno to implement an import_map.json for your imports is an easiest way to make imports in deno.
 
-```
+```javascript
 // import_map.json
 
 {
@@ -36,7 +36,7 @@ Download the repository and open the terminal in the folder of the repository an
 
 or in your terminal you can write
 
-```
+```bash
 deno install --allow-read --allow-write --unstable https://raw.githubusercontent.com/Crew-Dev/Trex/master/Trex.ts
 ```
 check for the installation of the Trex tool writing in the terminal:
@@ -63,7 +63,7 @@ help:
     * install custom module usig:
        Trex --custom [module_name]=[module_url]
 
-    * uninstall module using:
+    * uninstall module using: // not yet implemented
        Trex delete [module_name]
 
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
