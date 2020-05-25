@@ -3,6 +3,8 @@
 
 ## Trex 🐱‍🐉
 
+[![GitHub issues](https://img.shields.io/github/issues/Crew-Dev/Trex)](https://github.com/Crew-Dev/Trex/issues) [![GitHub forks](https://img.shields.io/github/forks/Crew-Dev/Trex)](https://github.com/Crew-Dev/Trex/network) [![GitHub stars](https://img.shields.io/github/stars/Crew-Dev/Trex)](https://github.com/Crew-Dev/Trex/stargazers) [![GitHub license](https://img.shields.io/github/license/Crew-Dev/Trex)](https://github.com/Crew-Dev/Trex/blob/master/LICENSE) ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/Crew-Dev/Trex)
+
 ![Trex](https://i.ibb.co/fF4BRkZ/trexquad.jpg)
 
  Package management for deno
