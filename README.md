@@ -63,7 +63,7 @@ help:
     * install custom module usig:
        Trex --custom [module_name]=[module_url]
 
-    * uninstall module using: // not yet implemented
+    * uninstall module using:
        Trex delete [module_name]
 
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
