@@ -28,7 +28,7 @@ export const STD = [
   "ws",
 ];
 
-export const VERSION = "Trex:\n Version v0.0.1 \n";
+export const VERSION = "Trex:\n Version v0.1.0 \n";
 
 export const helpsInfo = [
   "* flags",

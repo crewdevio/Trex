@@ -16,10 +16,10 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
       //@ts-ignore
       console.error(yellow(`error: ${white(`${oldPackage.error}`)}`));
     } else {
-      await createPackage({ ...oldPackage, ...newPAckage });
+      await createPackage({ ...oldPackage, ...newPAckage }, true);
     }
   } else {
-    await createPackage(installPakages(input));
+    await createPackage(installPakages(input), true);
   }
 } else if (input[0] === flags.version) {
   Version();
@@ -28,7 +28,7 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
 } else if (input[0] === flags.custom) {
   const data = input[1].includes("=")
     ? input[1].split("=")
-    : ['Error', 'Add a valid package'];
+    : ["Error", "Add a valid package"];
   const custom = {};
   //@ts-ignore
   custom[data[0]] = data[1];
@@ -37,30 +37,53 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
     const data = JSON.parse(checkPackage());
     const oldPackage = updatePackages(data);
 
-    await createPackage({ ...custom, ...oldPackage });
+    await createPackage({ ...custom, ...oldPackage }, true);
   } else {
     // * else create package
-    await createPackage(custom);
+    await createPackage(custom, true);
   }
 } else if (input[0] === keyWords.uninstall) {
-  const pkg: string | Error = input[1]
-    ? input[1].trim()
-    : new Deno.errors.InvalidData("no valid module");
+  const pkg: string = input[1].trim();
 
-  console.log(pkg);
+  if (existsSync("./import_map.json")) {
+    const Packages = JSON.parse(checkPackage());
+
+    if (Packages?.imports) {
+      delete Packages.imports[STD.includes(pkg) ? pkg + "/" : pkg];
+
+      const newPackage = updatePackages(Packages);
+
+      await createPackage(newPackage);
+
+      console.log(yellow(pkg + ': ') ,green('package removed'))
+    } else {
+      const error: Error = new Deno.errors.NotFound(
+        "not found imports key in import_map.json"
+      );
+      console.error(error);
+    }
+
+  } else {
+    const error: Error = new Deno.errors.NotFound("import_map.json");
+
+    console.error(error);
+  }
 }
 
-async function createPackage(template: Object) {
+async function createPackage(template: Object, log?: Boolean) {
   // * create import_map.json
   await Deno.createSync("./import_map.json");
   // * write import config inside import_map.json
   await writeJson("./import_map.json", { imports: template }, { spaces: 2 });
-  console.group("Packages list: ");
-  for (const pkg in template) {
-    console.log("|- ", cyan(pkg));
+
+  if (log) { // * log packages list
+    console.group("Packages list: ");
+    for (const pkg in template) {
+      console.log("|- ", cyan(pkg));
+    }
+    console.groupEnd();
+    console.log(green("Happy Coding"));
   }
-  console.groupEnd();
-  console.log(green("Happy Coding"));
 }
 
 function updatePackages(Package: { imports: Object }) {
