@@ -17,9 +17,9 @@ is a "Package management" for deno to implement an import_map.json for your impo
 // import_map.json
 
 {
-	"imports":  {
-		"http/":  "https://deno.land/std/http/"
-	}
+    "imports":  {
+	"http/":  "https://deno.land/std/http/"
+    }
 }
 ```
 For more information about the import maps in deno [import maps](https://deno.land/manual/linking_to_external_code/import_maps)
@@ -29,41 +29,63 @@ For more information about the import maps in deno [import maps](https://deno.la
 installation:
 
 Download the repository and open the terminal in the folder of the repository and write:
-
-    deno install --allow-read --allow-write --unstable Trex.ts
-
->__note__:  You should have the last version of deno for no errors.
+```sh
+   deno install --allow-read --allow-write --unstable Trex.ts
+```
+>__note__:  You should have the last version 1.0.0 >= of deno for no errors.
 
 or in your terminal you can write
 
-```bash
-deno install --allow-read --allow-write --unstable https://deno.land/x/trex/Trex.ts
+```sh
+  deno install --allow-read --allow-write --unstable https://deno.land/x/trex/Trex.ts
+```
+update trex using
+
+```sh
+  deno install -f --allow-read --allow-write --unstable https://deno.land/x/trex/Trex.ts
 ```
 check for the installation of the Trex tool writing in the terminal:
 
+```sh
     Trex --version
-
+```
 and the console should presente the Trex version.
 
+
 for any help of the commands of Trex write:
-
+```sh
     Trex --help
-
+```
 and the console should present:
 
 help:
-    * flags
+```
+   * flags:
        --map: for install a library
        --version: logs version
        --custom: for install custom package
 
-    * install module using:
-       Trex install --map fs http
+   * install module using:
+        Trex install --map fs http
 
-    * install custom module usig:
-       Trex --custom [module_name]=[module_url]
+   * install custom module usig:
+        Trex --custom module_name=module_url
 
-    * uninstall module using:
-       Trex delete [module_name]
-
+   * uninstall module using:
+        Trex delete module_name
+```
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
+
+## Todo
+- [x] install std modules and third party modules in deno.land/x.
+
+- [x] delete modules from import_map.json.
+
+- [X] support for custom module outside of deno third party modules.
+
+- [ ] sort modules names in import_map.json.
+
+- [ ] support to install tools like [Commands](https://deno.land/x/commands)
+
+- [ ] support to choose the module version
+
