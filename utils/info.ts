@@ -43,7 +43,7 @@ export const helpsInfo = [
   "* uninstall module using: ",
   "   Trex delete module_name \n",
   "* install Tool using: ",
-  "   Trex installTool tool_name \n"
+  "   Trex getTool tool_name \n"
 ];
 
 export const flags = {
@@ -54,4 +54,4 @@ export const flags = {
   all: ["--map", "--version", "--custom", "--help"],
 };
 
-export const keyWords = { install: "install", i: "i", uninstall: "delete", tool: "installTool" };
+export const keyWords = { install: "install", i: "i", uninstall: "delete", tool: "getTool" };
