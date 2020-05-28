@@ -58,8 +58,8 @@ for any help of the commands of Trex write:
 ```
 and the console should present:
 
-help:
 ```
+help:
    * flags:
        --map: for install a library
        --version: logs version
