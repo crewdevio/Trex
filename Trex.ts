@@ -1,6 +1,9 @@
-import { existsSync, writeJson } from "https://deno.land/std/fs/mod.ts";
-import { green, yellow, white, cyan } from "https://deno.land/std/fmt/colors.ts";
-import { STD, URI_STD, URI_X, VERSION, helpsInfo, flags, keyWords } from "./utils.ts";
+import { green, yellow, white } from "https://deno.land/std/fmt/colors.ts";
+import { installPakages, updatePackages } from "./handle_packages.ts";
+import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils.ts";
+import { checkPackage, createPackage } from "./handle_files.ts";
+import { existsSync } from "https://deno.land/std/fs/mod.ts";
+import { LogHelp, Version } from "./logs.ts";
 
 const input = Deno.args;
 
@@ -22,9 +25,9 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
     await createPackage(installPakages(input), true);
   }
 } else if (input[0] === flags.version) {
-  Version();
+  Version(VERSION);
 } else if (input[0] === flags.help) {
-  LogHelp();
+  LogHelp(helpsInfo);
 } else if (input[0] === flags.custom) {
   const data = input[1].includes("=")
     ? input[1].split("=")
@@ -55,93 +58,16 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
 
       await createPackage(newPackage);
 
-      console.log(yellow(pkg + ': ') ,green('package removed'))
+      console.log(yellow(pkg + ": "), green("package removed"));
     } else {
       const error: Error = new Deno.errors.NotFound(
         "not found imports key in import_map.json"
       );
       console.error(error);
     }
-
   } else {
     const error: Error = new Deno.errors.NotFound("import_map.json");
 
     console.error(error);
   }
-}
-
-async function createPackage(template: Object, log?: Boolean) {
-  // * create import_map.json
-  await Deno.createSync("./import_map.json");
-  // * write import config inside import_map.json
-  await writeJson("./import_map.json", { imports: template }, { spaces: 2 });
-
-  if (log) { // * log packages list
-    console.group("Packages list: ");
-    for (const pkg in template) {
-      console.log("|- ", cyan(pkg));
-    }
-    console.groupEnd();
-    console.log(green("Happy Coding"));
-  }
-}
-
-function updatePackages(Package: { imports: Object }) {
-  if (Package?.imports) {
-    // * if exist in import_map the key import return all modules
-    return Package.imports;
-  } else {
-    // * else return error obj
-    return {
-      error: "imports not found",
-      were: "import_map.json",
-    };
-  }
-}
-
-function checkPackage() {
-  const decoder = new TextDecoder("utf-8");
-
-  // * get data from import_map and return data
-  const Package = Deno.readFileSync("./import_map.json");
-
-  return decoder.decode(Package);
-}
-
-function installPakages(args: string[]) {
-  const map = {};
-  if (args[1] === flags.map) {
-    for (let index = 2; index < args.length; index++) {
-      if (STD.includes(args[index])) {
-        // @ts-ignore
-
-        // * if is a std lib create a uri std
-        map[args[index] + "/"] = URI_STD + args[index].trim() + "/";
-      } else {
-        // @ts-ignore
-
-        // * create Third Party Modules uri and log warning
-        map[args[index]] = URI_X + args[index].trim() + "/" + "mod.ts";
-        console.log(
-          yellow("warning: "),
-          cyan(args[index]),
-          " not is a std module, added as third party modules"
-        );
-      }
-    }
-  }
-
-  return map;
-}
-
-function LogHelp() {
-  console.group(cyan("help:"));
-  for (const info of helpsInfo) {
-    console.log(info);
-  }
-  console.groupEnd();
-}
-
-function Version() {
-  console.log(green(VERSION), cyan("༼ つ ◕_◕ ༽つ"));
 }
