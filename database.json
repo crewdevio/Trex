@@ -1,0 +1,6 @@
+{
+  "Commands": {
+    "permissions": ["--allow-read", "--allow-run", "--unstable"],
+    "url": "https://deno.land/x/commands/Commands.ts"
+  }
+}
