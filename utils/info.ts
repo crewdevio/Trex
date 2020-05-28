@@ -31,17 +31,19 @@ export const STD = [
 export const VERSION = "Trex:\n Version v0.1.0 \n";
 
 export const helpsInfo = [
-  "* flags",
+  "* flags:",
   "   --map: for install a library",
   "   --version: logs version",
   "   --custom: for install custom package \n",
 
   "* install module using: ",
-  "   Trex install --map fs http \n",
+  "   Trex install --map module_name \n",
   "* install custom module usig: ",
-  "   Trex --custom [module_name]=[module_url] \n",
+  "   Trex --custom module_name=module_url \n",
   "* uninstall module using: ",
-  "   Trex delete [module_name]"
+  "   Trex delete module_name \n",
+  "* install Tool using: ",
+  "   Trex installTool tool_name \n"
 ];
 
 export const flags = {
@@ -52,4 +54,4 @@ export const flags = {
   all: ["--map", "--version", "--custom", "--help"],
 };
 
-export const keyWords = { install: "install", i: "i", uninstall: "delete" };
+export const keyWords = { install: "install", i: "i", uninstall: "delete", tool: "installTool" };

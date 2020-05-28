@@ -85,7 +85,7 @@ for a better implementation of this tool you can use the tool Commands of deno [
 
 - [ ] sort modules names in import_map.json.
 
-- [ ] support to install tools like [Commands](https://deno.land/x/commands)
+- [x] support to install tools like [Commands](https://deno.land/x/commands) ** !unstable **
 
 - [ ] update using:
     - ``` Trex update ```

@@ -1,9 +1,17 @@
-import { green, yellow, white } from "https://deno.land/std/fmt/colors.ts";
+import {
+  green,
+  yellow,
+  white,
+  red,
+  cyan,
+} from "https://deno.land/std/fmt/colors.ts";
 import { installPakages, updatePackages } from "./handlers/handle_packages.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { checkPackage, createPackage } from "./handlers/handle_files.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LogHelp, Version } from "./utils/logs.ts";
+import exec from "./tools/install_tools.ts";
+import dbTool from "./tools/database.ts";
 
 const input = Deno.args;
 
@@ -69,5 +77,24 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
     const error: Error = new Deno.errors.NotFound("import_map.json");
 
     console.error(error);
+  }
+} else if (input[0] === keyWords.tool) {
+  const tool = input[1].trim();
+  if (Object.keys(dbTool).includes(tool)) {
+    console.log(
+      yellow("warnig: "),
+      cyan(tool),
+      " have permissions: ",
+      dbTool[tool].permissions
+    );
+    setTimeout(async () => {
+      await exec({ config: dbTool[tool] });
+    }, 5000);
+  } else {
+    console.error(
+      red("Error: "),
+      yellow(tool),
+      " is not in the tools database"
+    );
   }
 }
