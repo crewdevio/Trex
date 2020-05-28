@@ -30,31 +30,31 @@ installation:
 
 Download the repository and open the terminal in the folder of the repository and write:
 ```sh
-   deno install --allow-read --allow-write --unstable Trex.ts
+  deno install --allow-read --allow-write --allow-net --unstable Trex.ts
 ```
 >__note__:  You should have the last version 1.0.0 >= of deno for no errors.
 
 or in your terminal you can write
 
 ```sh
-  deno install --allow-read --allow-write --unstable https://deno.land/x/trex/Trex.ts
+  deno install --allow-read --allow-write --allow-net --unstable https://deno.land/x/trex/Trex.ts
 ```
 update trex using
 
 ```sh
-  deno install -f --allow-read --allow-write --unstable https://deno.land/x/trex/Trex.ts
+  deno install -f --allow-read --allow-write --allow-net --unstable https://deno.land/x/trex/Trex.ts
 ```
 check for the installation of the Trex tool writing in the terminal:
 
 ```sh
-    Trex --version
+  Trex --version
 ```
 and the console should presente the Trex version.
 
 
 for any help of the commands of Trex write:
 ```sh
-    Trex --help
+  Trex --help
 ```
 and the console should present:
 
@@ -87,5 +87,8 @@ for a better implementation of this tool you can use the tool Commands of deno [
 
 - [ ] support to install tools like [Commands](https://deno.land/x/commands)
 
-- [ ] support to choose the module version
+- [ ] update using:
+    - ``` Trex update ```
 
+- [ ] support to choose install other versions of modules:
+    - ``` Trex install --map fs@0.50.0 ```

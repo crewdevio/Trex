@@ -1,6 +1,6 @@
-import { STD, URI_STD, URI_X, flags } from "./utils.ts";
+import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { yellow, cyan, red } from "https://deno.land/std/fmt/colors.ts";
-import db from "./db.ts";
+import db from "../utils/db.ts";
 
 export function updatePackages(Package: { imports: Object }) {
   if (Package?.imports) {
