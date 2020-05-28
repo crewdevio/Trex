@@ -2,5 +2,25 @@
   "Commands": {
     "permissions": ["--allow-read", "--allow-run", "--unstable"],
     "url": "https://deno.land/x/commands/Commands.ts"
+  },
+  "velociraptor": {
+    "permissions": ["--allow-read", "--allow-run", "--allow-env", "--allow-write", "-n", "vr"],
+    "url": "https://deno.land/x/velociraptor/cli.ts"
+  },
+  "DenoAppSetuper": {
+    "permissions": ["--allow-read", "--allow-run", "--allow-write", "--allow-net", "-n", "-f", "das"],
+    "url": "https://deno.land/x/deno_app_setuper/cli.ts"
+  },
+  "denoSearch": {
+    "permissions": ["-f", "--allow-net", "ds"],
+    "url": "https://deno.land/x/deno_search/main.ts"
+  },
+  "denoversion": {
+    "permissions": ["--allow-write", "--allow-read", "--allow-run"],
+    "url": "https://deno.land/x/denoversion/denoversion.ts"
+  },
+  "dpx": {
+    "permissions": ["--allow-run", "--allow-net", "-n", "dpx"],
+    "url": "https://deno.land/x/dpx/cli.ts"
   }
 }
