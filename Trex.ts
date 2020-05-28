@@ -1,9 +1,9 @@
 import { green, yellow, white } from "https://deno.land/std/fmt/colors.ts";
-import { installPakages, updatePackages } from "./handle_packages.ts";
-import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils.ts";
-import { checkPackage, createPackage } from "./handle_files.ts";
+import { installPakages, updatePackages } from "./handlers/handle_packages.ts";
+import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
+import { checkPackage, createPackage } from "./handlers/handle_files.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
-import { LogHelp, Version } from "./logs.ts";
+import { LogHelp, Version } from "./utils/logs.ts";
 
 const input = Deno.args;
 
