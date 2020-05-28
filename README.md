@@ -30,19 +30,19 @@ installation:
 
 Download the repository and open the terminal in the folder of the repository and write:
 ```sh
-  deno install --allow-read --allow-write --allow-net --unstable Trex.ts
+  deno install --allow-read --allow-write --allow-net --allow-run --unstable Trex.ts
 ```
 >__note__:  You should have the last version 1.0.0 >= of deno for no errors.
 
 or in your terminal you can write
 
 ```sh
-  deno install --allow-read --allow-write --allow-net --unstable https://deno.land/x/trex/Trex.ts
+  deno install --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
 ```
 update trex using
 
 ```sh
-  deno install -f --allow-read --allow-write --allow-net --unstable https://deno.land/x/trex/Trex.ts
+  deno install -f --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
 ```
 check for the installation of the Trex tool writing in the terminal:
 
@@ -73,6 +73,9 @@ help:
 
    * uninstall module using:
         Trex delete module_name
+
+   * install Tool using:
+        Trex getTool tool_name
 ```
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
 
@@ -85,7 +88,8 @@ for a better implementation of this tool you can use the tool Commands of deno [
 
 - [ ] sort modules names in import_map.json.
 
-- [ ] support to install tools like [Commands](https://deno.land/x/commands)
+- [x] support to install tools like [Commands](https://deno.land/x/commands) (!unstable).
+    - if you want add your tool in database edit this file [database.json](database.json)
 
 - [ ] update using:
     - ``` Trex update ```
