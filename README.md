@@ -79,6 +79,160 @@ help:
 ```
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
 
+# How to use
+in your command line write:
+``` sh
+$ Trex install --map fs http fmt
+```
+>__note__: you can use **Trex i --map fs http fmt** 
+
+an import_map.json file will be created with the following.
+
+``` json
+{
+    "imports": {
+        "fs/": "https://deno.land/std/fs/",
+        "http/": "https://deno.land/std/http/",
+        "fmt/": "https://deno.land/std/fmt/"
+    }
+}
+```
+
+## Usage example.
+
+create a test file
+
+``` javascript
+// server.ts
+import { serve } from "http/server.ts"
+import { green } from "fmt/colors.ts" 
+
+const server = serve({ port: 8000 });
+console.log(green("http://localhost:8000/"));
+
+for await (const req of server) {
+  req.respond({ body: "Hello World\n" });
+}
+```
+run in terminal
+
+``` sh
+$ deno run --allow-net --importmap=import_map.json --unstable server.ts
+```
+>__note__: it is important to use **--importmap=import_map.json --unstable**
+
+## using third party modules
+
+example using [oak](https://deno.land/x/oak)
+
+``` sh
+$ Trex i --map oak
+```
+in import_map.json
+
+``` json
+{
+    "imports": {
+        "fs/": "https://deno.land/std/fs/",
+        "http/": "https://deno.land/std/http/",
+        "fmt/": "https://deno.land/std/fmt/",
+        "oak": "https://deno.land/x/oak/mod.ts"
+    }
+}
+```
+>__note__: third party modules are added using **mod.ts**
+
+in server.ts
+
+``` javascript
+// server.ts
+import { Application } from "oak";
+
+const app = new Application();
+
+app.use((ctx) => {
+  ctx.response.body = "Hello World!";
+});
+
+await app.listen({ port: 8000 });
+```
+run in terminal
+
+``` sh
+$ deno run --allow-net --importmap=import_map.json --unstable server.ts
+```
+
+## add custom module
+
+in your command line write:
+``` sh
+$ Trex --custom React=https://dev.jspm.io/react/index.js
+```
+in import_map.json
+
+``` json 
+{
+    "imports": {
+        "fs/": "https://deno.land/std/fs/",
+        "http/": "https://deno.land/std/http/",
+        "fmt/": "https://deno.land/std/fmt/",
+        "oak": "https://deno.land/x/oak/mod.ts",
+        "React": "https://dev.jspm.io/react/index.js"
+    }
+}
+```
+
+## install tools like [velociraptor](https://github.com/umbopepato/velociraptor) or [Commands](https://deno.land/x/commands)
+
+in your command line write:
+
+``` sh
+$ Trex getTool Commands
+```
+this will install the tool
+>__note__: this feature is currently unstable
+
+## delete module
+
+in your command line write:
+
+``` sh
+$ Trex delete React
+```
+in import_map.json
+
+``` json
+{
+    "imports": {
+        "fs/": "https://deno.land/std/fs/",
+        "http/": "https://deno.land/std/http/",
+        "fmt/": "https://deno.land/std/fmt/",
+        "oak": "https://deno.land/x/oak/mod.ts"
+    }
+}
+```
+
+## update Trex
+
+in your command line write:
+
+``` sh
+$ deno install -f --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+```
+
+## flags
+
+view Trex version
+``` sh
+$ Trex --version
+```
+
+view help
+``` sh
+$ Trex --help
+```
+
+
 ## Todo
 - [x] install std modules and third party modules in deno.land/x.
 
