@@ -240,7 +240,7 @@ $ Trex --help
 
 - [X] support for custom module outside of deno third party modules.
 
-- [ ] sort modules names in import_map.json.
+- [x] sort modules names in import_map.json.
 
 - [x] support to install tools like [Commands](https://deno.land/x/commands) (!unstable).
     - if you want add your tool in database edit this file [database.json](database.json)
