@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-16.04
     strategy:
       matrix:
-        deno: [1.0.0, 1.0.1, 1.0.2, 1.0.3]
+        deno: [1.0.1, 1.0.2, 1.0.3]
     name: Deno Trex cli test
     steps:
       - uses: actions/checkout@master
@@ -23,4 +23,9 @@ jobs:
         uses: denolib/setup-deno@master
         with:
           deno-version: ${{ matrix.deno }}
-      - run: deno run --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts Trex update
+      - run: deno install --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+      - run: Trex update
+      - run: Trex --version
+      - run: Trex install --map fs http@0.54.0 oak ws
+      - run: Trex --deps
+      - run: Trex getTool dpx
