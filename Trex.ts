@@ -121,3 +121,4 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
 } else {
   LogHelp(helpsInfo);
 }
+ 
