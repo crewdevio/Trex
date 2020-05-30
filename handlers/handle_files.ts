@@ -13,17 +13,23 @@ export function checkPackage() {
 //Sprt the import_map.json alphabetical
 function sortedPackage(obj: any) {
   //@ts-ignore
-  return Object.keys(obj).sort().reduce((result:{ [key: string]: string }, key) => {
-      result[key]=obj[key]
-      return result
-  },{})
+  return Object.keys(obj)
+    .sort()
+    .reduce((result: { [key: string]: string }, key) => {
+      result[key] = obj[key];
+      return result;
+    }, {});
 }
 export async function createPackage(template: Object, log?: Boolean) {
   // * create import_map.json
   await Deno.createSync("./import_map.json");
   // * write import config inside import_map.json
 
-  await writeJson("./import_map.json", { imports: sortedPackage(template )}, { spaces: 2 });
+  await writeJson(
+    "./import_map.json",
+    { imports: sortedPackage(template) },
+    { spaces: 2 }
+  );
 
   if (log) {
     // * log packages list

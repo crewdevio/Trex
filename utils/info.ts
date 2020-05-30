@@ -28,7 +28,7 @@ export const STD = [
   "ws",
 ];
 
-export const VERSION = "Trex:\n Version v0.1.0 \n";
+export const VERSION = "Trex:\n Version v0.2.0 \n";
 
 export const helpsInfo = [
   "* flags:",
@@ -43,7 +43,9 @@ export const helpsInfo = [
   "* uninstall module using: ",
   "   Trex delete module_name \n",
   "* install Tool using: ",
-  "   Trex getTool tool_name \n"
+  "   Trex getTool tool_name \n",
+  "* update Trex using: ",
+  "   Trex update \n"
 ];
 
 export const flags = {

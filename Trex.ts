@@ -97,6 +97,6 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
       " is not in the tools database"
     );
   }
-} else if(input[0] === keyWords.update){
-  updateTrex()
+} else if (input[0] === keyWords.update) {
+  updateTrex();
 }
