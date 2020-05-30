@@ -248,5 +248,5 @@ $ Trex --help
 - [ ] update using:
     - ``` Trex update ```
 
-- [ ] support to choose install other versions of modules:
+- [x] support to choose install other versions of modules. (!unstable):
     - ``` Trex install --map fs@0.50.0 ```

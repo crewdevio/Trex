@@ -1,4 +1,4 @@
-export const URI_STD = "https://deno.land/std/";
+export const URI_STD = "https://deno.land/std";
 
 export const URI_X = "https://deno.land/x/";
 
