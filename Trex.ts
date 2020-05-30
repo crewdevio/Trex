@@ -9,7 +9,7 @@ import { installPakages, updatePackages } from "./handlers/handle_packages.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { checkPackage, createPackage } from "./handlers/handle_files.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
-import { LogHelp, Version } from "./utils/logs.ts";
+import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
 
@@ -97,4 +97,6 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
       " is not in the tools database"
     );
   }
+} else if(input[0] === keyWords.update){
+  updateTrex()
 }
