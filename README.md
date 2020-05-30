@@ -26,35 +26,41 @@ For more information about the import maps in deno [import maps](https://deno.la
 
 ## Guide:
 
-installation:
+### installation:
 
 Download the repository and open the terminal in the folder of the repository and write:
 ```sh
-  deno install --allow-read --allow-write --allow-net --allow-run --unstable Trex.ts
+$  deno install --allow-read --allow-write --allow-net --allow-run --unstable Trex.ts
 ```
 >__note__:  You should have the last version 1.0.0 >= of deno for no errors.
 
 or in your terminal you can write
 
 ```sh
-  deno install --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+$  deno install --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
 ```
-update trex using
+### update Trex using
 
 ```sh
-  Trex update
+$  deno install -f --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
 ```
+or use:
+``` sh
+$ Trex update
+```
+for versions 0.2.0 or higher.
+
 check for the installation of the Trex tool writing in the terminal:
 
 ```sh
-  Trex --version
+$  Trex --version
 ```
 and the console should presente the Trex version.
 
 
 for any help of the commands of Trex write:
 ```sh
-  Trex --help
+$  Trex --help
 ```
 and the console should present:
 
@@ -121,7 +127,7 @@ $ deno run --allow-net --importmap=import_map.json --unstable server.ts
 ```
 >__note__: it is important to use **--importmap=import_map.json --unstable**
 
-## using third party modules
+### using third party modules
 
 example using [oak](https://deno.land/x/oak)
 
@@ -162,7 +168,7 @@ run in terminal
 $ deno run --allow-net --importmap=import_map.json --unstable server.ts
 ```
 
-## add custom module
+### add custom module
 
 in your command line write:
 ``` sh
@@ -182,7 +188,7 @@ in import_map.json
 }
 ```
 
-## install tools like [velociraptor](https://github.com/umbopepato/velociraptor) or [Commands](https://deno.land/x/commands)
+### install tools like [velociraptor](https://github.com/umbopepato/velociraptor) or [Commands](https://deno.land/x/commands)
 
 in your command line write:
 
@@ -192,7 +198,7 @@ $ Trex getTool Commands
 this will install the tool
 >__note__: this feature is currently unstable
 
-## delete module
+### delete module
 
 in your command line write:
 
@@ -212,22 +218,34 @@ in import_map.json
 }
 ```
 
-## update Trex
+### install another version of a module
 
-in your command line write:
+write the name of the module more **@\<Version\>**
 
+example:
 ``` sh
-$ deno install -f --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+$ Trex install --map fs@0.54.0
 ```
 
-## flags
+in import_map.json
+
+``` json
+{
+  "imports" : {
+    "fs/": "https://deno.land/std@0.54.0/fs/"
+  }
+}
+```
+>__note__: this feature is currently unstable and can be used with third party modules.
+
+### flags
 
 view Trex version
 ``` sh
 $ Trex --version
 ```
 
-view help
+### view help
 ``` sh
 $ Trex --help
 ```
@@ -246,7 +264,13 @@ $ Trex --help
     - if you want add your tool in database edit this file [database.json](database.json)
 
 - [x] update using:
-    - ``` Trex update ```
+    - ``` $ Trex update ```
 
 - [x] support to choose install other versions of modules. (!unstable):
-    - ``` Trex install --map fs@0.50.0 ```
+    - ``` $ Trex install --map fs@0.50.0 ```
+
+- [ ] safe installation for tools like [Commands](https://deno.land/x/commands), [velociraptor](https://deno.land/x/velociraptor) or [dpx](https://deno.land/x/dpx)
+    - do not have access to protected resources.
+
+- [ ] check the versions of the libraries.
+    - ``` $  Trex ---deps ```
