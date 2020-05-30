@@ -42,7 +42,7 @@ or in your terminal you can write
 update trex using
 
 ```sh
-  deno install -f --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+  Trex update
 ```
 check for the installation of the Trex tool writing in the terminal:
 
