@@ -273,4 +273,4 @@ $ Trex --help
     - do not have access to protected resources.
 
 - [ ] check the versions of the libraries.
-    - ``` $  Trex ---deps ```
+    - ``` $  Trex --deps ```
