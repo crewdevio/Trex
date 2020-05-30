@@ -99,4 +99,23 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
   }
 } else if (input[0] === keyWords.update) {
   updateTrex();
+} else if (input[0] === flags.deps) {
+  const process = Deno.run({
+    cmd: [
+      "deno",
+      "run",
+      "--allow-read",
+      "--allow-net",
+      "--unstable",
+      "tools/deno-check-updates/main.ts",
+      "-f",
+      "import_map.json"
+    ],
+
+    stdout: "piped"
+  });
+  const decoder = new TextDecoder("utf-8");
+
+  const out = await process.output();
+  console.log(decoder.decode(out))
 }

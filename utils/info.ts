@@ -45,7 +45,9 @@ export const helpsInfo = [
   "* install Tool using: ",
   "   Trex getTool tool_name \n",
   "* update Trex using: ",
-  "   Trex update \n"
+  "   Trex update \n",
+  "* check module stated using: ",
+  "   Trex --deps"
 ];
 
 export const flags = {
@@ -53,7 +55,8 @@ export const flags = {
   version: "--version",
   custom: "--custom",
   help: "--help",
-  all: ["--map", "--version", "--custom", "--help"],
+  deps: "--deps",
+  all: ["--map", "--version", "--custom", "--help", "--deps"],
 };
 
 export const keyWords = { install: "install", i: "i", uninstall: "delete", tool: "getTool", update: "update" };
