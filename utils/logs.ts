@@ -19,7 +19,7 @@ export async function updateTrex(): Promise<void> {
     "https://raw.githubusercontent.com/crewdevio/Trex/master/utils/info.ts"
   ); // * get the plain text
   const database = await response.text();
-  const newVersion: string = database.substring(403, 428).replace(/\\n/g, "\n");
+  const newVersion: string = database.substring(database.search("VERSION") + 11, database.search("VERSION") + 36).replace(/\\n/g, "\n");
   if (VERSION !== newVersion) {
     setTimeout(async () => {
       await exec({
@@ -35,7 +35,7 @@ export async function updateTrex(): Promise<void> {
           url: "https://deno.land/x/trex/Trex.ts",
         },
       });
-      console.log(cyan(newVersion));
+      console.log(cyan(newVersion))
     }, 5000);
   } else {
     console.log(cyan("Trex is already update"));
