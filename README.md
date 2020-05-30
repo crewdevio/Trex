@@ -245,7 +245,7 @@ $ Trex --help
 - [x] support to install tools like [Commands](https://deno.land/x/commands) (!unstable).
     - if you want add your tool in database edit this file [database.json](database.json)
 
-- [ ] update using:
+- [x] update using:
     - ``` Trex update ```
 
 - [x] support to choose install other versions of modules. (!unstable):
