@@ -109,13 +109,15 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
       "--unstable",
       "tools/deno-check-updates/main.ts",
       "-f",
-      "import_map.json"
+      "import_map.json",
     ],
 
-    stdout: "piped"
+    stdout: "piped",
   });
   const decoder = new TextDecoder("utf-8");
 
   const out = await process.output();
-  console.log(decoder.decode(out))
+  console.log(decoder.decode(out));
+} else {
+  LogHelp(helpsInfo);
 }

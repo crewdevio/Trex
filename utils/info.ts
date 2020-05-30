@@ -34,7 +34,8 @@ export const helpsInfo = [
   "* flags:",
   "   --map: for install a library",
   "   --version: logs version",
-  "   --custom: for install custom package \n",
+  "   --custom: for install custom package",
+  "   --deps: log modules versions \n",
 
   "* install module using: ",
   "   Trex install --map module_name \n",

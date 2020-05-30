@@ -78,6 +78,7 @@ help:
        --map: for install a library
        --version: logs version
        --custom: for install custom package
+       --deps: log modules versions
 
    * install module using:
         Trex install --map fs http
@@ -90,6 +91,9 @@ help:
 
    * install Tool using:
         Trex getTool tool_name
+
+   * check module stated using:
+        Trex --deps
 ```
 
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
