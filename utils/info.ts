@@ -54,4 +54,4 @@ export const flags = {
   all: ["--map", "--version", "--custom", "--help"],
 };
 
-export const keyWords = { install: "install", i: "i", uninstall: "delete", tool: "getTool" };
+export const keyWords = { install: "install", i: "i", uninstall: "delete", tool: "getTool", update: "update" };
