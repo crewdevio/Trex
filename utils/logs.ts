@@ -3,7 +3,7 @@ import exec from "../tools/install_tools.ts";
 import { green, cyan } from "https://deno.land/std/fmt/colors.ts";
 
 export function Version(version: string) {
-  console.log(green(version), cyan("༼ つ ◕_◕ ༽つ"));
+  console.log(version, cyan("༼ つ ◕_◕ ༽つ"));
 }
 
 export function LogHelp(helpsInfo: string[]) {
@@ -15,12 +15,14 @@ export function LogHelp(helpsInfo: string[]) {
 }
 
 export async function updateTrex(): Promise<void> {
+
+  //get the version of the repo in github
   const response = await fetch(
-    "https://raw.githubusercontent.com/crewdevio/Trex/master/utils/info.ts"
+    "https://raw.githubusercontent.com/crewdevio/Trex/master/utils/trex_version.json"
   ); // * get the plain text
-  const database = await response.text();
-  const newVersion: string = database.substring(database.search("VERSION") + 11, database.search("VERSION") + 36).replace(/\\n/g, "\n");
-  if (VERSION !== newVersion) {
+  const repoVersion: Object = await response.json();
+
+  if (JSON.stringify(VERSION) !== JSON.stringify(repoVersion)) {
     setTimeout(async () => {
       await exec({
         config: {
@@ -35,7 +37,7 @@ export async function updateTrex(): Promise<void> {
           url: "https://deno.land/x/trex/Trex.ts",
         },
       });
-      console.log(cyan(newVersion))
+      console.log(repoVersion)
     }, 5000);
   } else {
     console.log(cyan("Trex is already update"));

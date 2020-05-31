@@ -222,6 +222,7 @@ $ Trex getTool Commands
 this will install the tool
 
 > **note**: this feature is currently unstable
+> **note 2**: If you are a linux/MacOs user you'll have to specificate the PATH manually when the tool gets installed the will appear in your terminal __export PATH="/home/username/.deno/bin:$PATH"__
 
 ### delete module
 
@@ -251,7 +252,7 @@ write the name of the module more **@\<Version\>**
 example:
 
 ```sh
-$ Trex install --map fs@0.54.0
+$ Trex install --map fs@0.`5`4.0
 ```
 
 in import_map.json
