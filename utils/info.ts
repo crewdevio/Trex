@@ -28,7 +28,9 @@ export const STD = [
   "ws",
 ];
 
-export const VERSION = "Trex:\n Version v0.2.0 \n";
+  const decoder = new TextDecoder("utf-8");
+
+export const VERSION = JSON.parse(decoder.decode(Deno.readFileSync(Deno.cwd() + "/utils/trex_version.json")));;
 
 export const helpsInfo = [
   "* flags:",
