@@ -25,19 +25,19 @@ function detectVersion(pkgName: string) {
   if (pkgName.includes("@")) {
     const ModuleRelease = pkgName.split("@");
 
-    if (STD.includes(ModuleRelease[0])) {
+    if (STD.includes(ModuleRelease[0]) && db.includes(ModuleRelease[0])) {
       uri = `${URI_STD}@${ModuleRelease[1]}/${ModuleRelease[0]}/`;
-    }
-
-    if (db.includes(ModuleRelease[0])) {
+    } else if (STD.includes(ModuleRelease[0])) {
+      uri = `${URI_STD}@${ModuleRelease[1]}/${ModuleRelease[0]}/`;
+    } else if (db.includes(ModuleRelease[0])) {
       uri = `${URI_X + ModuleRelease[0]}@${ModuleRelease[1]}/mod.ts`;
     }
   } else {
-    if (STD.includes(pkgName)) {
+    if (STD.includes(pkgName) && db.includes(pkgName)) {
       uri = `${URI_STD}/${pkgName}/`;
-    }
-
-    if (db.includes(pkgName)) {
+    } else if (STD.includes(pkgName)) {
+      uri = `${URI_STD}/${pkgName}/`;
+    } else if (db.includes(pkgName)) {
       uri = `${URI_X}${pkgName}/mod.ts`;
     } else if (!STD.includes(pkgName) && !db.includes(pkgName)) {
       console.error(
@@ -61,19 +61,19 @@ function getNamePkg(pkg: string) {
   if (pkg.includes("@")) {
     const Facts = pkg.split("@");
 
-    if (STD.includes(Facts[0])) {
+    if (STD.includes(Facts[0]) && db.includes(Facts[0])) {
       name = Facts[0] + "/";
-    }
-
-    if (db.includes(Facts[0])) {
+    } else if (STD.includes(Facts[0])) {
+      name = Facts[0] + "/";
+    } else if (db.includes(Facts[0])) {
       name = Facts[0];
     }
   } else {
-    if (STD.includes(pkg)) {
+    if (STD.includes(pkg) && db.includes(pkg)) {
       name = pkg + "/";
-    }
-
-    if (db.includes(pkg)) {
+    } else if (STD.includes(pkg)) {
+      name = pkg + "/";
+    } else if (db.includes(pkg)) {
       name = pkg;
     }
   }
