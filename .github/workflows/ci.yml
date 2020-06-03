@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-16.04
     strategy:
       matrix:
-        deno: [1.0.1, 1.0.2, 1.0.3]
+        deno: [1.0.1, 1.0.2, 1.0.3, 1.0.4]
     name: Deno Trex cli test
     steps:
       - uses: actions/checkout@master
