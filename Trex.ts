@@ -107,7 +107,7 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
       "--allow-read",
       "--allow-net",
       "--unstable",
-      "./tools/CheckUpdatesDeps/main.ts",
+      "https://deno.land/x/trex/tools/CheckUpdatesDeps/main.ts",
       "-f",
       "import_map.json",
     ],
