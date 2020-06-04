@@ -28,9 +28,7 @@ export const STD = [
   "ws",
 ];
 
-  const decoder = new TextDecoder("utf-8");
-
-export const VERSION = JSON.parse(decoder.decode(Deno.readFileSync(Deno.cwd() + "/utils/trex_version.json")));;
+export const VERSION = { VERSION: "v0.2.0" };
 
 export const helpsInfo = [
   "* flags:",
@@ -50,7 +48,7 @@ export const helpsInfo = [
   "* update Trex using: ",
   "   Trex update \n",
   "* check module stated using: ",
-  "   Trex --deps"
+  "   Trex --deps",
 ];
 
 export const flags = {
@@ -62,4 +60,10 @@ export const flags = {
   all: ["--map", "--version", "--custom", "--help", "--deps"],
 };
 
-export const keyWords = { install: "install", i: "i", uninstall: "delete", tool: "getTool", update: "update" };
+export const keyWords = {
+  install: "install",
+  i: "i",
+  uninstall: "delete",
+  tool: "getTool",
+  update: "update",
+};

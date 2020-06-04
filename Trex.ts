@@ -33,7 +33,7 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
     await createPackage(installPakages(input), true);
   }
 } else if (input[0] === flags.version) {
-  Version(VERSION);
+  Version(VERSION.VERSION);
 } else if (input[0] === flags.help) {
   LogHelp(helpsInfo);
 } else if (input[0] === flags.custom) {
@@ -107,7 +107,7 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
       "--allow-read",
       "--allow-net",
       "--unstable",
-      "tools/deno-check-updates/main.ts",
+      "./tools/CheckUpdatesDeps/main.ts",
       "-f",
       "import_map.json",
     ],
