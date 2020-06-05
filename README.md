@@ -1,4 +1,6 @@
-# Welcome to Trex!
+# Welcome to Trex @beta branch
+
+> **Warning**: this branch is unstable y use for test new features
 
 ## Trex 🐱‍🐉
 
@@ -305,34 +307,3 @@ $ Trex --version
 ```sh
 $ Trex --help
 ```
-
-## Todo
-
-- [x] install std modules and third party modules in deno.land/x.
-
-- [x] delete modules from import_map.json.
-
-- [x] support for custom module outside of deno third party modules.
-
-- [x] sort modules names in import_map.json.
-
-- [x] support to install tools like [Commands](https://deno.land/x/commands) (!unstable).
-
-  - if you want add your tool in database edit this file [database.json](database.json)
-
-- [x] update using:
-
-  - `$ Trex update`
-
-- [x] support to choose install other versions of modules. (!unstable):
-
-  - `$ Trex install --map fs@0.50.0`
-
-- [ ] safe installation for tools like [Commands](https://deno.land/x/commands), [velociraptor](https://deno.land/x/velociraptor) or [dpx](https://deno.land/x/dpx)
-
-  - do not have access to protected resources.
-
-- [x] check the versions of the libraries.
-  - `$ Trex --deps`
-  
-- [ ] View change log when you update Trex
