@@ -41,13 +41,13 @@ $  deno install --allow-read --allow-write --allow-net --allow-run --unstable Tr
 or in your terminal you can write
 
 ```sh
-$  deno install --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+$  deno install --allow-read --allow-write --allow-net --allow-run --unstable https://raw.githubusercontent.com/crewdevio/Trex/beta-test/Trex.ts
 ```
 
 ### update Trex using
 
 ```sh
-$  deno install -f --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+$  deno install -f --allow-read --allow-write --allow-net --allow-run --unstable https://raw.githubusercontent.com/crewdevio/Trex/beta-test/Trex.ts
 ```
 
 or use:

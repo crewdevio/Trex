@@ -20,7 +20,7 @@ export function LogHelp(helpsInfo: string[]) {
 export async function updateTrex(): Promise<void> {
   //get the version of the repo in github
   const response = await fetch(
-    "https://raw.githubusercontent.com/crewdevio/Trex/master/utils/version.json"
+    "https://raw.githubusercontent.com/crewdevio/Trex/beta-test/utils/version.json"
   ); // * get the plain text
   const repoVersion = (await response.json()) as { VERSION: string };
 
@@ -36,7 +36,8 @@ export async function updateTrex(): Promise<void> {
             "--allow-run",
             "--unstable",
           ],
-          url: "https://deno.land/x/trex/Trex.ts",
+          url:
+            "https://raw.githubusercontent.com/crewdevio/Trex/beta-test/Trex.ts",
         },
       });
       console.log(repoVersion);
