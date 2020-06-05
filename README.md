@@ -334,3 +334,5 @@ $ Trex --help
 
 - [x] check the versions of the libraries.
   - `$ Trex --deps`
+  
+- [ ] View change log when you update Trex
