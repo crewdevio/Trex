@@ -12,7 +12,6 @@ export function checkPackage() {
 
 //Sprt the import_map.json alphabetical
 function sortedPackage(obj: any) {
-  //@ts-ignore
   return Object.keys(obj)
     .sort()
     .reduce((result: { [key: string]: string }, key) => {
