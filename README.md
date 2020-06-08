@@ -336,3 +336,5 @@ $ Trex --help
   - `$ Trex --deps`
   
 - [ ] View change log when you update Trex
+
+- [ ] System to cache package when install it
