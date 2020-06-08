@@ -14,7 +14,7 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
   if (existsSync("./import_map.json")) {
     const data = JSON.parse(checkPackage());
     const oldPackage = updatePackages(data) as { error?: string,  were?: string };
-    const newPAckage = installPakages(input);
+    const newPAckage = await installPakages(input);
 
     if (oldPackage?.error) {
       console.error(yellow(`in: ${white(`${oldPackage.were}`)}`));
@@ -27,7 +27,7 @@ if (input[0] === keyWords.install || input[0] === keyWords.i) {
   }
 
   else {
-    await createPackage(installPakages(input), true);
+    await createPackage(await installPakages(input), true);
   }
 }
 

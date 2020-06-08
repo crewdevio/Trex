@@ -1,6 +1,7 @@
 import { yellow, red } from "https://deno.land/std/fmt/colors.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import db from "../utils/db.ts";
+import cache from "./handle_cache.ts";
 
 export function updatePackages(Package: { imports: Object }) {
   if (Package?.imports) {
@@ -105,11 +106,16 @@ function getNamePkg(pkg: string): string {
   return name;
 }
 
-export function installPakages(args: string[]) {
-  const map = {} as { [key: string] : string | undefined };
+export async function installPakages(args: string[]) {
+  const map = {} as { [key: string]: string | undefined };
   if (args[1] === flags.map) {
     for (let index = 2; index < args.length; index++) {
 
+      if (Deno.build.os === 'windows') {
+        await cache(args[index].split('@')[0],
+          detectVersion(args[index]) as string
+        );
+      }
       map[getNamePkg(args[index])] = detectVersion(args[index]);
     }
   }
