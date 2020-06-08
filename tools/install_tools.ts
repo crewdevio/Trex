@@ -9,6 +9,10 @@ function installTools(args: string[]) {
   return Deno.run({ cmd: ["deno", ...args], stdout: "piped" });
 }
 
+/*
+  * install script from database.json
+*/
+
 export default async function exec(param: Paramans): Promise<void> {
   const args: string[] = [
     "install",

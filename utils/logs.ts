@@ -1,7 +1,7 @@
+import { cyan } from "https://deno.land/std/fmt/colors.ts";
+import exec from "../tools/install_tools.ts";
 import { VERSION } from "./info.ts";
 
-import exec from "../tools/install_tools.ts";
-import { cyan } from "https://deno.land/std/fmt/colors.ts";
 
 import changeLog from "../tools/changeLog.ts";
 
