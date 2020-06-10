@@ -306,7 +306,7 @@ $ Trex --version
 $ Trex --help
 ```
 
-## Todo
+## To Do
 
 - [x] install std modules and third party modules in deno.land/x.
 
