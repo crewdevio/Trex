@@ -107,13 +107,18 @@ function getNamePkg(pkg: string): string {
 }
 
 export async function installPakages(args: string[]) {
+  // * package to push in import_map.json
   const map = {} as { [key: string]: string | undefined };
+
   if (args[1] === flags.map) {
     for (let index = 2; index < args.length; index++) {
 
-      if (Deno.build.os === 'windows') {
-        await cache(args[index].split('@')[0],
-          detectVersion(args[index]) as string
+      // ! test on linux and macOs
+      if (Deno.build.os === "windows") {
+        await cache(
+          args[index].split("@")[0],
+          detectVersion(args[index]) as string,
+          Deno.build.os
         );
       }
       map[getNamePkg(args[index])] = detectVersion(args[index]);

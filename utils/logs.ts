@@ -3,8 +3,6 @@ import exec from "../tools/install_tools.ts";
 import { VERSION } from "./info.ts";
 
 
-import changeLog from "../tools/changeLog.ts";
-
 export function Version(version: string) {
   console.log(version, cyan("༼ つ ◕_◕ ༽つ"));
 }
@@ -41,7 +39,6 @@ export async function updateTrex(): Promise<void> {
         },
       });
       console.log(repoVersion);
-      changeLog();
     }, 5000);
   } else {
     console.log(cyan("Trex is already update"));
