@@ -1,11 +1,25 @@
 import { STD } from "../utils/info.ts";
 import { green } from "https://deno.land/std/fmt/colors.ts";
+import { v4 } from "https://deno.land/std/uuid/mod.ts";
 
 import db from "../utils/db.ts";
 
 type OS = "darwin" | "linux" | "windows";
 
+const id = v4.generate();
+
+// * generate universally unique identifier
+function generateCacheId(): string {
+  // * standardize the id to be a valid name
+  const hash = id.split("-");
+  hash.unshift("Trex_Cache_");
+
+  return hash.join("");
+}
+
 async function cached(typePkg: string, packageUrl: string, sys: OS) {
+  const ID = generateCacheId();
+
   let process: Deno.Process;
   let DirOs: string;
 
@@ -19,7 +33,7 @@ async function cached(typePkg: string, packageUrl: string, sys: OS) {
   }
   // * macOs dir
   else if (sys === "darwin") {
-    DirOs = "/library";
+    DirOs = Deno.execPath();
   }
 
   // * by default use deno root dir
@@ -37,6 +51,8 @@ async function cached(typePkg: string, packageUrl: string, sys: OS) {
         "-f",
         "--root",
         DirOs,
+        "-n",
+        ID,
         "--unstable",
         packageUrl + "mod.ts",
       ],
@@ -51,6 +67,8 @@ async function cached(typePkg: string, packageUrl: string, sys: OS) {
         "-f",
         "--root",
         DirOs,
+        "-n",
+        ID,
         "--unstable",
         packageUrl + "mod.ts",
       ],
@@ -62,7 +80,17 @@ async function cached(typePkg: string, packageUrl: string, sys: OS) {
   // * install third party package
   else if (db.includes(typePkg)) {
     process = Deno.run({
-      cmd: ["deno", "install", "-f", "--root", DirOs, "--unstable", packageUrl],
+      cmd: [
+        "deno",
+        "install",
+        "-f",
+        "--root",
+        DirOs,
+        "-n",
+        ID,
+        "--unstable",
+        packageUrl,
+      ],
     });
 
     await process.status();

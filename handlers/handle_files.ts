@@ -10,7 +10,7 @@ export function checkPackage() {
   return decoder.decode(Package);
 }
 
-//Sprt the import_map.json alphabetical
+// * Sprt the import_map.json alphabetical
 function sortedPackage(obj: any) {
   return Object.keys(obj)
     .sort()

@@ -2,7 +2,7 @@ interface Paramans {
   config: {
     permissions: string[];
     url: string;
-  }
+  };
 }
 
 function installTools(args: string[]) {
@@ -10,8 +10,8 @@ function installTools(args: string[]) {
 }
 
 /*
-  * install script from database.json
-*/
+ * install script from database.json
+ */
 
 export default async function exec(param: Paramans): Promise<void> {
   const args: string[] = [
