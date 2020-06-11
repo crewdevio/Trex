@@ -24,6 +24,24 @@ is a "Package management" for deno to implement an import_map.json for your impo
 
 For more information about the import maps in deno [import maps](https://deno.land/manual/linking_to_external_code/import_maps)
 
+## Setup visual studio code
+
+install the [deno](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno) extension first, then add in settings.json the following configuration.
+
+![settings.json](https://i.ibb.co/YyCD6RY/config-Json-Deno.png)
+
+activate the enable option **Deno unstable features** in **settings >> extensions >> Deno**
+
+![unstable](https://i.ibb.co/p4hDp41/enable.jpg)
+
+if you get this error after installing a module.
+
+![error](https://i.ibb.co/RvhKp5s/error.jpg)
+
+run your project to cache all dependencies.
+
+> **note**: We are working so that when a module is installed in import_map.json it will be cached to avoid this error when calling the module. it is currently being tested on windows and linux but it is an instable feature at the moment
+
 ## Guide:
 
 ### installation:
@@ -221,8 +239,7 @@ $ Trex getTool Commands
 
 this will install the tool
 
-> **note**: this feature is currently unstable
-> **note 2**: If you are a linux/MacOs user you'll have to specificate the PATH manually when the tool gets installed the will appear in your terminal __export PATH="/home/username/.deno/bin:$PATH"__
+> **note**: If you are a linux/MacOs user you'll have to specificate the PATH manually when the tool gets installed the will appear in your terminal **export PATH="/home/username/.deno/bin:\$PATH"**
 
 ### delete module
 
@@ -280,7 +297,7 @@ you should see something like that on the console.
 {
   "imports": {
     "oak": "https://deno.land/x/oak@v4.0.0/mod.ts",
-    "http": "https://deno.land/std@0.51.0/http/"
+    "http/": "https://deno.land/std@0.51.0/http/"
   }
 }
 ```
@@ -292,15 +309,13 @@ you should see something like that on the console.
 
 thanks to [Fzwael](https://github.com/Fzwael) this functionality is based on your tool [deno-check-updates](https://github.com/Fzwael/deno-check-updates)
 
-### flags
-
-view Trex version
+View version
 
 ```sh
 $ Trex --version
 ```
 
-### view help
+View help
 
 ```sh
 $ Trex --help
@@ -316,7 +331,7 @@ $ Trex --help
 
 - [x] sort modules names in import_map.json.
 
-- [x] support to install tools like [Commands](https://deno.land/x/commands) (!unstable).
+- [x] support to install tools like [Commands.](https://deno.land/x/commands)
 
   - if you want add your tool in database edit this file [database.json](database.json)
 
@@ -328,13 +343,16 @@ $ Trex --help
 
   - `$ Trex install --map fs@0.50.0`
 
-- [ ] safe installation for tools like [Commands](https://deno.land/x/commands), [velociraptor](https://deno.land/x/velociraptor) or [dpx](https://deno.land/x/dpx)
+- [x] safe installation for tools like [Commands](https://deno.land/x/commands), [velociraptor](https://deno.land/x/velociraptor) or [dpx.](https://deno.land/x/dpx)
 
-  - do not have access to protected resources.
+  - display a warning message with the permissions of the tool
 
 - [x] check the versions of the libraries.
-  - `$ Trex --deps`
-  
-- [ ] View change log when you update Trex
 
-- [ ] System to cache package when install it
+  - `$ Trex --deps`
+
+- [ ] System to cache package when install it.
+
+  - it is currently being tested on windows and linux but it is an instable feature at the moment
+
+- [ ] List all the tools you can install.
