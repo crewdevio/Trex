@@ -4,8 +4,6 @@ import { v4 } from "https://deno.land/std/uuid/mod.ts";
 
 import db from "../utils/db.ts";
 
-type OS = "darwin" | "linux" | "windows";
-
 const id = v4.generate();
 
 // * generate universally unique identifier
@@ -17,29 +15,10 @@ function generateCacheId(): string {
   return hash.join("");
 }
 
-async function cached(typePkg: string, packageUrl: string, sys: OS) {
+async function cached(typePkg: string, packageUrl: string) {
   const ID = generateCacheId();
 
   let process: Deno.Process;
-  let DirOs: string;
-
-  // * windows dir
-  if (sys === "windows") {
-    DirOs = "C:/ProgramData";
-  }
-  // * linux dir
-  else if (sys === "linux") {
-    DirOs = "opt/";
-  }
-  // * macOs dir
-  else if (sys === "darwin") {
-    DirOs = Deno.execPath();
-  }
-
-  // * by default use deno root dir
-  else {
-    DirOs = Deno.execPath();
-  }
 
   console.log(green("cache package... \n"));
   // *
@@ -49,8 +28,6 @@ async function cached(typePkg: string, packageUrl: string, sys: OS) {
         "deno",
         "install",
         "-f",
-        "--root",
-        DirOs,
         "-n",
         ID,
         "--unstable",
@@ -65,8 +42,6 @@ async function cached(typePkg: string, packageUrl: string, sys: OS) {
         "deno",
         "install",
         "-f",
-        "--root",
-        DirOs,
         "-n",
         ID,
         "--unstable",
@@ -84,8 +59,6 @@ async function cached(typePkg: string, packageUrl: string, sys: OS) {
         "deno",
         "install",
         "-f",
-        "--root",
-        DirOs,
         "-n",
         ID,
         "--unstable",

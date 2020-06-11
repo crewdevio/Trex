@@ -114,13 +114,10 @@ export async function installPakages(args: string[]) {
     for (let index = 2; index < args.length; index++) {
 
       // ! test on linux and macOs
-      if (Deno.build.os === "windows" || Deno.build.os === "linux") {
         await cache(
           args[index].split("@")[0],
           detectVersion(args[index]) as string,
-          Deno.build.os
         );
-      }
       map[getNamePkg(args[index])] = detectVersion(args[index]);
     }
   }
