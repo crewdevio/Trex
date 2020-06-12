@@ -351,8 +351,15 @@ $ Trex --help
 
   - `$ Trex --deps`
 
-- [ ] System to cache package when install it.
+- [x] System to cache package when install it. (!unstable):
 
-  - it is currently being tested on windows and linux but it is an instable feature at the moment
+  - it is currently being tested on windows and linux but it is an instable feature at the moment.
+    > **note**: by default it caches the modules using the mod.ts file, if it cannot find it, it does not add it to the cache but add to the import_map.json.
+
+  - We are working to you can choose the target file
 
 - [ ] List all the tools you can install.
+
+- [ ] choose the destination file when installing a module.
+
+  - `$ Trex i --map fmt@0.45.0=colors.ts` [ fmt ] = module, [ @0.45.0 ] = version, [ =colors.ts ] = file target

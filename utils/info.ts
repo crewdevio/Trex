@@ -28,7 +28,7 @@ export const STD = [
   "ws",
 ];
 
-export const VERSION = { VERSION: "v0.2.0" };
+export const VERSION = { VERSION: "v0.2.1" };
 
 export const helpsInfo = [
   "* flags:",

@@ -7,133 +7,148 @@ import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
 
-const input = Deno.args;
+async function mainCli() {
+  const input = Deno.args;
 
-if (input[0] === keyWords.install || input[0] === keyWords.i) {
+  if (input[0] === keyWords.install || input[0] === keyWords.i) {
 
-  if (existsSync("./import_map.json")) {
-    const data = JSON.parse(checkPackage());
-    const oldPackage = updatePackages(data) as { error?: string,  were?: string };
-    const newPAckage = installPakages(input);
+    if (existsSync("./import_map.json")) {
+      const data = JSON.parse(checkPackage());
+      const oldPackage = updatePackages(data) as {
+        error?: string;
+        were?: string;
+      };
+      const newPAckage = await installPakages(input);
 
-    if (oldPackage?.error) {
-      console.error(yellow(`in: ${white(`${oldPackage.were}`)}`));
-      console.error(yellow(`error: ${white(`${oldPackage.error}`)}`));
+      if (oldPackage?.error) {
+        console.error(yellow(`in: ${white(`${oldPackage.were}`)}`));
+        console.error(yellow(`error: ${white(`${oldPackage.error}`)}`));
+      }
+
+      else {
+        await createPackage({ ...oldPackage, ...newPAckage }, true);
+      }
     }
 
     else {
-      await createPackage({ ...oldPackage, ...newPAckage }, true);
+      await createPackage(await installPakages(input), true);
     }
   }
 
-  else {
-    await createPackage(installPakages(input), true);
-  }
-}
-
-else if (input[0] === flags.version) {
-  Version(VERSION.VERSION);
-}
-
-else if (input[0] === flags.help) {
-  LogHelp(helpsInfo);
-}
-
-else if (input[0] === flags.custom) {
-  const data = input[1].includes("=")
-    ? input[1].split("=")
-    : ["Error", "Add a valid package"];
-
-  const custom = {} as { [key: string]: string};
-
-  custom[data[0]] = data[1];
-  // * if import_map exists update it
-  if (existsSync("./import_map.json")) {
-    const data = JSON.parse(checkPackage());
-    const oldPackage = updatePackages(data);
-
-    await createPackage({ ...custom, ...oldPackage }, true);
+  else if (input[0] === flags.version) {
+    Version(VERSION.VERSION);
   }
 
-  else {
-    // * else create package
-    await createPackage(custom, true);
+  else if (input[0] === flags.help) {
+    LogHelp(helpsInfo);
   }
-}
 
-else if (input[0] === keyWords.uninstall) {
-  const pkg: string = input[1].trim();
+  else if (input[0] === flags.custom) {
+    const data = input[1].includes("=")
+      ? input[1].split("=")
+      : ["Error", "Add a valid package"];
 
-  if (existsSync("./import_map.json")) {
-    const Packages = JSON.parse(checkPackage());
+    const custom = {} as { [key: string]: string };
 
-    if (Packages?.imports) {
-      delete Packages.imports[STD.includes(pkg) ? pkg + "/" : pkg];
+    custom[data[0]] = data[1];
+    // * if import_map exists update it
+    if (existsSync("./import_map.json")) {
+      const data = JSON.parse(checkPackage());
+      const oldPackage = updatePackages(data);
 
-      const newPackage = updatePackages(Packages);
+      await createPackage({ ...custom, ...oldPackage }, true);
+    }
 
-      await createPackage(newPackage);
+    else {
+      // * else create package
+      await createPackage(custom, true);
+    }
+  }
 
-      console.log(yellow(pkg + ": "), green("package removed"));
-    } else {
-      const error: Error = new Deno.errors.NotFound(
-        "not found imports key in import_map.json"
-      );
+  else if (input[0] === keyWords.uninstall) {
+    const pkg: string = input[1].trim();
+
+    if (existsSync("./import_map.json")) {
+      const Packages = JSON.parse(checkPackage());
+
+      if (Packages?.imports) {
+        delete Packages.imports[STD.includes(pkg) ? pkg + "/" : pkg];
+
+        const newPackage = updatePackages(Packages);
+
+        await createPackage(newPackage);
+
+        console.log(yellow(pkg + ": "), green("package removed"));
+      }
+
+      else {
+        const error: Error = new Deno.errors.NotFound(
+          "not found imports key in import_map.json"
+        );
+        console.error(error);
+      }
+    }
+
+    else {
+      const error: Error = new Deno.errors.NotFound("import_map.json");
+
       console.error(error);
     }
-  } else {
-    const error: Error = new Deno.errors.NotFound("import_map.json");
+  }
 
-    console.error(error);
+  else if (input[0] === keyWords.tool) {
+    const tool = input[1].trim();
+    if (Object.keys(dbTool).includes(tool)) {
+      console.log(
+        yellow("warnig: "),
+        cyan(tool),
+        " have permissions: ",
+        dbTool[tool].permissions
+      );
+      setTimeout(async () => {
+        await exec({ config: dbTool[tool] });
+      }, 5000);
+    }
+
+    else {
+      console.error(
+        red("Error: "),
+        yellow(tool),
+        " is not in the tools database"
+      );
+    }
+  }
+
+  else if (input[0] === keyWords.update) {
+    updateTrex();
+  }
+
+  else if (input[0] === flags.deps) {
+    const process = Deno.run({
+      cmd: [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-net",
+        "--unstable",
+        "https://deno.land/x/trex/tools/CheckUpdatesDeps/main.ts",
+        "-f",
+        "import_map.json",
+      ],
+
+      stdout: "piped",
+    });
+    const decoder = new TextDecoder("utf-8");
+
+    const out = await process.output();
+    console.log(decoder.decode(out));
+  }
+
+  else {
+    LogHelp(helpsInfo);
   }
 }
 
-else if (input[0] === keyWords.tool) {
-  const tool = input[1].trim();
-  if (Object.keys(dbTool).includes(tool)) {
-    console.log(
-      yellow("warnig: "),
-      cyan(tool),
-      " have permissions: ",
-      dbTool[tool].permissions
-    );
-    setTimeout(async () => {
-      await exec({ config: dbTool[tool] });
-    }, 5000);
-  } else {
-    console.error(
-      red("Error: "),
-      yellow(tool),
-      " is not in the tools database"
-    );
-  }
-}
-
-else if (input[0] === keyWords.update) {
-  updateTrex();
-}
-
-else if (input[0] === flags.deps) {
-  const process = Deno.run({
-    cmd: [
-      "deno",
-      "run",
-      "--allow-read",
-      "--allow-net",
-      "--unstable",
-      "https://deno.land/x/trex/tools/CheckUpdatesDeps/main.ts",
-      "-f",
-      "import_map.json",
-    ],
-
-    stdout: "piped",
-  });
-  const decoder = new TextDecoder("utf-8");
-
-  const out = await process.output();
-  console.log(decoder.decode(out));
-}
-
-else {
-  LogHelp(helpsInfo);
+if (import.meta.main) {
+  await mainCli();
 }
