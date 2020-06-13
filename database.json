@@ -7,20 +7,28 @@
     "permissions": ["--allow-read", "--allow-run", "--allow-env", "--allow-write", "-n", "vr"],
     "url": "https://deno.land/x/velociraptor/cli.ts"
   },
+  "yolk": {
+    "permissions": ["-A", "-f", "--unstable"],
+    "url": "https://raw.githubusercontent.com/denjucks/yolk/master/yolk.js"
+  },
+  "fsCli": {
+    "permissions": ["--allow-read", "--allow-write", "--allow-env", "--allow-run", "-n", "fs_cli"],
+    "url": "https://deno.land/x/fs_cli@v0.1.0/cli.ts"
+  },
+  "dpm": {
+    "permissions": ["--allow-net", "--allow-read", "--allow-write", "--allow-run"],
+    "url": "https://deno.land/x/dpm/mod.ts"
+  },
+  "dpx": {
+    "permissions": ["--allow-run", "--allow-net", "-n", "dpx"],
+    "url": "https://deno.land/x/dpx/cli.ts"
+  },
   "DenoAppSetuper": {
-    "permissions": ["--allow-read", "--allow-run", "--allow-write", "--allow-net", "-n", "-f", "das"],
+    "permissions": ["--unstable", "--allow-net", "--allow-read", "--allow-write", "--allow-run", "-f", "-n", "das"],
     "url": "https://deno.land/x/deno_app_setuper/cli.ts"
   },
   "denoSearch": {
     "permissions": ["-f", "--allow-net", "ds"],
     "url": "https://deno.land/x/deno_search/main.ts"
-  },
-  "denoversion": {
-    "permissions": ["--allow-write", "--allow-read", "--allow-run"],
-    "url": "https://deno.land/x/denoversion/denoversion.ts"
-  },
-  "dpx": {
-    "permissions": ["--allow-run", "--allow-net", "-n", "dpx"],
-    "url": "https://deno.land/x/dpx/cli.ts"
   }
 }
