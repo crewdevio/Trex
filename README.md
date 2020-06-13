@@ -231,6 +231,8 @@ in import_map.json
 
 ### install tools like [velociraptor](https://github.com/umbopepato/velociraptor) or [Commands](https://deno.land/x/commands)
 
+[list of tools you can install](https://crewdevio.github.io/Trex-tools/)
+
 in your command line write:
 
 ```sh
@@ -358,7 +360,7 @@ $ Trex --help
 
   - We are working to you can choose the target file
 
-- [ ] List all the tools you can install.
+- [x] List all the tools you can install.
 
 - [ ] choose the destination file when installing a module.
 
