@@ -91,27 +91,48 @@ $  Trex --help
 and the console should present:
 
 ```
-help:
-   * flags:
-       --map: for install a library
-       --version: logs version
-       --custom: for install custom package
-       --deps: log modules versions
+Package management for deno to implement an import_map.json for your imports is an easiest way to make imports in deno.
 
-   * install module using:
-        Trex install --map fs http
+* install module using:
+   Trex install --map module_name
 
-   * install custom module usig:
-        Trex --custom module_name=module_url
+* install custom module usig:
+   Trex --custom module_name=module_url
 
-   * uninstall module using:
-        Trex delete module_name
+* uninstall module using:
+   Trex delete module_name
 
-   * install Tool using:
-        Trex getTool tool_name
+* install Tool using:
+   Trex getTool tool_name
 
-   * check module stated using:
-        Trex --deps
+* update Trex using:
+   Trex update
+
+* check modules version using:
+   Trex --deps
+
+USAGE:
+   Trex [OPTIONS] [SUBCOMMAND]
+
+OPTIONS:
+   --help
+           Prints help information.
+   --custom
+           install custom module.
+   --version
+           Prints version information.
+   --deps
+           show dependencies versions.
+   --map
+           add module to import_mao.json.
+
+SUBCOMMANDS:
+   [install or i] install some module
+   delete     delete a module from import_map.json.
+
+   getTool    install some tool.
+
+   update     update Trex.
 ```
 
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
@@ -284,7 +305,7 @@ in import_map.json
 }
 ```
 
-> **note**: this feature is currently unstable and can be used with third party modules.
+> **note**: can be used with third party modules.
 
 ### check the versions of dependencies using
 
@@ -341,7 +362,7 @@ $ Trex --help
 
   - `$ Trex update`
 
-- [x] support to choose install other versions of modules. (!unstable):
+- [x] support to choose install other versions of modules:
 
   - `$ Trex install --map fs@0.50.0`
 
@@ -356,12 +377,13 @@ $ Trex --help
 - [x] System to cache package when install it. (!unstable):
 
   - it is currently being tested on windows and linux but it is an instable feature at the moment.
+
     > **note**: by default it caches the modules using the mod.ts file, if it cannot find it, it does not add it to the cache but add to the import_map.json.
 
   - We are working to you can choose the target file
 
 - [x] List all the tools you can install.
 
-- [ ] choose the destination file when installing a module.
+- [x] choose the destination file when installing a module.
 
-  - `$ Trex i --map fmt@0.45.0=colors.ts` [ fmt ] = module, [ @0.45.0 ] = version, [ =colors.ts ] = file target
+  - `$ Trex --custom djwt/create.ts=https://deno.land/x/djwt/create.ts`

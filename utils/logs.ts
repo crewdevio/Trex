@@ -7,11 +7,9 @@ export function Version(version: string) {
 }
 
 export function LogHelp(helpsInfo: string[]) {
-  console.group(cyan("help:"));
   for (const info of helpsInfo) {
-    console.log(green(info));
+    console.log(info);
   }
-  console.groupEnd();
 }
 
 export async function updateTrex(): Promise<void> {

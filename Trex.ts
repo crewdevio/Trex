@@ -51,6 +51,12 @@ async function mainCli() {
     const custom = {} as { [key: string]: string };
 
     custom[data[0]] = data[1];
+    // * cache custom module
+    const cache = Deno.run({
+      cmd: ["deno", "cache", data[1]]
+    })
+
+    await cache.status();
     // * if import_map exists update it
     if (existsSync("./import_map.json")) {
       const data = JSON.parse(checkPackage());

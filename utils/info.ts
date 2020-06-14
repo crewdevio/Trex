@@ -31,11 +31,7 @@ export const STD = [
 export const VERSION = { VERSION: "v0.2.1" };
 
 export const helpsInfo = [
-  "* flags:",
-  "   --map: for install a library",
-  "   --version: logs version",
-  "   --custom: for install custom package",
-  "   --deps: log modules versions \n",
+  "Package management for deno to implement an import_map.json for your imports is an easiest way to make imports in deno.\n",
 
   "* install module using: ",
   "   Trex install --map module_name \n",
@@ -47,8 +43,36 @@ export const helpsInfo = [
   "   Trex getTool tool_name \n",
   "* update Trex using: ",
   "   Trex update \n",
-  "* check module stated using: ",
-  "   Trex --deps",
+  "* check modules version using: ",
+  "   Trex --deps\n",
+
+  "USAGE:",
+  "   Trex [OPTIONS] [SUBCOMMAND]\n",
+
+  "OPTIONS:",
+  "   --help",
+  "           Prints help information.",
+
+  "   --custom",
+  "           install custom module.",
+
+  "   --version",
+  "           Prints version information.",
+
+  "   --deps",
+  "           show dependencies versions.",
+
+  "   --map",
+  "           add module to import_mao.json.\n",
+
+  "SUBCOMMANDS:",
+  "   [install or i] install some module",
+
+  "   delete     delete a module from import_map.json.\n",
+
+  "   getTool    install some tool.\n",
+
+  "   update     update Trex."
 ];
 
 export const flags = {
