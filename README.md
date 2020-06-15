@@ -4,7 +4,9 @@
 
 [![GitHub issues](https://img.shields.io/github/issues/crewdevio/Trex)](https://github.com/crewdevio/Trex/issues) [![GitHub forks](https://img.shields.io/github/forks/crewdevio/Trex)](https://github.com/crewdevioTrex/network) [![GitHub stars](https://img.shields.io/github/stars/crewdevio/Trex)](https://github.com/crewdevio/Trex/stargazers) [![GitHub license](https://img.shields.io/github/license/crewdevio/Trex)](https://github.com/crewdevio/Trex/blob/master/LICENSE) ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/crewdevio/Trex)
 
-![Trex](https://i.ibb.co/fF4BRkZ/trexquad.jpg)
+<!-- ![Trex](https://i.ibb.co/fF4BRkZ/trexquad.jpg) --->
+
+![Trex](http://clipart-library.com/image_gallery/3119.png)
 
 Package management for deno
 
