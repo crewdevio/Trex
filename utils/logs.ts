@@ -1,4 +1,4 @@
-import { cyan, green } from "https://deno.land/std/fmt/colors.ts";
+import { cyan } from "https://deno.land/std/fmt/colors.ts";
 import exec from "../tools/install_tools.ts";
 import { VERSION } from "./info.ts";
 

@@ -4,6 +4,7 @@ import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { checkPackage, createPackage } from "./handlers/handle_files.ts";
 import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
+import { importMap, objectGen } from "./utils/types.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
 
@@ -48,7 +49,7 @@ async function mainCli() {
       ? input[1].split("=")
       : ["Error", "Add a valid package"];
 
-    const custom = {} as { [key: string]: string };
+    const custom: objectGen = {};
 
     custom[data[0]] = data[1];
     // * cache custom module
@@ -106,7 +107,7 @@ async function mainCli() {
     const tool = input[1].trim();
     if (Object.keys(dbTool).includes(tool)) {
       console.log(
-        yellow("warnig: "),
+        yellow("warning: "),
         cyan(tool),
         " have permissions: ",
         dbTool[tool].permissions
@@ -126,7 +127,7 @@ async function mainCli() {
   }
 
   else if (input[0] === keyWords.update) {
-    updateTrex();
+    await updateTrex();
   }
 
   else if (input[0] === flags.deps) {
@@ -148,6 +149,39 @@ async function mainCli() {
 
     const out = await process.output();
     console.log(decoder.decode(out));
+  }
+
+  else if (input[0] === keyWords.tree) {
+
+    const RawMap = checkPackage();
+
+    const map: importMap = JSON.parse(RawMap);
+
+    for (const pkg in map?.imports) {
+      if (STD.includes(input[1])) {
+        const moduleName = input[1] + '/';
+
+        if (moduleName === pkg) {
+          const process = Deno.run({
+            cmd: ["deno", "info", map.imports[pkg] + "mod.ts"]
+          });
+
+          await process.status();
+        }
+      }
+
+      else {
+        const moduleName = input[1];
+
+        if (moduleName === pkg) {
+          const process = Deno.run({
+            cmd: ["deno", "info", map.imports[pkg]]
+          });
+
+          await process.status();
+        }
+      }
+    }
   }
 
   else {

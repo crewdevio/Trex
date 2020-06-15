@@ -1,6 +1,6 @@
-import { STD } from "../utils/info.ts";
 import { green } from "https://deno.land/std/fmt/colors.ts";
 import { v4 } from "https://deno.land/std/uuid/mod.ts";
+import { STD } from "../utils/info.ts";
 
 import db from "../utils/db.ts";
 
