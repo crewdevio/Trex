@@ -1,7 +1,7 @@
 import { green } from "https://deno.land/std/fmt/colors.ts";
 import { v4 } from "https://deno.land/std/uuid/mod.ts";
+import { needProxy, Proxy } from "../proxy/proxy.ts";
 import { STD } from "../utils/info.ts";
-
 import db from "../utils/db.ts";
 
 const id = v4.generate();
@@ -21,7 +21,7 @@ async function cached(typePkg: string, packageUrl: string) {
   let process: Deno.Process;
 
   console.log(green("cache package... \n"));
-  // *
+
   if (STD.includes(typePkg) && db.includes(typePkg)) {
     process = Deno.run({
       cmd: [
@@ -31,7 +31,7 @@ async function cached(typePkg: string, packageUrl: string) {
         "-n",
         ID,
         "--unstable",
-        packageUrl + "mod.ts",
+        needProxy(typePkg) ? Proxy(typePkg) : packageUrl + "mod.ts",
       ],
     });
   }
@@ -45,7 +45,7 @@ async function cached(typePkg: string, packageUrl: string) {
         "-n",
         ID,
         "--unstable",
-        packageUrl + "mod.ts",
+        needProxy(typePkg) ? Proxy(typePkg) : packageUrl + "mod.ts",
       ],
     });
 
@@ -55,15 +55,7 @@ async function cached(typePkg: string, packageUrl: string) {
   // * install third party package
   else if (db.includes(typePkg)) {
     process = Deno.run({
-      cmd: [
-        "deno",
-        "install",
-        "-f",
-        "-n",
-        ID,
-        "--unstable",
-        packageUrl,
-      ],
+      cmd: ["deno", "install", "-f", "-n", ID, "--unstable", packageUrl],
     });
 
     await process.status();
