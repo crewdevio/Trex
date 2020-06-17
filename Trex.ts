@@ -2,6 +2,7 @@ import { green, yellow, white, red, cyan } from "https://deno.land/std/fmt/color
 import { installPakages, updatePackages } from "./handlers/handle_packages.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { checkPackage, createPackage } from "./handlers/handle_files.ts";
+import { DeleteCacheModule } from "./handlers/handle_delete_package.ts";
 import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { importMap, objectGen } from "./utils/types.ts";
@@ -80,6 +81,10 @@ async function mainCli() {
 
       if (Packages?.imports) {
         delete Packages.imports[STD.includes(pkg) ? pkg + "/" : pkg];
+
+        if (STD.includes(pkg)) {
+          DeleteCacheModule(pkg);
+        }
 
         const newPackage = updatePackages(Packages);
 
