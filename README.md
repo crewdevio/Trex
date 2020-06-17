@@ -55,7 +55,8 @@ if you get this error after installing a module.
 
 run your project to cache all dependencies.
 
-> **note**: We are working so that when a module is installed in import_map.json it will be cached to avoid this error when calling the module. it is currently being tested on windows and linux but it is an instable feature at the moment
+> **note**: when installing a module using ( Trex install --map someModule )
+> or ( Trex --custom someModule=someModule.com/someModule.ts ) this is automatically cached
 
 ## Guide:
 
@@ -81,7 +82,7 @@ $  deno install --allow-read --allow-write --allow-net --allow-run --unstable ht
 $  deno install -f --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
 ```
 
-or use:
+**or use:**
 
 ```sh
 $ Trex update
@@ -89,7 +90,7 @@ $ Trex update
 
 for versions 0.2.0 or higher.
 
-check for the installation of the Trex tool writing in the terminal:
+**check for the installation of the Trex tool writing in the terminal:**
 
 ```sh
 $  Trex --version
@@ -284,6 +285,10 @@ in import_map.json
 }
 ```
 
+the modules in the standard library will clear the cache.
+
+we are working so that third party modules are also removed from the cache.
+
 ### install another version of a module
 
 write the name of the module more **@\<Version\>**
@@ -291,7 +296,7 @@ write the name of the module more **@\<Version\>**
 example:
 
 ```sh
-$ Trex install --map fs@0.`5`4.0
+$ Trex install --map fs@0.54.0
 ```
 
 in import_map.json
@@ -334,7 +339,7 @@ thanks to [Fzwael](https://github.com/Fzwael) this functionality is based on you
 ### see module dependency tree.
 
 ```sh
-$ trex treeDeps fs
+$ Trex treeDeps fs
 ```
 
 you should see this in the terminal
@@ -408,17 +413,26 @@ https://deno.land/std/fs/mod.ts
   └── https://deno.land/std/fs/eol.ts
 ```
 
-View version
+### Proxy
 
-```sh
-$ Trex --version
-```
+Some modules in the standard deno library do not have a `mod.ts` file.
 
-View help
+When installing a standard library module, a request is made to `deno.land/std/moduleName/mod.ts`
+to be able to cache the module.
+the solution we have is to create a bridge between the request to download the module and the files in the library.
 
-```sh
-$ Trex --help
-```
+![proxy](https://i.ibb.co/f97j2Rm/proxy.png)
+
+in the [proxy folder](https://github.com/crewdevio/Trex/tree/beta-test/proxy) are the bridges of the modules that do not have the `mod.ts` file.
+
+**these are the modules that use proxy**
+
+- \_util
+- archive
+- encoding
+- fmt
+- node
+- testing
 
 ## To Do
 
@@ -455,8 +469,6 @@ $ Trex --help
   - it is currently being tested on windows and linux but it is an instable feature at the moment.
 
     > **note**: by default it caches the modules using the mod.ts file, if it cannot find it, it does not add it to the cache but add to the import_map.json.
-
-  - We are working to you can choose the target file
 
 - [x] List all the tools you can install.
 
