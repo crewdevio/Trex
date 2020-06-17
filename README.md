@@ -1,4 +1,3 @@
-
 <h1 align="center">Welcome to Trex 🐱‍🐉</h1>
 
 <p align="center">
@@ -106,28 +105,33 @@ $  Trex --help
 
 and the console should present:
 
-```
-help:
-   * flags:
-       --map: for install a library
-       --version: logs version
-       --custom: for install custom package
-       --deps: log modules versions
+```sh
+advance package management for deno to implement an import_map.
 
-   * install module using:
-        Trex install --map fs http
+USAGE:
+   Trex [OPTIONS] [SUBCOMMAND]
 
-   * install custom module usig:
-        Trex --custom module_name=module_url
+OPTIONS:
+   --help
+           Prints help information.
+   --custom
+           install custom module.
+   --version
+           Prints version information.
+   --deps
+           show dependencies versions.
+   --map
+           add module to import_mao.json.
 
-   * uninstall module using:
-        Trex delete module_name
+SUBCOMMANDS:
+   [install or i] install some module.
+   delete     delete a module from import_map.json.
 
-   * install Tool using:
-        Trex getTool tool_name
+   getTool    install some tool.
 
-   * check module stated using:
-        Trex --deps
+   update     update Trex.
+
+   treeDeps   view dependencie tree.
 ```
 
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
@@ -300,7 +304,7 @@ in import_map.json
 }
 ```
 
-> **note**: this feature is currently unstable and can be used with third party modules.
+> **note**: can be used with third party modules.
 
 ### check the versions of dependencies using
 
@@ -326,6 +330,83 @@ you should see something like that on the console.
 | http/ |  std   |  "https://deno.land/std@0.54.0/http/"   | "0.54.0" | "0.54.0" |   true   |
 
 thanks to [Fzwael](https://github.com/Fzwael) this functionality is based on your tool [deno-check-updates](https://github.com/Fzwael/deno-check-updates)
+
+### see module dependency tree.
+
+```sh
+$ trex treeDeps fs
+```
+
+you should see this in the terminal
+
+```sh
+local: C:\Users\trex\AppData\Local\deno\deps\https\deno.land\434fe4a7be02d187573484b382f4c1fec5b023d27d1dcf4f768f300799a073e0
+type: TypeScript
+compiled: C:\Users\trex\AppData\Local\deno\gen\https\deno.land\std\fs\mod.ts.js
+map: C:\Users\trex\AppData\Local\deno\gen\https\deno.land\std\fs\mod.ts.js.map
+deps:
+https://deno.land/std/fs/mod.ts
+  ├─┬ https://deno.land/std/fs/empty_dir.ts
+  │ └─┬ https://deno.land/std/path/mod.ts
+  │   ├── https://deno.land/std/path/_constants.ts
+  │   ├─┬ https://deno.land/std/path/win32.ts
+  │   │ ├── https://deno.land/std/path/_constants.ts
+  │   │ ├─┬ https://deno.land/std/path/_util.ts
+  │   │ │ └── https://deno.land/std/path/_constants.ts
+  │   │ └── https://deno.land/std/_util/assert.ts
+  │   ├─┬ https://deno.land/std/path/posix.ts
+  │   │ ├── https://deno.land/std/path/_constants.ts
+  │   │ └── https://deno.land/std/path/_util.ts
+  │   ├─┬ https://deno.land/std/path/common.ts
+  │   │ └─┬ https://deno.land/std/path/separator.ts
+  │   │   └── https://deno.land/std/path/_constants.ts
+  │   ├── https://deno.land/std/path/separator.ts
+  │   ├── https://deno.land/std/path/_interface.ts
+  │   └─┬ https://deno.land/std/path/glob.ts
+  │     ├── https://deno.land/std/path/separator.ts
+  │     ├─┬ https://deno.land/std/path/_globrex.ts
+  │     │ └── https://deno.land/std/path/_constants.ts
+  │     ├── https://deno.land/std/path/mod.ts
+  │     └── https://deno.land/std/_util/assert.ts
+  ├─┬ https://deno.land/std/fs/ensure_dir.ts
+  │ └─┬ https://deno.land/std/fs/_util.ts
+  │   └── https://deno.land/std/path/mod.ts
+  ├─┬ https://deno.land/std/fs/ensure_file.ts
+  │ ├── https://deno.land/std/path/mod.ts
+  │ ├── https://deno.land/std/fs/ensure_dir.ts
+  │ └── https://deno.land/std/fs/_util.ts
+  ├─┬ https://deno.land/std/fs/ensure_link.ts
+  │ ├── https://deno.land/std/path/mod.ts
+  │ ├── https://deno.land/std/fs/ensure_dir.ts
+  │ ├── https://deno.land/std/fs/exists.ts
+  │ └── https://deno.land/std/fs/_util.ts
+  ├─┬ https://deno.land/std/fs/ensure_symlink.ts
+  │ ├── https://deno.land/std/path/mod.ts
+  │ ├── https://deno.land/std/fs/ensure_dir.ts
+  │ ├── https://deno.land/std/fs/exists.ts
+  │ └── https://deno.land/std/fs/_util.ts
+  ├── https://deno.land/std/fs/exists.ts
+  ├─┬ https://deno.land/std/fs/expand_glob.ts
+  │ ├── https://deno.land/std/path/mod.ts
+  │ ├─┬ https://deno.land/std/fs/walk.ts
+  │ │ ├── https://deno.land/std/_util/assert.ts
+  │ │ └── https://deno.land/std/path/mod.ts
+  │ └── https://deno.land/std/_util/assert.ts
+  ├─┬ https://deno.land/std/fs/move.ts
+  │ ├── https://deno.land/std/fs/exists.ts
+  │ └── https://deno.land/std/fs/_util.ts
+  ├─┬ https://deno.land/std/fs/copy.ts
+  │ ├── https://deno.land/std/path/mod.ts
+  │ ├── https://deno.land/std/fs/ensure_dir.ts
+  │ ├── https://deno.land/std/fs/_util.ts
+  │ └── https://deno.land/std/_util/assert.ts
+  ├── https://deno.land/std/fs/read_file_str.ts
+  ├── https://deno.land/std/fs/write_file_str.ts
+  ├── https://deno.land/std/fs/read_json.ts
+  ├── https://deno.land/std/fs/write_json.ts
+  ├── https://deno.land/std/fs/walk.ts
+  └── https://deno.land/std/fs/eol.ts
+```
 
 View version
 
@@ -357,7 +438,7 @@ $ Trex --help
 
   - `$ Trex update`
 
-- [x] support to choose install other versions of modules. (!unstable):
+- [x] support to choose install other versions of modules:
 
   - `$ Trex install --map fs@0.50.0`
 
@@ -372,12 +453,13 @@ $ Trex --help
 - [x] System to cache package when install it. (!unstable):
 
   - it is currently being tested on windows and linux but it is an instable feature at the moment.
+
     > **note**: by default it caches the modules using the mod.ts file, if it cannot find it, it does not add it to the cache but add to the import_map.json.
 
   - We are working to you can choose the target file
 
 - [x] List all the tools you can install.
 
-- [ ] choose the destination file when installing a module.
+- [x] choose the destination file when installing a module.
 
-  - `$ Trex i --map fmt@0.45.0=colors.ts` [ fmt ] = module, [ @0.45.0 ] = version, [ =colors.ts ] = file target
+  - `$ Trex --custom djwt/create.ts=https://deno.land/x/djwt/create.ts`

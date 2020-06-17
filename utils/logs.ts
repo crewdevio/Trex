@@ -1,4 +1,4 @@
-import { cyan, green } from "https://deno.land/std/fmt/colors.ts";
+import { cyan } from "https://deno.land/std/fmt/colors.ts";
 import exec from "../tools/install_tools.ts";
 import { VERSION } from "./info.ts";
 
@@ -7,11 +7,9 @@ export function Version(version: string) {
 }
 
 export function LogHelp(helpsInfo: string[]) {
-  console.group(cyan("help:"));
   for (const info of helpsInfo) {
-    console.log(green(info));
+    console.log(info);
   }
-  console.groupEnd();
 }
 
 export async function updateTrex(): Promise<void> {

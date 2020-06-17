@@ -1,5 +1,6 @@
-import { writeJson } from "https://deno.land/std/fs/mod.ts";
 import { green, cyan } from "https://deno.land/std/fmt/colors.ts";
+import { writeJson } from "https://deno.land/std/fs/mod.ts";
+import { objectGen } from "../utils/types.ts";
 
 export function checkPackage() {
   const decoder = new TextDecoder("utf-8");
@@ -14,7 +15,7 @@ export function checkPackage() {
 function sortedPackage(obj: any) {
   return Object.keys(obj)
     .sort()
-    .reduce((result: { [key: string]: string }, key) => {
+    .reduce((result: objectGen, key) => {
       result[key] = obj[key];
       return result;
     }, {});

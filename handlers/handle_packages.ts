@@ -1,9 +1,10 @@
 import { yellow, red } from "https://deno.land/std/fmt/colors.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
-import db from "../utils/db.ts";
+import { importMap, objectGen } from "../utils/types.ts";
 import cache from "./handle_cache.ts";
+import db from "../utils/db.ts";
 
-export function updatePackages(Package: { imports: Object }) {
+export function updatePackages(Package: importMap) {
   if (Package?.imports) {
     // * if exist in import_map the key import return all modules
     return Package.imports;
@@ -20,7 +21,7 @@ export function updatePackages(Package: { imports: Object }) {
  * * get pkg name create uri
  */
 
-function detectVersion(pkgName: string): string | undefined {
+function detectVersion(pkgName: string): string {
   let uri: string = "";
 
   if (pkgName.includes("@")) {
@@ -59,7 +60,7 @@ function detectVersion(pkgName: string): string | undefined {
         yellow(pkgName) + " not is a third party modules \n",
         "install using custom install"
       );
-      return;
+      return "";
     }
   }
 
@@ -108,7 +109,7 @@ function getNamePkg(pkg: string): string {
 
 export async function installPakages(args: string[]) {
   // * package to push in import_map.json
-  const map = {} as { [key: string]: string | undefined };
+  const map: objectGen = {};
 
   if (args[1] === flags.map) {
     for (let index = 2; index < args.length; index++) {
@@ -116,7 +117,7 @@ export async function installPakages(args: string[]) {
       // ! test on linux and macOs
         await cache(
           args[index].split("@")[0],
-          detectVersion(args[index]) as string,
+          detectVersion(args[index]),
         );
       map[getNamePkg(args[index])] = detectVersion(args[index]);
     }

@@ -1,9 +1,4 @@
-interface Paramans {
-  config: {
-    permissions: string[];
-    url: string;
-  };
-}
+import { Params } from "../utils/types.ts";
 
 function installTools(args: string[]) {
   return Deno.run({ cmd: ["deno", ...args], stdout: "piped" });
@@ -13,7 +8,7 @@ function installTools(args: string[]) {
  * install script from database.json
  */
 
-export default async function exec(param: Paramans): Promise<void> {
+export default async function exec(param: Params): Promise<void> {
   const args: string[] = [
     "install",
     ...param.config.permissions,
