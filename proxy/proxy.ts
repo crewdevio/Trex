@@ -44,7 +44,7 @@ export function Proxy(pkg: string): string {
   console.log(
     yellow("warning: "),
     red(pkg),
-    green(" se a proxy to download your data. \n")
+    green(" is using a proxy. \n")
   );
 
   console.log(

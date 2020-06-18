@@ -1,22 +1,10 @@
 import { green } from "https://deno.land/std/fmt/colors.ts";
-import { v4 } from "https://deno.land/std/uuid/mod.ts";
 import { needProxy, Proxy } from "../proxy/proxy.ts";
 import { STD } from "../utils/info.ts";
 import db from "../utils/db.ts";
 
-const id = v4.generate();
-
-// * generate universally unique identifier
-function generateCacheId(): string {
-  // * standardize the id to be a valid name
-  const hash = id.split("-");
-  hash.unshift("Trex_Cache_");
-
-  return hash.join("");
-}
-
 async function cached(typePkg: string, packageUrl: string) {
-  const ID = generateCacheId();
+  const ID = "Trex_Cache_Map";
 
   let process: Deno.Process;
 

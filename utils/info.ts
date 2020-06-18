@@ -53,15 +53,15 @@ export const helpsInfo = [
   "           add module to import_mao.json.\n",
 
   "SUBCOMMANDS:",
-  "   [install or i] install some module.",
+  "   [install or i]  install some module.",
 
-  "   delete     delete a module from import_map.json.\n",
+  "   delete<@version>  delete a module from import_map.json and cache.\n",
 
-  "   getTool    install some tool.\n",
+  "   getTool  install some tool.\n",
 
-  "   update     update Trex.\n",
+  "   update  update Trex.\n",
 
-  "   treeDeps   view dependencie tree.\n"
+  "   treeDeps  view dependencie tree.\n",
 ];
 
 export const flags = {
@@ -79,5 +79,5 @@ export const keyWords = {
   uninstall: "delete",
   tool: "getTool",
   update: "update",
-  tree: "treeDeps"
+  tree: "treeDeps",
 };

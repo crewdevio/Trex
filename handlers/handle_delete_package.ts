@@ -102,7 +102,7 @@ function canDelete(module: string) {
   else {
     console.log(
       red(
-        "error this package not have installed."
+        "it was not removed from the cache because it is not a standard module or deno.land/x or it is not installed."
       )
     );
     return false;
@@ -114,7 +114,7 @@ export function DeleteCacheModule(module: string) {
     if (canDelete(module)) {
       const path = canDelete(module) as string;
       removeSync(path, { recursive: true });
-      console.log(green(yellow(module) + " delete from cache."));
+      console.log(green(yellow(module + ":") + " deleted from cache."));
     }
   }
   catch (error) {

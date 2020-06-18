@@ -25,10 +25,7 @@ export async function updateTrex(): Promise<void> {
         config: {
           permissions: [
             "-f",
-            "--allow-read",
-            "--allow-write",
-            "--allow-net",
-            "--allow-run",
+            "-A",
             "--unstable",
           ],
           url: "https://deno.land/x/trex/Trex.ts",

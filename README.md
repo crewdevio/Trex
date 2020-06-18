@@ -65,7 +65,7 @@ run your project to cache all dependencies.
 Download the repository and open the terminal in the folder of the repository and write:
 
 ```sh
-$  deno install --allow-read --allow-write --allow-net --allow-run --unstable Trex.ts
+$  deno install -A --unstable Trex.ts
 ```
 
 > **note**: You should have the last version 1.0.0 >= of deno for no errors.
@@ -73,13 +73,25 @@ $  deno install --allow-read --allow-write --allow-net --allow-run --unstable Tr
 or in your terminal you can write
 
 ```sh
-$  deno install --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+$  deno install -A --unstable https://deno.land/x/trex/Trex.ts
 ```
+
+**we shorten the install command so it's not that long**
+
+The resources that Trex uses are:
+
+- --allow-net
+- --allow-read
+- --allow-write
+- --allow-run
+- --allow-env
+
+you can give those permissions explicitly
 
 ### update Trex using
 
 ```sh
-$  deno install -f --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+$  deno install -f -A --unstable https://deno.land/x/trex/Trex.ts
 ```
 
 **or use:**
@@ -90,7 +102,7 @@ $ Trex update
 
 for versions 0.2.0 or higher.
 
-**check for the installation of the Trex tool writing in the terminal:**
+check for the installation of the Trex tool writing in the terminal:
 
 ```sh
 $  Trex --version
@@ -125,14 +137,15 @@ OPTIONS:
            add module to import_mao.json.
 
 SUBCOMMANDS:
-   [install or i] install some module.
-   delete     delete a module from import_map.json.
+   [install or i]  install some module.
 
-   getTool    install some tool.
+   delete<@version>  delete a module from import_map.json and cache.
 
-   update     update Trex.
+   getTool  install some tool.
 
-   treeDeps   view dependencie tree.
+   update  update Trex.
+
+   treeDeps  view dependencie tree.
 ```
 
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
@@ -272,6 +285,12 @@ in your command line write:
 $ Trex delete React
 ```
 
+to remove a specific version from the cache and import_map.json, it only works with standard modules and those installed from `deno.land/x`
+
+```sh
+$ Trex delete fs@0.52.0
+```
+
 in import_map.json
 
 ```json
@@ -285,9 +304,7 @@ in import_map.json
 }
 ```
 
-the modules in the standard library will clear the cache.
-
-we are working so that third party modules are also removed from the cache.
+The modules in the standard library or those installed from `deno.land/x` will be removed from the cache.
 
 ### install another version of a module
 

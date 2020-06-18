@@ -84,7 +84,7 @@ async function mainCli() {
         delete Packages.imports[
           STD.includes(haveVersion(pkg))
           ? haveVersion(pkg) + "/"
-          : pkg
+          : haveVersion(pkg)
         ];
 
         if (STD.includes(haveVersion(pkg)) || db.includes(haveVersion(pkg))) {
@@ -95,7 +95,7 @@ async function mainCli() {
 
         await createPackage(newPackage);
 
-        console.log(yellow(pkg + ": "), green(" removed from import_map.json"));
+        console.log(yellow(pkg + ":"), green(" removed from import_map.json"));
       }
 
       else {
