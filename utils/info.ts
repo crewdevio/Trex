@@ -28,7 +28,7 @@ export const STD = [
   "ws",
 ];
 
-export const VERSION = { VERSION: "v0.2.2" };
+export const VERSION = { VERSION: "v0.2.3" };
 
 export const helpsInfo = [
   "advance package management for deno to implement an import_map.\n",

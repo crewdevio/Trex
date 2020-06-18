@@ -1,13 +1,14 @@
 import { green, yellow, white, red, cyan } from "https://deno.land/std/fmt/colors.ts";
+import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
 import { installPakages, updatePackages } from "./handlers/handle_packages.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { checkPackage, createPackage } from "./handlers/handle_files.ts";
-import { DeleteCacheModule } from "./handlers/handle_delete_package.ts";
 import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { importMap, objectGen } from "./utils/types.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
+import db from "./utils/db.ts";
 
 async function mainCli() {
   const input = Deno.args;
@@ -80,9 +81,13 @@ async function mainCli() {
       const Packages = JSON.parse(checkPackage());
 
       if (Packages?.imports) {
-        delete Packages.imports[STD.includes(pkg) ? pkg + "/" : pkg];
+        delete Packages.imports[
+          STD.includes(haveVersion(pkg))
+          ? haveVersion(pkg) + "/"
+          : pkg
+        ];
 
-        if (STD.includes(pkg)) {
+        if (STD.includes(haveVersion(pkg)) || db.includes(haveVersion(pkg))) {
           DeleteCacheModule(pkg);
         }
 
@@ -90,7 +95,7 @@ async function mainCli() {
 
         await createPackage(newPackage);
 
-        console.log(yellow(pkg + ": "), green("package removed"));
+        console.log(yellow(pkg + ": "), green(" removed from import_map.json"));
       }
 
       else {

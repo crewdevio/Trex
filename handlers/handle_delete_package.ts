@@ -4,34 +4,106 @@ import { STD } from "../utils/info.ts";
 
 const { env, removeSync, build } = Deno;
 
+export function haveVersion(module: string) {
+
+  if (module.includes("@")) {
+    return module.split("@")[0];
+  }
+
+  else {
+    return module;
+  }
+}
+
+// * return std version
+function Version(module: string) {
+  return module.includes("@") ? "@" + module.split("@")[1] : "";
+}
+
+// * return module name only
+function Name(module: string) {
+  return module.includes("@") ? module.split("@")[0] : module;
+}
+
 function existModule(user: string, module: string) {
   if (Deno.build.os === "windows") {
-    return existsSync(
-      `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/std/${module}`
-    );
-  } else {
-    return existsSync(`${user}/.cache/deno/gen/https/deno.land/std/${module}`);
+    // * for std modules
+    if (STD.includes(haveVersion(module))) {
+      return existsSync(
+        `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/std${Version(
+          module
+        )}/${Name(module)}`
+      );
+    }
+
+    // * deno.land/x modules
+    else {
+      return existsSync(
+        `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/x/${module}`
+      );
+    }
+  }
+
+  else {
+    // * for std modules
+    if (STD.includes(haveVersion(module))) {
+      return existsSync(
+        `${user}/.cache/deno/gen/https/deno.land/std${Version(
+          module
+        )}/${Name(module)}`
+      );
+    }
+
+    // * deno.land/x modules
+    else {
+      return existsSync(`${user}/.cache/deno/gen/https/deno.land/x/${module}`);
+    }
   }
 }
-
+// * return module path to delete
 function getPath(user: string, module: string) {
   if (Deno.build.os === "windows") {
-    return `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/std/${module}`;
-  } else {
-    return `${user}/.cache/deno/gen/https/deno.land/std/${module}`;
+
+    if (STD.includes(haveVersion(module))) {
+      return `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/std${Version(
+        module
+      )}/${Name(module)}`;
+    }
+
+    else {
+      return `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/x/${module}`;
+    }
+  }
+
+  else {
+
+    if (STD.includes(haveVersion(module))) {
+      return `${user}/.cache/deno/gen/https/deno.land/std${Version(
+        module
+      )}/${Name(module)}`;
+    }
+
+    else {
+      return `${user}/.cache/deno/gen/https/deno.land/x/${module}`;
+    }
   }
 }
-
-function deleteModule(module: string) {
+// * if can delete return module path dir
+function canDelete(module: string) {
   const user = (build.os === "windows"
     ? env.get("USERNAME")
     : env.get("HOME")) as string;
 
-  if (STD.includes(module) && existModule(user, module)) {
+  if (existModule(user, module)) {
+
     return getPath(user, module);
-  } else {
+  }
+
+  else {
     console.log(
-      red("error this package not have installed or not is std module.")
+      red(
+        "error this package not have installed."
+      )
     );
     return false;
   }
@@ -39,12 +111,13 @@ function deleteModule(module: string) {
 
 export function DeleteCacheModule(module: string) {
   try {
-    if (deleteModule(module)) {
-      const path = deleteModule(module) as string;
+    if (canDelete(module)) {
+      const path = canDelete(module) as string;
       removeSync(path, { recursive: true });
-      console.log(green("Done " + yellow(module) + " delete."));
+      console.log(green(yellow(module) + " delete from cache."));
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.log(red(error));
   }
 }
