@@ -1,4 +1,4 @@
-import { yellow, red } from "https://deno.land/std/fmt/colors.ts";
+import { yellow, red, green } from "https://deno.land/std/fmt/colors.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { importMap, objectGen } from "../utils/types.ts";
 import cache from "./handle_cache.ts";
@@ -55,12 +55,11 @@ function detectVersion(pkgName: string): string {
     }
 
     else if (!STD.includes(pkgName) && !db.includes(pkgName)) {
-      console.error(
-        red("Error: "),
-        yellow(pkgName) + " not is a third party modules \n",
-        "install using custom install"
-      );
-      return "";
+      throw new Error(
+        `\n${red("=>")} ${yellow(pkgName)} not is a third party modules\n${
+          green("install using custom install")
+        }\n`
+        ).message;
     }
   }
 

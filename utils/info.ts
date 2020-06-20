@@ -37,23 +37,18 @@ export const helpsInfo = [
   "   Trex [OPTIONS] [SUBCOMMAND]\n",
 
   "OPTIONS:",
-  "   --help",
-  "           Prints help information.",
+  "   --help     Prints help information.\n",
 
-  "   --custom",
-  "           install custom module.",
+  "   --custom   install custom module.\n",
 
-  "   --version",
-  "           Prints version information.",
+  "   --version  Prints version information.\n",
 
-  "   --deps",
-  "           show dependencies versions.",
+  "   --deps     show dependencies versions.\n",
 
-  "   --map",
-  "           add module to import_mao.json.\n",
+  "   --map      add module to import_mao.json.\n",
 
   "SUBCOMMANDS:",
-  "   [install or i]  install some module.",
+  "   [install or i]  install some module.\n",
 
   "   delete<@version>  delete a module from import_map.json and cache.\n",
 

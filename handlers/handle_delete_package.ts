@@ -100,7 +100,7 @@ function canDelete(module: string) {
   }
 
   else {
-    console.log(
+    console.error(
       red(
         "it was not removed from the cache because it is not a standard module or deno.land/x or it is not installed."
       )
@@ -118,6 +118,6 @@ export function DeleteCacheModule(module: string) {
     }
   }
   catch (error) {
-    console.log(red(error));
+    console.error(red(error));
   }
 }

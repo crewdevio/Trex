@@ -41,11 +41,7 @@ export function needProxy(pkg: string) {
 }
 
 export function Proxy(pkg: string): string {
-  console.log(
-    yellow("warning: "),
-    red(pkg),
-    green(" is using a proxy. \n")
-  );
+  console.log(yellow("warning: "), red(pkg), green(" is using a proxy. \n"));
 
   console.log(
     green(

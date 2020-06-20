@@ -1,4 +1,4 @@
-import { green } from "https://deno.land/std/fmt/colors.ts";
+import { green, red } from "https://deno.land/std/fmt/colors.ts";
 import { needProxy, Proxy } from "../proxy/proxy.ts";
 import { STD } from "../utils/info.ts";
 import db from "../utils/db.ts";
@@ -38,7 +38,7 @@ async function cached(typePkg: string, packageUrl: string) {
     });
 
     await process.status();
-    console.log(green("\n Done \n"));
+    console.log(green("\n Done. \n"));
   }
   // * install third party package
   else if (db.includes(typePkg)) {
@@ -47,11 +47,12 @@ async function cached(typePkg: string, packageUrl: string) {
     });
 
     await process.status();
-    console.log(green("\n Done \n"));
+    console.log(green("\n Done. \n"));
   }
-  // * throw error if package is not found
+  // * log error if package is not found
   else if (!STD.includes(typePkg) && !db.includes(typePkg)) {
-    throw new TypeError("package not found");
+    console.error(red("package not found"));
+    return;
   }
 }
 
