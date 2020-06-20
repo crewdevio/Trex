@@ -1,4 +1,5 @@
 import { green, yellow, white, red, cyan } from "https://deno.land/std/fmt/colors.ts";
+import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
 import { installPakages, updatePackages } from "./handlers/handle_packages.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { checkPackage, createPackage } from "./handlers/handle_files.ts";
@@ -7,6 +8,7 @@ import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { importMap, objectGen } from "./utils/types.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
+import db from "./utils/db.ts";
 
 async function mainCli() {
   const input = Deno.args;
@@ -79,27 +81,32 @@ async function mainCli() {
       const Packages = JSON.parse(checkPackage());
 
       if (Packages?.imports) {
-        delete Packages.imports[STD.includes(pkg) ? pkg + "/" : pkg];
+        delete Packages.imports[
+          STD.includes(haveVersion(pkg))
+          ? haveVersion(pkg) + "/"
+          : haveVersion(pkg)
+        ];
+
+        if (STD.includes(haveVersion(pkg)) || db.includes(haveVersion(pkg))) {
+          DeleteCacheModule(pkg);
+        }
 
         const newPackage = updatePackages(Packages);
 
         await createPackage(newPackage);
 
-        console.log(yellow(pkg + ": "), green("package removed"));
+        console.log(yellow(pkg + ":"), green(" removed from import_map.json"));
       }
 
       else {
-        const error: Error = new Deno.errors.NotFound(
-          "not found imports key in import_map.json"
-        );
-        console.error(error);
+        console.error(red("not found imports key in import_map.json"));
+        return;
       }
     }
 
     else {
-      const error: Error = new Deno.errors.NotFound("import_map.json");
-
-      console.error(error);
+      console.error(red("import_map.json"));
+      return;
     }
   }
 

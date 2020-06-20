@@ -25,7 +25,7 @@
 
 ### What is Trex?
 
-is a "Package management" for deno to implement an import_map.json for your imports is an easiest way to make imports in deno.
+is a Package management for deno similar to npm but maintaining the deno philosophy. packages are cached and only one `import_map.json` file is generated.
 
 ```javascript
 // import_map.json
@@ -39,7 +39,7 @@ is a "Package management" for deno to implement an import_map.json for your impo
 
 For more information about the import maps in deno [import maps](https://deno.land/manual/linking_to_external_code/import_maps)
 
-## Setup visual studio code
+## Setup [visual studio code](https://code.visualstudio.com/)
 
 install the [deno](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno) extension first, then add in settings.json the following configuration.
 
@@ -55,7 +55,52 @@ if you get this error after installing a module.
 
 run your project to cache all dependencies.
 
-> **note**: We are working so that when a module is installed in import_map.json it will be cached to avoid this error when calling the module. it is currently being tested on windows and linux but it is an instable feature at the moment
+> **note**: when installing a module using ( Trex install --map someModule )
+> or ( Trex --custom someModule=someModule.com/someModule.ts ) this is automatically cached
+
+## Setup [Atom](https://atom.io/)
+
+first install [typescript plugin.](https://atom.io/packages/atom-typescript) then install the [typescript-deno-plugin](https://github.com/justjavac/typescript-deno-plugin)
+
+**using npm**
+
+```sh
+$ npm install --save-dev typescript-deno-plugin typescript
+```
+
+**using yarn**
+
+```sh
+$ yarn add -D typescript-deno-plugin typescript
+```
+
+Then add a plugins section to your [tsconfig.json.](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
+
+```json
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "typescript-deno-plugin",
+        "enable": true,
+        "importmap": "import_map.json"
+      }
+    ]
+  }
+}
+```
+
+> **note**: `enable` by default is `true`
+
+Then restart Atom. after restart you should have no problems.
+
+**before installing**
+
+![atom-setup](https://i.ibb.co/bbHhBkG/after.jpg)
+
+**after installing**
+
+![atom-setup](https://i.ibb.co/z8W4Zt9/before.jpg)
 
 ## Guide:
 
@@ -64,7 +109,7 @@ run your project to cache all dependencies.
 Download the repository and open the terminal in the folder of the repository and write:
 
 ```sh
-$  deno install --allow-read --allow-write --allow-net --allow-run --unstable Trex.ts
+$  deno install -A --unstable Trex.ts
 ```
 
 > **note**: You should have the last version 1.0.0 >= of deno for no errors.
@@ -72,16 +117,28 @@ $  deno install --allow-read --allow-write --allow-net --allow-run --unstable Tr
 or in your terminal you can write
 
 ```sh
-$  deno install --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+$  deno install -A --unstable https://deno.land/x/trex/Trex.ts
 ```
+
+**we shorten the install command so it's not that long**
+
+The resources that Trex uses are:
+
+- --allow-net
+- --allow-read
+- --allow-write
+- --allow-run
+- --allow-env
+
+you can give those permissions explicitly
 
 ### update Trex using
 
 ```sh
-$  deno install -f --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
+$  deno install -f -A --unstable https://deno.land/x/trex/Trex.ts
 ```
 
-or use:
+**or use:**
 
 ```sh
 $ Trex update
@@ -124,14 +181,15 @@ OPTIONS:
            add module to import_mao.json.
 
 SUBCOMMANDS:
-   [install or i] install some module.
-   delete     delete a module from import_map.json.
+   [install or i]  install some module.
 
-   getTool    install some tool.
+   delete<@version>  delete a module from import_map.json and cache.
 
-   update     update Trex.
+   getTool  install some tool.
 
-   treeDeps   view dependencie tree.
+   update  update Trex.
+
+   treeDeps  view dependencie tree.
 ```
 
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
@@ -271,6 +329,12 @@ in your command line write:
 $ Trex delete React
 ```
 
+to remove a specific version from the cache and import_map.json, it only works with standard modules and those installed from `deno.land/x`
+
+```sh
+$ Trex delete fs@0.52.0
+```
+
 in import_map.json
 
 ```json
@@ -284,6 +348,8 @@ in import_map.json
 }
 ```
 
+The modules in the standard library or those installed from `deno.land/x` will be removed from the cache.
+
 ### install another version of a module
 
 write the name of the module more **@\<Version\>**
@@ -291,7 +357,7 @@ write the name of the module more **@\<Version\>**
 example:
 
 ```sh
-$ Trex install --map fs@0.`5`4.0
+$ Trex install --map fs@0.54.0
 ```
 
 in import_map.json
@@ -334,7 +400,7 @@ thanks to [Fzwael](https://github.com/Fzwael) this functionality is based on you
 ### see module dependency tree.
 
 ```sh
-$ trex treeDeps fs
+$ Trex treeDeps fs
 ```
 
 you should see this in the terminal
@@ -408,17 +474,26 @@ https://deno.land/std/fs/mod.ts
   └── https://deno.land/std/fs/eol.ts
 ```
 
-View version
+### Proxy
 
-```sh
-$ Trex --version
-```
+Some modules in the standard deno library do not have a `mod.ts` file.
 
-View help
+When installing a standard library module, a request is made to `deno.land/std/moduleName/mod.ts`
+to be able to cache the module.
+the solution we have is to create a bridge between the request to download the module and the files in the library.
 
-```sh
-$ Trex --help
-```
+![proxy](https://i.ibb.co/f97j2Rm/proxy.png)
+
+in the [proxy folder](https://github.com/crewdevio/Trex/tree/beta-test/proxy) are the bridges of the modules that do not have the `mod.ts` file.
+
+**these are the modules that use proxy**
+
+- \_util
+- archive
+- encoding
+- fmt
+- node
+- testing
 
 ## To Do
 
@@ -455,8 +530,6 @@ $ Trex --help
   - it is currently being tested on windows and linux but it is an instable feature at the moment.
 
     > **note**: by default it caches the modules using the mod.ts file, if it cannot find it, it does not add it to the cache but add to the import_map.json.
-
-  - We are working to you can choose the target file
 
 - [x] List all the tools you can install.
 

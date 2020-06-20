@@ -28,7 +28,7 @@ export const STD = [
   "ws",
 ];
 
-export const VERSION = { VERSION: "v0.2.2" };
+export const VERSION = { VERSION: "v0.2.3" };
 
 export const helpsInfo = [
   "advance package management for deno to implement an import_map.\n",
@@ -37,31 +37,26 @@ export const helpsInfo = [
   "   Trex [OPTIONS] [SUBCOMMAND]\n",
 
   "OPTIONS:",
-  "   --help",
-  "           Prints help information.",
+  "   --help     Prints help information.\n",
 
-  "   --custom",
-  "           install custom module.",
+  "   --custom   install custom module.\n",
 
-  "   --version",
-  "           Prints version information.",
+  "   --version  Prints version information.\n",
 
-  "   --deps",
-  "           show dependencies versions.",
+  "   --deps     show dependencies versions.\n",
 
-  "   --map",
-  "           add module to import_mao.json.\n",
+  "   --map      add module to import_mao.json.\n",
 
   "SUBCOMMANDS:",
-  "   [install or i] install some module.",
+  "   [install or i]  install some module.\n",
 
-  "   delete     delete a module from import_map.json.\n",
+  "   delete<@version>  delete a module from import_map.json and cache.\n",
 
-  "   getTool    install some tool.\n",
+  "   getTool  install some tool.\n",
 
-  "   update     update Trex.\n",
+  "   update  update Trex.\n",
 
-  "   treeDeps   view dependencie tree.\n"
+  "   treeDeps  view dependencie tree.\n",
 ];
 
 export const flags = {
@@ -79,5 +74,5 @@ export const keyWords = {
   uninstall: "delete",
   tool: "getTool",
   update: "update",
-  tree: "treeDeps"
+  tree: "treeDeps",
 };

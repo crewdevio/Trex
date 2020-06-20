@@ -25,16 +25,13 @@ export async function updateTrex(): Promise<void> {
         config: {
           permissions: [
             "-f",
-            "--allow-read",
-            "--allow-write",
-            "--allow-net",
-            "--allow-run",
+            "-A",
             "--unstable",
           ],
           url: "https://deno.land/x/trex/Trex.ts",
         },
       });
-      console.log(repoVersion);
+      console.log(repoVersion.VERSION);
     }, 5000);
   } else {
     console.log(cyan("Trex is already update"));
