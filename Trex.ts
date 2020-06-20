@@ -99,17 +99,14 @@ async function mainCli() {
       }
 
       else {
-        const error: Error = new Deno.errors.NotFound(
-          "not found imports key in import_map.json"
-        );
-        console.error(error);
+        console.error(red("not found imports key in import_map.json"));
+        return;
       }
     }
 
     else {
-      const error: Error = new Deno.errors.NotFound("import_map.json");
-
-      console.error(error);
+      console.error(red("import_map.json"));
+      return;
     }
   }
 

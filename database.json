@@ -4,7 +4,14 @@
     "url": "https://deno.land/x/commands/Commands.ts"
   },
   "velociraptor": {
-    "permissions": ["--allow-read", "--allow-run", "--allow-env", "--allow-write", "-n", "vr"],
+    "permissions": [
+      "--allow-read",
+      "--allow-run",
+      "--allow-env",
+      "--allow-write",
+      "-n",
+      "vr"
+    ],
     "url": "https://deno.land/x/velociraptor/cli.ts"
   },
   "yolk": {
@@ -12,11 +19,23 @@
     "url": "https://raw.githubusercontent.com/denjucks/yolk/master/yolk.js"
   },
   "fsCli": {
-    "permissions": ["--allow-read", "--allow-write", "--allow-env", "--allow-run", "-n", "fs_cli"],
+    "permissions": [
+      "--allow-read",
+      "--allow-write",
+      "--allow-env",
+      "--allow-run",
+      "-n",
+      "fs_cli"
+    ],
     "url": "https://deno.land/x/fs_cli@v0.1.0/cli.ts"
   },
   "dpm": {
-    "permissions": ["--allow-net", "--allow-read", "--allow-write", "--allow-run"],
+    "permissions": [
+      "--allow-net",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run"
+    ],
     "url": "https://deno.land/x/dpm/mod.ts"
   },
   "dpx": {
@@ -24,11 +43,62 @@
     "url": "https://deno.land/x/dpx/cli.ts"
   },
   "DenoAppSetuper": {
-    "permissions": ["--unstable", "--allow-net", "--allow-read", "--allow-write", "--allow-run", "-f", "-n", "das"],
+    "permissions": [
+      "--unstable",
+      "--allow-net",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "-f",
+      "-n",
+      "das"
+    ],
     "url": "https://deno.land/x/deno_app_setuper/cli.ts"
   },
   "denoSearch": {
     "permissions": ["-f", "--allow-net", "ds"],
     "url": "https://deno.land/x/deno_search/main.ts"
+  },
+  "denon": {
+    "permissions": [
+      "--allow-read",
+      "--allow-run",
+      "--allow-write",
+      "--allow-net -f",
+      "--unstable"
+    ],
+    "url": "https://deno.land/x/denon@v2.2.0/denon.ts"
+  },
+  "denox": {
+    "permissions": ["-Af", "-n", "denox"],
+    "url": "https://denopkg.com/BentoumiTech/denox/denox.ts"
+  },
+  "udd": {
+    "permissions": ["-A", "-f", "-n", "udd"],
+    "url": "https://deno.land/x/udd@0.2.0/main.ts"
+  },
+  "pagic": {
+    "permissions": [
+      "--unstable",
+      "--allow-read",
+      "--allow-write",
+      "--allow-net"
+    ],
+    "url": "https://deno.land/x/pagic/mod.ts"
+  },
+  "dedep": {
+    "permissions": ["-A"],
+    "url": "https://denopkg.com/egoist/dedep/dedep.ts"
+  },
+  "clone": {
+    "permissions": [
+      "--allow-env",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "-n",
+      "clone"
+    ],
+    "url": "https://deno.land/x/clone@v1.0.3/clone.ts"
   }
 }
