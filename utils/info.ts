@@ -28,7 +28,7 @@ export const STD = [
   "ws",
 ];
 
-export const VERSION = { VERSION: "v0.2.3" };
+export const VERSION = { VERSION: "v0.2.4" };
 
 export const helpsInfo = [
   "advance package management for deno to implement an import_map.\n",
@@ -45,7 +45,9 @@ export const helpsInfo = [
 
   "   --deps     show dependencies versions.\n",
 
-  "   --map      add module to import_mao.json.\n",
+  "   --map      add module to import_map.json.\n",
+
+  "   --lock     create a lock files.\n",
 
   "SUBCOMMANDS:",
   "   [install or i]  install some module.\n",
@@ -65,7 +67,8 @@ export const flags = {
   custom: "--custom",
   help: "--help",
   deps: "--deps",
-  all: ["--map", "--version", "--custom", "--help", "--deps"],
+  lock: "--lock",
+  all: ["--map", "--version", "--custom", "--help", "--deps", "--lock"],
 };
 
 export const keyWords = {

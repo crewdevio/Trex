@@ -169,16 +169,17 @@ USAGE:
    Trex [OPTIONS] [SUBCOMMAND]
 
 OPTIONS:
-   --help
-           Prints help information.
-   --custom
-           install custom module.
-   --version
-           Prints version information.
-   --deps
-           show dependencies versions.
-   --map
-           add module to import_mao.json.
+   --help     Prints help information.
+
+   --custom   install custom module.
+
+   --version  Prints version information.
+
+   --deps     show dependencies versions.
+
+   --map      add module to import_map.json.
+
+   --lock     create a lock files.
 
 SUBCOMMANDS:
    [install or i]  install some module.
@@ -284,6 +285,14 @@ run in terminal
 ```sh
 $ deno run --allow-net --importmap=import_map.json --unstable server.ts
 ```
+
+### download modules from an `import map.json` file.
+
+```sh
+$ Trex install
+```
+
+this downloads all the modules listed in the `import_map.json` similar to `npm install`
 
 ### add custom module
 
@@ -474,6 +483,28 @@ https://deno.land/std/fs/mod.ts
   └── https://deno.land/std/fs/eol.ts
 ```
 
+### Integrity checking & lock files
+
+Let's say your module depends on remote module . When you compile your module for the first time is retrieved, compiled and cached. It will remain this way until you run your module on a new machine (say in production) or reload the cache (through for example). But what happens if the content in the remote url is changed? This could lead to your production module running with different dependency code than your local module. Deno's solution to avoid this is to use integrity checking and lock files.
+
+info from [deno page](https://deno.land/manual/linking_to_external_code/integrity_checking)
+
+**use:**
+
+```sh
+$ Trex --lock file.ts
+```
+
+this generates a `lock.json` file.
+
+if in input file you use `import_map.json` you can specify it.
+
+```sh
+$ Trex --lock --importmap file.ts
+```
+
+for more information this is the [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking)
+
 ### Proxy
 
 Some modules in the standard deno library do not have a `mod.ts` file.
@@ -536,3 +567,7 @@ in the [proxy folder](https://github.com/crewdevio/Trex/tree/beta-test/proxy) ar
 - [x] choose the destination file when installing a module.
 
   - `$ Trex --custom djwt/create.ts=https://deno.land/x/djwt/create.ts`
+
+- [x] Integrity checking & lock files.
+
+  - `$ Trex --lock someFile.ts`
