@@ -1,5 +1,5 @@
 import { green, yellow, red } from "https://deno.land/std/fmt/colors.ts";
-import { proxyPkg } from "../utils/types.ts";
+import { proxyPkg } from "https://deno.land/x/trex/utils/types.ts";
 
 const modulesProxys: Array<proxyPkg> = [
   {
