@@ -39,7 +39,7 @@ const modulesProxys: Array<proxyPkg> = [
   },
 ];
 
-const modules = ["_util", "archive", "encoding", "fmt", "node", "testing"];
+const modules = ["_util", "archive", "encoding", "fmt", "node", "testing", "wasi"];
 
 export function needProxy(pkg: string) {
   return modules.includes(pkg);
