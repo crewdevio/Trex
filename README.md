@@ -23,7 +23,6 @@
    </a>
 </p>
 
-[![nest badge](https://nest.land/badge-large.svg)](https://nest.land/package/your-package)
 
 ### What is Trex?
 
