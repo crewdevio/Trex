@@ -45,7 +45,7 @@ For more information about the import maps in deno [import maps](https://deno.la
 
 - [Proxy](docs/proxy.md)
 
-- [Setup your IDE](docs/setpu.md)
+- [Setup your IDE](docs/setup.md)
 
 ### installation:
 
