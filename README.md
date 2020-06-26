@@ -23,6 +23,8 @@
    </a>
 </p>
 
+[![nest badge](https://nest.land/badge-large.svg)](https://nest.land/package/your-package)
+
 ### What is Trex?
 
 is a Package management for deno similar to npm but maintaining the deno philosophy. packages are cached and only one `import_map.json` file is generated.
@@ -39,70 +41,11 @@ is a Package management for deno similar to npm but maintaining the deno philoso
 
 For more information about the import maps in deno [import maps](https://deno.land/manual/linking_to_external_code/import_maps)
 
-## Setup [visual studio code](https://code.visualstudio.com/)
+# Content
 
-install the [deno](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno) extension first, then add in settings.json the following configuration.
+- [Proxy](docs/proxy.md)
 
-![settings.json](https://i.ibb.co/YyCD6RY/config-Json-Deno.png)
-
-activate the enable option **Deno unstable features** in **settings >> extensions >> Deno**
-
-![unstable](https://i.ibb.co/p4hDp41/enable.jpg)
-
-if you get this error after installing a module.
-
-![error](https://i.ibb.co/RvhKp5s/error.jpg)
-
-run your project to cache all dependencies.
-
-> **note**: when installing a module using ( Trex install --map someModule )
-> or ( Trex --custom someModule=someModule.com/someModule.ts ) this is automatically cached
-
-## Setup [Atom](https://atom.io/)
-
-first install [typescript plugin.](https://atom.io/packages/atom-typescript) then install the [typescript-deno-plugin](https://github.com/justjavac/typescript-deno-plugin)
-
-**using npm**
-
-```sh
-$ npm install --save-dev typescript-deno-plugin typescript
-```
-
-**using yarn**
-
-```sh
-$ yarn add -D typescript-deno-plugin typescript
-```
-
-Then add a plugins section to your [tsconfig.json.](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
-
-```json
-{
-  "compilerOptions": {
-    "plugins": [
-      {
-        "name": "typescript-deno-plugin",
-        "enable": true,
-        "importmap": "import_map.json"
-      }
-    ]
-  }
-}
-```
-
-> **note**: `enable` by default is `true`
-
-Then restart Atom. after restart you should have no problems.
-
-**before installing**
-
-![atom-setup](https://i.ibb.co/bbHhBkG/after.jpg)
-
-**after installing**
-
-![atom-setup](https://i.ibb.co/z8W4Zt9/before.jpg)
-
-## Guide:
+- [Setup your IDE](docs/setpu.md)
 
 ### installation:
 
@@ -160,39 +103,6 @@ for any help of the commands of Trex write:
 $  Trex --help
 ```
 
-and the console should present:
-
-```sh
-advance package management for deno to implement an import_map.
-
-USAGE:
-   Trex [OPTIONS] [SUBCOMMAND]
-
-OPTIONS:
-   --help     Prints help information.
-
-   --custom   install custom module.
-
-   --version  Prints version information.
-
-   --deps     show dependencies versions.
-
-   --map      add module to import_map.json.
-
-   --lock     create a lock files.
-
-SUBCOMMANDS:
-   [install or i]  install some module.
-
-   delete<@version>  delete a module from import_map.json and cache.
-
-   getTool  install some tool.
-
-   update  update Trex.
-
-   treeDeps  view dependencie tree.
-```
-
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
 
 # How to use
@@ -217,7 +127,7 @@ an import_map.json file will be created with the following.
 }
 ```
 
-## Usage example.
+# example.
 
 create a test file
 
@@ -286,7 +196,7 @@ run in terminal
 $ deno run --allow-net --importmap=import_map.json --unstable server.ts
 ```
 
-### download modules from an `import map.json` file.
+### download modules from an `import_map.json` file.
 
 ```sh
 $ Trex install
@@ -504,27 +414,6 @@ $ Trex --lock --importmap file.ts
 ```
 
 for more information this is the [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking)
-
-### Proxy
-
-Some modules in the standard deno library do not have a `mod.ts` file.
-
-When installing a standard library module, a request is made to `deno.land/std/moduleName/mod.ts`
-to be able to cache the module.
-the solution we have is to create a bridge between the request to download the module and the files in the library.
-
-![proxy](https://i.ibb.co/f97j2Rm/proxy.png)
-
-in the [proxy folder](https://github.com/crewdevio/Trex/tree/beta-test/proxy) are the bridges of the modules that do not have the `mod.ts` file.
-
-**these are the modules that use proxy**
-
-- \_util
-- archive
-- encoding
-- fmt
-- node
-- testing
 
 ## To Do
 
