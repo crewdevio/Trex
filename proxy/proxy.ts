@@ -5,32 +5,37 @@ const modulesProxys: Array<proxyPkg> = [
   {
     module: "_util",
     url:
-      "https://raw.githubusercontent.com/crewdevio/Trex/beta-test/proxy/proxy_files/_util.ts",
+      "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy_files/_util.ts",
   },
   {
     module: "archive",
     url:
-      "https://raw.githubusercontent.com/crewdevio/Trex/beta-test/proxy/proxy_files/archive.ts",
+      "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy_files/archive.ts",
   },
   {
     module: "encoding",
     url:
-      "https://raw.githubusercontent.com/crewdevio/Trex/beta-test/proxy/proxy_files/encoding.ts",
+      "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy_files/encoding.ts",
   },
   {
     module: "fmt",
     url:
-      "https://raw.githubusercontent.com/crewdevio/Trex/beta-test/proxy/proxy_files/fmt.ts",
+      "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy_files/fmt.ts",
   },
   {
     module: "node",
     url:
-      "https://raw.githubusercontent.com/crewdevio/Trex/beta-test/proxy/proxy_files/node.ts",
+      "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy_files/node.ts",
   },
   {
     module: "testing",
     url:
-      "https://raw.githubusercontent.com/crewdevio/Trex/beta-test/proxy/proxy_files/testing.ts",
+      "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy_files/testing.ts",
+  },
+  {
+    module: "wasi",
+    url:
+      "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy_files/wasi.ts",
   },
 ];
 
