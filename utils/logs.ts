@@ -1,4 +1,4 @@
-import { cyan } from "https://deno.land/std/fmt/colors.ts";
+import { cyan, red } from "https://deno.land/std/fmt/colors.ts";
 import exec from "../tools/install_tools.ts";
 import { VERSION } from "./info.ts";
 
@@ -36,4 +36,8 @@ export async function updateTrex(): Promise<void> {
   } else {
     console.log(cyan("Trex is already update"));
   }
+}
+
+export function offLine() {
+  throw new Error(red("you are not online, check your connection.")).message;
 }
