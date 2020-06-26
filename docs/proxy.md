@@ -8,7 +8,7 @@ the solution we have is to create a bridge between the request to download the m
 
 ![proxy](https://i.ibb.co/f97j2Rm/proxy.png)
 
-in the [proxy folder](https://github.com/crewdevio/Trex/tree/beta-test/proxy) are the bridges of the modules that do not have the `mod.ts` file.
+in the [proxy folder](https://github.com/crewdevio/Trex/tree/proxy) are the bridges of the modules that do not have the `mod.ts` file.
 
 **these are the modules that use proxy**
 

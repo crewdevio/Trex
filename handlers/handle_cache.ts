@@ -1,5 +1,5 @@
+import { needProxy, Proxy } from "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy.ts";
 import { green, red, yellow } from "https://deno.land/std/fmt/colors.ts";
-import { needProxy, Proxy } from "../proxy/proxy.ts";
 import { STD } from "../utils/info.ts";
 import db from "../utils/db.ts";
 

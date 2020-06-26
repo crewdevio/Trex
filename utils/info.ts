@@ -26,6 +26,7 @@ export const STD = [
   "textproto",
   "uuid",
   "ws",
+  "wasi"
 ];
 
 export const VERSION = { VERSION: "v0.2.4" };
