@@ -1,6 +1,7 @@
 import { yellow, red, green } from "https://deno.land/std/fmt/colors.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { importMap, objectGen } from "../utils/types.ts";
+import { checkPackage } from "./handle_files.ts";
 import cache from "./handle_cache.ts";
 import db from "../utils/db.ts";
 
@@ -18,7 +19,7 @@ export function updatePackages(Package: importMap) {
 }
 
 /**
- * * get pkg name create uri
+ * * get pkg name to create uri
  */
 
 function detectVersion(pkgName: string): string {
@@ -110,6 +111,8 @@ export async function installPakages(args: string[]) {
   // * package to push in import_map.json
   const map: objectGen = {};
 
+  const beforeTime = Date.now();
+
   if (args[1] === flags.map) {
     for (let index = 2; index < args.length; index++) {
 
@@ -118,9 +121,39 @@ export async function installPakages(args: string[]) {
           args[index].split("@")[0],
           detectVersion(args[index]),
         );
-      map[getNamePkg(args[index])] = detectVersion(args[index]);
+        map[getNamePkg(args[index])] = detectVersion(args[index]);
+    }
+
+  }
+
+  // * install all package in import_map.josn
+  else {
+
+    try {
+      const importmap: importMap = JSON.parse(checkPackage());
+
+      for (const pkg in importmap.imports) {
+
+        const mod = pkg.split("/").join("");
+        await cache(
+          mod,
+          detectVersion(mod));
+
+        map[getNamePkg(mod)] = detectVersion(mod);
+      }
+
+    }
+
+    catch (_) {
+      console.error(red("import_map.json file not found"));
     }
   }
+
+  // * show installation time
+  const afterTime = Date.now();
+  console.log(
+    'time to installation:',
+    ((afterTime - beforeTime) / 1000).toString() + "s");
 
   return map;
 }

@@ -5,6 +5,7 @@ import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { checkPackage, createPackage } from "./handlers/handle_files.ts";
 import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
+import { LockFile } from "./handlers/handle_lock_file.ts";
 import { importMap, objectGen } from "./utils/types.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
@@ -189,6 +190,10 @@ async function mainCli() {
         }
       }
     }
+  }
+
+  else if (input[0] === flags.lock) {
+    await LockFile(...input);
   }
 
   else {
