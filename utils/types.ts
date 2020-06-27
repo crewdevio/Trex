@@ -11,3 +11,27 @@ export interface Params {
     url: string;
   };
 }
+
+export interface NestResponse {
+  name: string;
+
+  package: {
+    name: string;
+    owner: string;
+    description: string;
+    createdAt: string;
+  };
+
+  entry: string;
+  version: string;
+  prefix: string;
+  malicious: boolean | null | undefined;
+  files: {
+    [key: string]: {
+      [key: string]: {
+        [key: string]: string;
+      };
+    };
+  };
+  createdAt: string;
+}

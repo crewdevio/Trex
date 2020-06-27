@@ -1,4 +1,5 @@
 import { yellow, red, green } from "https://deno.land/std/fmt/colors.ts";
+import { nestPackageUrl } from '../tools/nest_land_connection.ts';
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { importMap, objectGen } from "../utils/types.ts";
 import { checkPackage } from "./handle_files.ts";
@@ -124,6 +125,19 @@ export async function installPakages(args: string[]) {
         map[getNamePkg(args[index])] = detectVersion(args[index]);
     }
 
+  }
+
+  // * integration on nest.land
+  else if (args[1] === flags.nest) {
+    for (let index = 2; index < args.length; index++) {
+
+      // ! test on linux and macOs
+        const [name, version] = args[index].split("@");
+        const packageList = { name, version, url: await  nestPackageUrl(name, version)};
+
+        map[packageList.name] = packageList.url;
+
+    }
   }
 
   // * install all package in import_map.josn

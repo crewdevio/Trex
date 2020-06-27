@@ -69,7 +69,8 @@ export const flags = {
   help: "--help",
   deps: "--deps",
   lock: "--lock",
-  all: ["--map", "--version", "--custom", "--help", "--deps", "--lock"],
+  nest: "--nest",
+  all: ["--map", "--version", "--custom", "--help", "--deps", "--lock", "--nest"],
 };
 
 export const keyWords = {
