@@ -20,4 +20,5 @@ export async function LockFile(...args: string[]) {
   }
 
   console.log("|- ", green("lock.json\ndone it."));
+  return (await process.status()).success
 }
