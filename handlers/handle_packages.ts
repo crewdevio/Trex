@@ -148,6 +148,7 @@ export async function installPakages(args: string[]) {
     try {
       const importmap: importMap = JSON.parse(checkPackage());
 
+      // TODO(buttercubz) add nest.land package install scape.
       for (const pkg in importmap.imports) {
 
         const mod = pkg.split("/").join("");
@@ -184,7 +185,15 @@ export async function customPackage(...args: string[]) {
   custom[data[0]] = data[1];
   // * cache custom module
   const cache = Deno.run({
-    cmd: ["deno", "cache", data[1]],
+    cmd: [
+          "deno",
+          "install",
+          "-f",
+          "-n",
+          "Trex_Cache_Map",
+          "--unstable",
+          data[1]
+        ],
   });
 
   await cache.status();
