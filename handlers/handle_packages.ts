@@ -1,5 +1,5 @@
+import { nestPackageUrl, cacheNestpackage } from '../tools/nest_land_connection.ts';
 import { yellow, red, green } from "https://deno.land/std/fmt/colors.ts";
-import { nestPackageUrl } from '../tools/nest_land_connection.ts';
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { importMap, objectGen } from "../utils/types.ts";
 import { checkPackage } from "./handle_files.ts";
@@ -135,6 +135,7 @@ export async function installPakages(args: string[]) {
         const [name, version] = args[index].split("@");
         const packageList = { name, version, url: await  nestPackageUrl(name, version)};
 
+        await cacheNestpackage(packageList.url);
         map[packageList.name] = packageList.url;
 
     }
