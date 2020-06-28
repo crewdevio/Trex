@@ -23,5 +23,5 @@ export default async function exec(param: Params): Promise<boolean> {
   console.log(decoder.decode(out));
   const response = (await app.status()).success
   return response
-  
+
 }
