@@ -23,7 +23,6 @@
    </a>
 </p>
 
-
 ### What is Trex?
 
 is a Package management for deno similar to npm but maintaining the deno philosophy. packages are cached and only one `import_map.json` file is generated.
@@ -45,6 +44,12 @@ For more information about the import maps in deno [import maps](https://deno.la
 - [Proxy](docs/proxy.md)
 
 - [Setup your IDE](docs/setup.md)
+
+- [Integration with nest.land](docs/nest_land_setup.md)
+
+- [How can I have my package available to download with Trex?](docs/add_package.md)
+
+- [How can I add my tool to make it available on Trex?](docs/add_tool.md)
 
 ### installation:
 
@@ -113,6 +118,16 @@ $ Trex install --map fs http fmt
 ```
 
 > **note**: you can use **Trex i --map fs http fmt**
+
+`--map` installs packages from the standard library and those hosted at `deno.land/x`
+
+Install a package hosted on [nest.land](https://nest.land/gallery)
+
+```sh
+$ Trex install --nest opine@0.13.0
+```
+
+> **note**: if you install a package using nest.land you must specify the version, example: `$ Trex i --nest opine@0.13.0`
 
 an import_map.json file will be created with the following.
 
