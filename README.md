@@ -429,48 +429,21 @@ $ Trex --lock --importmap file.ts
 
 for more information this is the [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking)
 
-## To Do
+### [LICENSE MIT](https://opensource.org/licenses/MIT)
 
-- [x] install std modules and third party modules in deno.land/x.
-
-- [x] delete modules from import_map.json.
-
-- [x] support for custom module outside of deno third party modules.
-
-- [x] sort modules names in import_map.json.
-
-- [x] support to install tools like [Commands.](https://deno.land/x/commands)
-
-  - if you want add your tool in database edit this file [database.json](database.json)
-
-- [x] update using:
-
-  - `$ Trex update`
-
-- [x] support to choose install other versions of modules:
-
-  - `$ Trex install --map fs@0.50.0`
-
-- [x] safe installation for tools like [Commands](https://deno.land/x/commands), [velociraptor](https://deno.land/x/velociraptor) or [dpx.](https://deno.land/x/dpx)
-
-  - display a warning message with the permissions of the tool
-
-- [x] check the versions of the libraries.
-
-  - `$ Trex --deps`
-
-- [x] System to cache package when install it. (!unstable):
-
-  - it is currently being tested on windows and linux but it is an instable feature at the moment.
-
-    > **note**: by default it caches the modules using the mod.ts file, if it cannot find it, it does not add it to the cache but add to the import_map.json.
-
-- [x] List all the tools you can install.
-
-- [x] choose the destination file when installing a module.
-
-  - `$ Trex --custom djwt/create.ts=https://deno.land/x/djwt/create.ts`
-
-- [x] Integrity checking & lock files.
-
-  - `$ Trex --lock someFile.ts`
+</br>
+ <p align="center">
+    <img src="http://clipart-library.com/image_gallery/3119.png" width="150">
+    <h3 align="center">Trex is powered by</h3>
+    <p align="center">
+       <a href="https://nest.land/">
+	  <img src="https://raw.githubusercontent.com/nestlandofficial/nest.land/master/web/public/favicon.png" width="85" height="85">
+       </a>
+       <a href="https://deno.land/">
+	  <img src="https://raw.githubusercontent.com/denoland/deno_website2/master/public/logo.svg" width="85" height="85">
+       </a>
+       <a href="https://denopkg.com/">
+	  <img src="https://raw.githubusercontent.com/denopkg/denopkg.com/master/public/denopkg.png" width="90" height="90">
+       </a>
+    </p>
+  </p>
