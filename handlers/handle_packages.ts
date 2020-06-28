@@ -137,7 +137,7 @@ export async function installPakages(args: string[]) {
         const packageList = { name, version, url: await  nestPackageUrl(name, version)};
 
         await cacheNestpackage(packageList.url);
-        map[packageList.name] = packageList.url;
+        map[packageList.name.toLowerCase()] = packageList.url;
 
     }
   }
@@ -182,7 +182,7 @@ export async function customPackage(...args: string[]) {
 
   const custom: objectGen = {};
 
-  custom[data[0]] = data[1];
+  custom[data[0].toLowerCase()] = data[1];
   // * cache custom module
   const cache = Deno.run({
     cmd: [
