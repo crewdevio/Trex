@@ -1,6 +1,6 @@
 import { DeleteCacheModule, canDelete, getPath } from "../handlers/handle_delete_package.ts";
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import { installPakages } from "../handlers/handle_packages.ts";
+import { installPakages, customPackage } from "../handlers/handle_packages.ts";
 import { delay } from "https://deno.land/std/async/delay.ts";
 
 // * Install Package from denoland
@@ -27,6 +27,18 @@ Deno.test({
       importql:
         "https://arweave.net/F8armYyxSykulJmJ3kx1KzLh40VDCzEa_OQjUnpnsqo/mod.ts",
     });
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Install custom package #1",
+
+  fn: async () => {
+    await delay(1000);
+    const response = await customPackage(...[ "--custom", "React=https://dev.jspm.io/react/index.js" ]);
+    assertEquals(response, true);
   },
   sanitizeResources: false,
   sanitizeOps: false,

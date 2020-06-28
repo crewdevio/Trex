@@ -198,4 +198,5 @@ export async function customPackage(...args: string[]) {
     // * else create package
     await createPackage(custom, true);
   }
+  return (await cache.status()).success
 }
