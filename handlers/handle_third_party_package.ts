@@ -36,3 +36,14 @@ export async function cacheNestpackage(url: string): Promise<void> {
     throw new Error(logError).message;
   }
 }
+
+export function pkgRepo(url: string, pkgName: string | undefined) {
+  const [user, repo, ...path] = url.split("/");
+
+  return [
+    pkgName ? pkgName : repo,
+    `https://denopkg.com/${user}/${repo}/${path.join("/")}${
+      path.length ? "" : "mod.ts"
+    }`,
+  ];
+}

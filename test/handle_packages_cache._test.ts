@@ -1,6 +1,6 @@
 import { DeleteCacheModule, canDelete, getPath } from "../handlers/handle_delete_package.ts";
-import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import { installPakages, customPackage } from "../handlers/handle_packages.ts";
+import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import { delay } from "https://deno.land/std/async/delay.ts";
 
 // * Install Package from denoland
@@ -37,7 +37,9 @@ Deno.test({
 
   fn: async () => {
     await delay(1000);
-    const response = await customPackage(...[ "--custom", "React=https://dev.jspm.io/react/index.js" ]);
+    const response = await customPackage(
+      ...["--custom", "React=https://dev.jspm.io/react/index.js"]
+    );
     assertEquals(response, true);
   },
   sanitizeResources: false,

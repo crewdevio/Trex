@@ -1,4 +1,4 @@
-import { nestPackageUrl, cacheNestpackage } from '../tools/nest_land_connection.ts';
+import { nestPackageUrl, cacheNestpackage, pkgRepo } from './handle_third_party_package.ts';
 import { yellow, red, green } from "https://deno.land/std/fmt/colors.ts";
 import { checkPackage, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
@@ -118,7 +118,7 @@ export async function installPakages(args: string[]) {
   if (args[1] === flags.map) {
     for (let index = 2; index < args.length; index++) {
 
-      // ! test on linux and macOs
+      ////  test on linux and macOs
         await cache(
           args[index].split("@")[0],
           detectVersion(args[index]),
@@ -132,7 +132,7 @@ export async function installPakages(args: string[]) {
   else if (args[1] === flags.nest) {
     for (let index = 2; index < args.length; index++) {
 
-      // ! test on linux and macOs
+      //// test on linux and macOs
         const [name, version] = args[index].split("@");
         const packageList = { name, version, url: await  nestPackageUrl(name, version)};
 
@@ -142,21 +142,39 @@ export async function installPakages(args: string[]) {
     }
   }
 
+  // * install from repo using denopkg.com
+  else if (args[1] === flags.pkg) {
+
+    const [name, url] = pkgRepo(args[2], args[3]);
+    await cacheNestpackage(url);
+
+    map[name] = url;
+  }
+
   // * install all package in import_map.josn
   else {
 
     try {
       const importmap: importMap = JSON.parse(checkPackage());
 
-      // TODO(buttercubz) add nest.land package install scape.
+      //// add nest.land package install scape.
       for (const pkg in importmap.imports) {
 
-        const mod = pkg.split("/").join("");
-        await cache(
-          mod,
-          detectVersion(mod));
+        const md = importmap.imports[pkg];
 
-        map[getNamePkg(mod)] = detectVersion(mod);
+        if (md.includes("deno.land")) {
+
+          const mod = pkg.split("/").join("");
+          await cache(mod, detectVersion(mod));
+
+          map[getNamePkg(mod)] = detectVersion(mod);
+        }
+
+        else {
+          await cacheNestpackage(importmap.imports[pkg]);
+
+          map[pkg] = importmap.imports[pkg];
+        }
       }
 
     }
