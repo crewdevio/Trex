@@ -129,6 +129,20 @@ $ Trex install --nest opine@0.13.0
 
 > **note**: if you install a package using nest.land you must specify the version, example: `$ Trex i --nest opine@0.13.0`
 
+Install a package from some repository
+
+```sh
+$ Trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
+```
+
+example:
+
+```sh
+$ Trex install --pkg oakserver/oak/mod.ts oak
+```
+
+this downloads oak directly from its repository
+
 an import_map.json file will be created with the following.
 
 ```json
@@ -166,7 +180,7 @@ $ deno run --allow-net --importmap=import_map.json --unstable server.ts
 
 > **note**: it is important to use **--importmap=import_map.json --unstable**
 
-### using third party modules
+### using third party packages
 
 example using [oak](https://deno.land/x/oak)
 
@@ -187,7 +201,7 @@ in import_map.json
 }
 ```
 
-> **note**: third party modules are added using **mod.ts**
+> **note**: third party packages are added using **mod.ts**
 
 in server.ts
 
@@ -210,15 +224,15 @@ run in terminal
 $ deno run --allow-net --importmap=import_map.json --unstable server.ts
 ```
 
-### download modules from an `import_map.json` file.
+### download packages from an `import_map.json` file.
 
 ```sh
 $ Trex install
 ```
 
-this downloads all the modules listed in the `import_map.json` similar to `npm install`
+this downloads all the packages listed in the `import_map.json` similar to `npm install`
 
-### add custom module
+### add custom package
 
 in your command line write:
 
@@ -254,7 +268,7 @@ this will install the tool
 
 > **note**: If you are a linux/MacOs user you'll have to specificate the PATH manually when the tool gets installed the will appear in your terminal **export PATH="/home/username/.deno/bin:\$PATH"**
 
-### delete module
+### delete a package
 
 in your command line write:
 
@@ -262,7 +276,7 @@ in your command line write:
 $ Trex delete React
 ```
 
-to remove a specific version from the cache and import_map.json, it only works with standard modules and those installed from `deno.land/x`
+to remove a specific version from the cache and import_map.json, it only works with standard packages and those installed from `deno.land/x`
 
 ```sh
 $ Trex delete fs@0.52.0
@@ -281,11 +295,11 @@ in import_map.json
 }
 ```
 
-The modules in the standard library or those installed from `deno.land/x` will be removed from the cache.
+The packages in the standard library or those installed from `deno.land/x` will be removed from the cache.
 
-### install another version of a module
+### install another version of a package
 
-write the name of the module more **@\<Version\>**
+write the name of the package more **@\<Version\>**
 
 example:
 
@@ -303,7 +317,7 @@ in import_map.json
 }
 ```
 
-> **note**: can be used with third party modules.
+> **note**: can be used with third party packages.
 
 ### check the versions of dependencies using
 
@@ -330,7 +344,7 @@ you should see something like that on the console.
 
 thanks to [Fzwael](https://github.com/Fzwael) this functionality is based on your tool [deno-check-updates](https://github.com/Fzwael/deno-check-updates)
 
-### see module dependency tree.
+### see pacakge dependency tree.
 
 ```sh
 $ Trex treeDeps fs
