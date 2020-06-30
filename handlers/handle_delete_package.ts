@@ -61,7 +61,7 @@ function existModule(user: string, module: string) {
   }
 }
 // * return module path to delete
-function getPath(user: string, module: string) {
+export function getPath(user: string, module: string) {
   if (Deno.build.os === "windows") {
 
     if (STD.includes(haveVersion(module))) {
@@ -89,7 +89,7 @@ function getPath(user: string, module: string) {
   }
 }
 // * if can delete return module path dir
-function canDelete(module: string) {
+export function canDelete(module: string) {
   const user = (build.os === "windows"
     ? env.get("USERNAME")
     : env.get("HOME")) as string;

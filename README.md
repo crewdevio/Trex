@@ -23,7 +23,6 @@
    </a>
 </p>
 
-
 ### What is Trex?
 
 is a Package management for deno similar to npm but maintaining the deno philosophy. packages are cached and only one `import_map.json` file is generated.
@@ -45,6 +44,12 @@ For more information about the import maps in deno [import maps](https://deno.la
 - [Proxy](docs/proxy.md)
 
 - [Setup your IDE](docs/setup.md)
+
+- [Integration with nest.land](docs/nest_land_setup.md)
+
+- [How can I have my package available to download with Trex?](docs/add_package.md)
+
+- [How can I add my tool to make it available on Trex?](docs/add_tool.md)
 
 ### installation:
 
@@ -114,6 +119,30 @@ $ Trex install --map fs http fmt
 
 > **note**: you can use **Trex i --map fs http fmt**
 
+`--map` installs packages from the standard library and those hosted at `deno.land/x`
+
+Install a package hosted on [nest.land](https://nest.land/gallery)
+
+```sh
+$ Trex install --nest opine@0.13.0
+```
+
+> **note**: if you install a package using nest.land you must specify the version, example: `$ Trex i --nest opine@0.13.0`
+
+Install a package from some repository
+
+```sh
+$ Trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
+```
+
+example:
+
+```sh
+$ Trex install --pkg oakserver/oak/mod.ts oak
+```
+
+this downloads oak directly from its repository
+
 an import_map.json file will be created with the following.
 
 ```json
@@ -151,7 +180,7 @@ $ deno run --allow-net --importmap=import_map.json --unstable server.ts
 
 > **note**: it is important to use **--importmap=import_map.json --unstable**
 
-### using third party modules
+### using third party packages
 
 example using [oak](https://deno.land/x/oak)
 
@@ -172,7 +201,7 @@ in import_map.json
 }
 ```
 
-> **note**: third party modules are added using **mod.ts**
+> **note**: third party packages are added using **mod.ts**
 
 in server.ts
 
@@ -195,15 +224,15 @@ run in terminal
 $ deno run --allow-net --importmap=import_map.json --unstable server.ts
 ```
 
-### download modules from an `import_map.json` file.
+### download packages from an `import_map.json` file.
 
 ```sh
 $ Trex install
 ```
 
-this downloads all the modules listed in the `import_map.json` similar to `npm install`
+this downloads all the packages listed in the `import_map.json` similar to `npm install`
 
-### add custom module
+### add custom package
 
 in your command line write:
 
@@ -239,7 +268,7 @@ this will install the tool
 
 > **note**: If you are a linux/MacOs user you'll have to specificate the PATH manually when the tool gets installed the will appear in your terminal **export PATH="/home/username/.deno/bin:\$PATH"**
 
-### delete module
+### delete a package
 
 in your command line write:
 
@@ -247,7 +276,7 @@ in your command line write:
 $ Trex delete React
 ```
 
-to remove a specific version from the cache and import_map.json, it only works with standard modules and those installed from `deno.land/x`
+to remove a specific version from the cache and import_map.json, it only works with standard packages and those installed from `deno.land/x`
 
 ```sh
 $ Trex delete fs@0.52.0
@@ -266,11 +295,11 @@ in import_map.json
 }
 ```
 
-The modules in the standard library or those installed from `deno.land/x` will be removed from the cache.
+The packages in the standard library or those installed from `deno.land/x` will be removed from the cache.
 
-### install another version of a module
+### install another version of a package
 
-write the name of the module more **@\<Version\>**
+write the name of the package more **@\<Version\>**
 
 example:
 
@@ -288,7 +317,7 @@ in import_map.json
 }
 ```
 
-> **note**: can be used with third party modules.
+> **note**: can be used with third party packages.
 
 ### check the versions of dependencies using
 
@@ -315,7 +344,7 @@ you should see something like that on the console.
 
 thanks to [Fzwael](https://github.com/Fzwael) this functionality is based on your tool [deno-check-updates](https://github.com/Fzwael/deno-check-updates)
 
-### see module dependency tree.
+### see pacakge dependency tree.
 
 ```sh
 $ Trex treeDeps fs
@@ -414,48 +443,21 @@ $ Trex --lock --importmap file.ts
 
 for more information this is the [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking)
 
-## To Do
+### [LICENSE MIT](https://opensource.org/licenses/MIT)
 
-- [x] install std modules and third party modules in deno.land/x.
-
-- [x] delete modules from import_map.json.
-
-- [x] support for custom module outside of deno third party modules.
-
-- [x] sort modules names in import_map.json.
-
-- [x] support to install tools like [Commands.](https://deno.land/x/commands)
-
-  - if you want add your tool in database edit this file [database.json](database.json)
-
-- [x] update using:
-
-  - `$ Trex update`
-
-- [x] support to choose install other versions of modules:
-
-  - `$ Trex install --map fs@0.50.0`
-
-- [x] safe installation for tools like [Commands](https://deno.land/x/commands), [velociraptor](https://deno.land/x/velociraptor) or [dpx.](https://deno.land/x/dpx)
-
-  - display a warning message with the permissions of the tool
-
-- [x] check the versions of the libraries.
-
-  - `$ Trex --deps`
-
-- [x] System to cache package when install it. (!unstable):
-
-  - it is currently being tested on windows and linux but it is an instable feature at the moment.
-
-    > **note**: by default it caches the modules using the mod.ts file, if it cannot find it, it does not add it to the cache but add to the import_map.json.
-
-- [x] List all the tools you can install.
-
-- [x] choose the destination file when installing a module.
-
-  - `$ Trex --custom djwt/create.ts=https://deno.land/x/djwt/create.ts`
-
-- [x] Integrity checking & lock files.
-
-  - `$ Trex --lock someFile.ts`
+</br>
+ <p align="center">
+    <img src="http://clipart-library.com/image_gallery/3119.png" width="150">
+    <h3 align="center">Trex is powered by</h3>
+    <p align="center">
+       <a href="https://nest.land/">
+	  <img src="https://raw.githubusercontent.com/nestlandofficial/nest.land/master/web/public/favicon.png" width="85" height="85">
+       </a>
+       <a href="https://deno.land/">
+	  <img src="https://raw.githubusercontent.com/denoland/deno_website2/master/public/logo.svg" width="85" height="85">
+       </a>
+       <a href="https://denopkg.com/">
+	  <img src="https://raw.githubusercontent.com/denopkg/denopkg.com/master/public/denopkg.png" width="90" height="90">
+       </a>
+    </p>
+  </p>

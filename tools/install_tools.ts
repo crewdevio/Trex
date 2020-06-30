@@ -8,9 +8,10 @@ function installTools(args: string[]) {
  * install script from database.json
  */
 
-export default async function exec(param: Params): Promise<void> {
+export default async function exec(param: Params): Promise<boolean> {
   const args: string[] = [
     "install",
+    "-f",
     ...param.config.permissions,
     param.config.url,
   ];
@@ -20,4 +21,7 @@ export default async function exec(param: Params): Promise<void> {
 
   const out = await app.output();
   console.log(decoder.decode(out));
+  const response = (await app.status()).success
+  return response
+
 }

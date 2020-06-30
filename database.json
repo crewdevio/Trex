@@ -64,7 +64,8 @@
       "--allow-read",
       "--allow-run",
       "--allow-write",
-      "--allow-net -f",
+      "--allow-net",
+      "-f",
       "--unstable"
     ],
     "url": "https://deno.land/x/denon@v2.2.0/denon.ts"
@@ -102,13 +103,7 @@
     "url": "https://deno.land/x/clone@v1.0.3/clone.ts"
   },
   "eggs": {
-    "permissions": [
-      "-A",
-      "-f",
-      "--unstable",
-      "-n",
-      "eggs"
-    ],
+    "permissions": ["-A", "-f", "--unstable", "-n", "eggs"],
     "url": "https://raw.githubusercontent.com/nestlandofficial/nest.land/master/eggs/mod.ts"
   }
 }

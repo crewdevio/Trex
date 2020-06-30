@@ -1,7 +1,9 @@
+import { nestPackageUrl, cacheNestpackage, pkgRepo } from './handle_third_party_package.ts';
 import { yellow, red, green } from "https://deno.land/std/fmt/colors.ts";
+import { checkPackage, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
+import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { importMap, objectGen } from "../utils/types.ts";
-import { checkPackage } from "./handle_files.ts";
 import cache from "./handle_cache.ts";
 import db from "../utils/db.ts";
 
@@ -107,7 +109,7 @@ function getNamePkg(pkg: string): string {
   return name;
 }
 
-export async function installPakages(args: string[]) {
+export async function installPackages(args: string[]) {
   // * package to push in import_map.json
   const map: objectGen = {};
 
@@ -116,7 +118,7 @@ export async function installPakages(args: string[]) {
   if (args[1] === flags.map) {
     for (let index = 2; index < args.length; index++) {
 
-      // ! test on linux and macOs
+      ////  test on linux and macOs
         await cache(
           args[index].split("@")[0],
           detectVersion(args[index]),
@@ -126,20 +128,53 @@ export async function installPakages(args: string[]) {
 
   }
 
+  // * integration on nest.land
+  else if (args[1] === flags.nest) {
+    for (let index = 2; index < args.length; index++) {
+
+      //// test on linux and macOs
+        const [name, version] = args[index].split("@");
+        const packageList = { name, version, url: await  nestPackageUrl(name, version)};
+
+        await cacheNestpackage(packageList.url);
+        map[packageList.name.toLowerCase()] = packageList.url;
+
+    }
+  }
+
+  // * install from repo using denopkg.com
+  else if (args[1] === flags.pkg) {
+
+    const [name, url] = pkgRepo(args[2], args[3]);
+    await cacheNestpackage(url);
+
+    map[name] = url;
+  }
+
   // * install all package in import_map.josn
   else {
 
     try {
       const importmap: importMap = JSON.parse(checkPackage());
 
+      //// add nest.land package install scape.
       for (const pkg in importmap.imports) {
 
-        const mod = pkg.split("/").join("");
-        await cache(
-          mod,
-          detectVersion(mod));
+        const md = importmap.imports[pkg];
 
-        map[getNamePkg(mod)] = detectVersion(mod);
+        if (md.includes("deno.land")) {
+
+          const mod = pkg.split("/").join("");
+          await cache(mod, detectVersion(mod));
+
+          map[getNamePkg(mod)] = detectVersion(mod);
+        }
+
+        else {
+          await cacheNestpackage(importmap.imports[pkg]);
+
+          map[pkg] = importmap.imports[pkg];
+        }
       }
 
     }
@@ -156,4 +191,39 @@ export async function installPakages(args: string[]) {
     ((afterTime - beforeTime) / 1000).toString() + "s");
 
   return map;
+}
+
+export async function customPackage(...args: string[]) {
+  const data = args[1].includes("=")
+    ? args[1].split("=")
+    : ["Error", "Add a valid package"];
+
+  const custom: objectGen = {};
+
+  custom[data[0].toLowerCase()] = data[1];
+  // * cache custom module
+  const cache = Deno.run({
+    cmd: [
+          "deno",
+          "install",
+          "-f",
+          "-n",
+          "Trex_Cache_Map",
+          "--unstable",
+          data[1]
+        ],
+  });
+
+  await cache.status();
+  // * if import_map exists update it
+  if (existsSync("./import_map.json")) {
+    const data = JSON.parse(checkPackage());
+    const oldPackage = updatePackages(data);
+
+    await createPackage({ ...custom, ...oldPackage }, true);
+  } else {
+    // * else create package
+    await createPackage(custom, true);
+  }
+  return (await cache.status()).success
 }

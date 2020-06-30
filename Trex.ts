@@ -1,12 +1,12 @@
+import { installPackages, updatePackages, customPackage } from "./handlers/handle_packages.ts";
 import { green, yellow, white, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
-import { installPakages, updatePackages } from "./handlers/handle_packages.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { checkPackage, createPackage } from "./handlers/handle_files.ts";
 import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
-import { importMap, objectGen } from "./utils/types.ts";
+import { importMap } from "./utils/types.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
 import db from "./utils/db.ts";
@@ -22,7 +22,7 @@ async function mainCli() {
         error?: string;
         were?: string;
       };
-      const newPAckage = await installPakages(input);
+      const newPAckage = await installPackages(input);
 
       if (oldPackage?.error) {
         console.error(yellow(`in: ${white(`${oldPackage.were}`)}`));
@@ -35,7 +35,7 @@ async function mainCli() {
     }
 
     else {
-      await createPackage(await installPakages(input), true);
+      await createPackage(await installPackages(input), true);
     }
   }
 
@@ -48,31 +48,7 @@ async function mainCli() {
   }
 
   else if (input[0] === flags.custom) {
-    const data = input[1].includes("=")
-      ? input[1].split("=")
-      : ["Error", "Add a valid package"];
-
-    const custom: objectGen = {};
-
-    custom[data[0]] = data[1];
-    // * cache custom module
-    const cache = Deno.run({
-      cmd: ["deno", "cache", data[1]]
-    })
-
-    await cache.status();
-    // * if import_map exists update it
-    if (existsSync("./import_map.json")) {
-      const data = JSON.parse(checkPackage());
-      const oldPackage = updatePackages(data);
-
-      await createPackage({ ...custom, ...oldPackage }, true);
-    }
-
-    else {
-      // * else create package
-      await createPackage(custom, true);
-    }
+    customPackage(...input)
   }
 
   else if (input[0] === keyWords.uninstall) {

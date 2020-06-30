@@ -26,7 +26,7 @@ export const STD = [
   "textproto",
   "uuid",
   "ws",
-  "wasi"
+  "wasi",
 ];
 
 export const VERSION = { VERSION: "v0.2.4" };
@@ -40,20 +40,24 @@ export const helpsInfo = [
   "OPTIONS:",
   "   --help     Prints help information.\n",
 
-  "   --custom   install custom module.\n",
+  "   --custom   install custom package.\n",
 
   "   --version  Prints version information.\n",
 
   "   --deps     show dependencies versions.\n",
 
-  "   --map      add module to import_map.json.\n",
+  "   --map      add package to import_map.json.\n",
 
   "   --lock     create a lock files.\n",
 
-  "SUBCOMMANDS:",
-  "   [install or i]  install some module.\n",
+  "   --nest     install package from nest.land.\n",
 
-  "   delete<@version>  delete a module from import_map.json and cache.\n",
+  "   --pkg      install package from some repository.\n",
+
+  "SUBCOMMANDS:",
+  "   [install or i]  install some pacakege.\n",
+
+  "   delete<@version>  delete a package from import_map.json and cache.\n",
 
   "   getTool  install some tool.\n",
 
@@ -69,7 +73,8 @@ export const flags = {
   help: "--help",
   deps: "--deps",
   lock: "--lock",
-  all: ["--map", "--version", "--custom", "--help", "--deps", "--lock"],
+  nest: "--nest",
+  pkg: "--pkg",
 };
 
 export const keyWords = {
