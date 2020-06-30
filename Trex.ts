@@ -1,4 +1,4 @@
-import { installPakages, updatePackages, customPackage } from "./handlers/handle_packages.ts";
+import { installPackages, updatePackages, customPackage } from "./handlers/handle_packages.ts";
 import { green, yellow, white, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
@@ -22,7 +22,7 @@ async function mainCli() {
         error?: string;
         were?: string;
       };
-      const newPAckage = await installPakages(input);
+      const newPAckage = await installPackages(input);
 
       if (oldPackage?.error) {
         console.error(yellow(`in: ${white(`${oldPackage.were}`)}`));
@@ -35,7 +35,7 @@ async function mainCli() {
     }
 
     else {
-      await createPackage(await installPakages(input), true);
+      await createPackage(await installPackages(input), true);
     }
   }
 

@@ -1,5 +1,5 @@
 import { DeleteCacheModule, canDelete, getPath } from "../handlers/handle_delete_package.ts";
-import { installPakages, customPackage } from "../handlers/handle_packages.ts";
+import { installPackages, customPackage } from "../handlers/handle_packages.ts";
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import { delay } from "https://deno.land/std/async/delay.ts";
 
@@ -9,7 +9,7 @@ Deno.test({
 
   fn: async () => {
     await delay(1000);
-    const response = await installPakages(["i", "--map", "oak"]);
+    const response = await installPackages(["i", "--map", "oak"]);
     assertEquals(response, { oak: "https://deno.land/x/oak/mod.ts" });
   },
   sanitizeResources: false,
@@ -22,7 +22,7 @@ Deno.test({
 
   fn: async () => {
     await delay(1000);
-    const response = await installPakages(["i", "--nest", "importql@0.1.0 "]);
+    const response = await installPackages(["i", "--nest", "importql@0.1.0 "]);
     assertEquals(response, {
       importql:
         "https://arweave.net/F8armYyxSykulJmJ3kx1KzLh40VDCzEa_OQjUnpnsqo/mod.ts",

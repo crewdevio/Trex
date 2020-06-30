@@ -109,7 +109,7 @@ function getNamePkg(pkg: string): string {
   return name;
 }
 
-export async function installPakages(args: string[]) {
+export async function installPackages(args: string[]) {
   // * package to push in import_map.json
   const map: objectGen = {};
 
