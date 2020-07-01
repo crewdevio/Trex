@@ -37,9 +37,7 @@ async function mainCli() {
       }
 
       catch (_) {
-        throw new Error(
-          red("the import_map.json file does not have a valid format.")
-            ).message
+        throw new Error(_).message;
       }
     }
 
@@ -154,8 +152,9 @@ async function mainCli() {
 
   else if (_arguments[0] === keyWords.tree) {
 
-    const RawMap = checkPackage();
+    try {
 
+    const RawMap = checkPackage();
     const map: importMap = JSON.parse(RawMap);
 
     for (const pkg in map?.imports) {
@@ -186,6 +185,11 @@ async function mainCli() {
           }
         }
       }
+    }
+   }
+
+    catch (_) {
+      throw new Error(_).message;
     }
   }
 
