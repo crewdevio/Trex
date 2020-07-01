@@ -1,4 +1,4 @@
-import { cyan, red } from "https://deno.land/std/fmt/colors.ts";
+import { cyan, red, green, yellow } from "https://deno.land/std/fmt/colors.ts";
 import exec from "../tools/install_tools.ts";
 import { VERSION } from "./info.ts";
 
@@ -23,11 +23,7 @@ export async function updateTrex(): Promise<void> {
     setTimeout(async () => {
       await exec({
         config: {
-          permissions: [
-            "-f",
-            "-A",
-            "--unstable",
-          ],
+          permissions: ["-f", "-A", "--unstable"],
           url: "https://deno.land/x/trex/Trex.ts",
         },
       });
@@ -40,4 +36,16 @@ export async function updateTrex(): Promise<void> {
 
 export function offLine() {
   throw new Error(red("you are not online, check your connection.")).message;
+}
+
+export function Somebybroken() {
+  throw new Error(red("some process is broken.")).message;
+}
+
+export function ErrorInstalling() {
+  const logError = `${red("something be wrong\n")}${green(
+    "maybe this package not have mod.ts file, use custom install.\n"
+  )}${yellow("Trex --custom module=moduleUrl\n")}`;
+
+  throw new Error(logError).message;
 }

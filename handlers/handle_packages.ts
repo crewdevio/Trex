@@ -4,6 +4,7 @@ import { checkPackage, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { importMap, objectGen } from "../utils/types.ts";
+import { Somebybroken } from '../utils/logs.ts';
 import cache from "./handle_cache.ts";
 import db from "../utils/db.ts";
 
@@ -214,13 +215,23 @@ export async function customPackage(...args: string[]) {
         ],
   });
 
-  await cache.status();
+  if (!(await cache.status()).success){
+    Somebybroken();
+  }
+
   // * if import_map exists update it
   if (existsSync("./import_map.json")) {
-    const data = JSON.parse(checkPackage());
-    const oldPackage = updatePackages(data);
+    try {
+      const data = JSON.parse(checkPackage());
+      const oldPackage = updatePackages(data);
 
-    await createPackage({ ...custom, ...oldPackage }, true);
+      await createPackage({ ...custom, ...oldPackage }, true);
+    }
+
+    catch(_) {
+      console.error(red("the import_map.json file does not have a valid format."))
+    }
+
   } else {
     // * else create package
     await createPackage(custom, true);

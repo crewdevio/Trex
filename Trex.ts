@@ -1,9 +1,9 @@
 import { installPackages, updatePackages, customPackage } from "./handlers/handle_packages.ts";
 import { green, yellow, white, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
+import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { checkPackage, createPackage } from "./handlers/handle_files.ts";
-import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import { importMap } from "./utils/types.ts";
@@ -12,52 +12,63 @@ import dbTool from "./tools/database.ts";
 import db from "./utils/db.ts";
 
 async function mainCli() {
-  const input = Deno.args;
+  const _arguments = Deno.args;
 
-  if (input[0] === keyWords.install || input[0] === keyWords.i) {
+  if (_arguments[0] === keyWords.install || _arguments[0] === keyWords.i) {
 
     if (existsSync("./import_map.json")) {
-      const data = JSON.parse(checkPackage());
-      const oldPackage = updatePackages(data) as {
-        error?: string;
-        were?: string;
-      };
-      const newPAckage = await installPackages(input);
 
-      if (oldPackage?.error) {
-        console.error(yellow(`in: ${white(`${oldPackage.were}`)}`));
-        console.error(yellow(`error: ${white(`${oldPackage.error}`)}`));
+      try {
+        const data = JSON.parse(checkPackage());
+        const oldPackage = updatePackages(data) as {
+          error?: string;
+          were?: string;
+        };
+        const newPackage = await installPackages(_arguments);
+
+        if (oldPackage?.error) {
+          console.error(yellow(`in: ${white(`${oldPackage.were}`)}`));
+          console.error(yellow(`error: ${white(`${oldPackage.error}`)}`));
+        }
+
+        else {
+          await createPackage({ ...oldPackage, ...newPackage }, true);
+        }
       }
 
-      else {
-        await createPackage({ ...oldPackage, ...newPAckage }, true);
+      catch (_) {
+        throw new Error(
+          red("the import_map.json file does not have a valid format.")
+            ).message
       }
     }
 
     else {
-      await createPackage(await installPackages(input), true);
+      await createPackage(await installPackages(_arguments), true);
     }
   }
 
-  else if (input[0] === flags.version) {
+  else if (_arguments[0] === flags.version) {
     Version(VERSION.VERSION);
   }
 
-  else if (input[0] === flags.help) {
+  else if (_arguments[0] === flags.help) {
     LogHelp(helpsInfo);
   }
 
-  else if (input[0] === flags.custom) {
-    customPackage(...input)
+  else if (_arguments[0] === flags.custom) {
+    customPackage(..._arguments)
   }
 
-  else if (input[0] === keyWords.uninstall) {
-    const pkg: string = input[1].trim();
+  else if (_arguments[0] === keyWords.uninstall) {
+    const pkg: string = _arguments[1].trim();
 
     if (existsSync("./import_map.json")) {
-      const Packages = JSON.parse(checkPackage());
 
-      if (Packages?.imports) {
+      try {
+        const Packages = JSON.parse(checkPackage());
+
+        if (Packages?.imports) {
         delete Packages.imports[
           STD.includes(haveVersion(pkg))
           ? haveVersion(pkg) + "/"
@@ -80,6 +91,12 @@ async function mainCli() {
         return;
       }
     }
+      catch (_) {
+        throw new Error(
+          red("the import_map.json file does not have a valid format.")
+            ).message
+      }
+    }
 
     else {
       console.error(red("import_map.json"));
@@ -87,8 +104,8 @@ async function mainCli() {
     }
   }
 
-  else if (input[0] === keyWords.tool) {
-    const tool = input[1].trim();
+  else if (_arguments[0] === keyWords.tool) {
+    const tool = _arguments[1].trim();
     if (Object.keys(dbTool).includes(tool)) {
       console.log(
         yellow("warning: "),
@@ -110,11 +127,11 @@ async function mainCli() {
     }
   }
 
-  else if (input[0] === keyWords.update) {
+  else if (_arguments[0] === keyWords.update) {
     await updateTrex();
   }
 
-  else if (input[0] === flags.deps) {
+  else if (_arguments[0] === flags.deps) {
     const process = Deno.run({
       cmd: [
         "deno",
@@ -135,41 +152,45 @@ async function mainCli() {
     console.log(decoder.decode(out));
   }
 
-  else if (input[0] === keyWords.tree) {
+  else if (_arguments[0] === keyWords.tree) {
 
     const RawMap = checkPackage();
 
     const map: importMap = JSON.parse(RawMap);
 
     for (const pkg in map?.imports) {
-      if (STD.includes(input[1])) {
-        const moduleName = input[1] + '/';
+      if (STD.includes(_arguments[1])) {
+        const moduleName = _arguments[1] + '/';
 
         if (moduleName === pkg) {
           const process = Deno.run({
             cmd: ["deno", "info", map.imports[pkg] + "mod.ts"]
           });
 
-          await process.status();
+          if (!(await process.status()).success) {
+            Somebybroken();
+          }
         }
       }
 
       else {
-        const moduleName = input[1];
+        const moduleName = _arguments[1];
 
         if (moduleName === pkg) {
           const process = Deno.run({
             cmd: ["deno", "info", map.imports[pkg]]
           });
 
-          await process.status();
+          if (!(await process.status()).success) {
+            Somebybroken();
+          }
         }
       }
     }
   }
 
-  else if (input[0] === flags.lock) {
-    await LockFile(...input);
+  else if (_arguments[0] === flags.lock) {
+    await LockFile(..._arguments);
   }
 
   else {

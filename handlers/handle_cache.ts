@@ -1,5 +1,6 @@
 import { needProxy, Proxy } from "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy.ts";
-import { green, red, yellow } from "https://deno.land/std/fmt/colors.ts";
+import { green, red } from "https://deno.land/std/fmt/colors.ts";
+import { ErrorInstalling } from "../utils/logs.ts";
 import { STD } from "../utils/info.ts";
 import db from "../utils/db.ts";
 
@@ -21,6 +22,10 @@ async function cached(typePkg: string, packageUrl: string) {
         needProxy(typePkg) ? Proxy(typePkg) : packageUrl + "mod.ts",
       ],
     });
+
+    if (!(await process.status()).success) {
+      ErrorInstalling();
+    }
   }
 
   // * install standar party package by defaul use mod.ts
@@ -37,7 +42,10 @@ async function cached(typePkg: string, packageUrl: string) {
       ],
     });
 
-    await process.status();
+    if (!(await process.status()).success) {
+      ErrorInstalling();
+    }
+
     console.log(green("\n Done. \n"));
   }
 
@@ -49,11 +57,7 @@ async function cached(typePkg: string, packageUrl: string) {
 
     // * if cannot download module, throw error message
     if (!(await process.status()).success) {
-      const logError = `${red("something be wrong\n")}${green(
-        "maybe this package not have mod.ts file, use custom install.\n"
-      )}${yellow("Trex --custom module=moduleUrl\n")}`;
-
-      throw new Error(logError).message;
+      ErrorInstalling();
     }
 
     console.log(green("\n Done. \n"));
