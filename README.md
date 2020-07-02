@@ -23,6 +23,8 @@
    </a>
 </p>
 
+![Use Trex](https://cdn.discordapp.com/attachments/727169454667989016/728363543614980116/ajio.gif)
+
 ### What is Trex?
 
 is a Package management for deno similar to npm but maintaining the deno philosophy. packages are cached and only one `import_map.json` file is generated.
