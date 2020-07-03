@@ -450,6 +450,9 @@ $ Trex --lock --importmap file.ts
 
 for more information this is the [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking)
 
+### Contributing
+contributions welcome, create a pull request and send us your feature.
+
 ### [LICENSE MIT](https://opensource.org/licenses/MIT)
 
 </br>
