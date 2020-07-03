@@ -1,6 +1,5 @@
-import { red, green, yellow } from "https://deno.land/std/fmt/colors.ts";
+import { offLine,  ErrorInstalling } from "../utils/logs.ts";
 import { NestResponse } from "../utils/types.ts";
-import { offLine } from "../utils/logs.ts";
 
 export async function nestPackageUrl(
   pkgName: string,
@@ -29,11 +28,7 @@ export async function cacheNestpackage(url: string): Promise<void> {
   });
 
   if (!(await process.status()).success) {
-    const logError = `${red("something be wrong\n")}${green(
-      "maybe this package not have mod.ts file, use custom install.\n"
-    )}${yellow("Trex --custom module=moduleUrl\n")}`;
-
-    throw new Error(logError).message;
+    ErrorInstalling();
   }
 }
 

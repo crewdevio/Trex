@@ -1,3 +1,4 @@
+import { needProxy, Proxy } from "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy.ts";
 import { installPackages, updatePackages, customPackage } from "./handlers/handle_packages.ts";
 import { green, yellow, white, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
@@ -162,8 +163,13 @@ async function mainCli() {
         const moduleName = _arguments[1] + '/';
 
         if (moduleName === pkg) {
+
+          const _pkg = needProxy(_arguments[1])
+            ? Proxy(_arguments[1])
+            : map.imports[pkg] + "mod.ts";
+
           const process = Deno.run({
-            cmd: ["deno", "info", map.imports[pkg] + "mod.ts"]
+            cmd: ["deno", "info", _pkg]
           });
 
           if (!(await process.status()).success) {
