@@ -123,6 +123,9 @@ $ Trex install --map fs http fmt
 
 `--map` installs packages from the standard library and those hosted at `deno.land/x`
 
+<details><summary>install package from nest.land or a repository (click me)</summary>
+<p>
+
 Install a package hosted on [nest.land](https://nest.land/gallery)
 
 ```sh
@@ -136,6 +139,8 @@ Install a package from some repository
 ```sh
 $ Trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
 ```
+</p>
+</details>
 
 example:
 
