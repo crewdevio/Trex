@@ -29,11 +29,7 @@ function existModule(user: string, module: string) {
   if (Deno.build.os === "windows") {
     // * for std modules
     if (STD.includes(haveVersion(module))) {
-      return existsSync(
-        `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/std${Version(
-          module
-        )}/${Name(module)}`
-      );
+      return undefined;
     }
 
     // * deno.land/x modules
@@ -47,11 +43,7 @@ function existModule(user: string, module: string) {
   else {
     // * for std modules
     if (STD.includes(haveVersion(module))) {
-      return existsSync(
-        `${user}/.cache/deno/gen/https/deno.land/std${Version(
-          module
-        )}/${Name(module)}`
-      );
+      return undefined;
     }
 
     // * deno.land/x modules
@@ -102,7 +94,7 @@ export function canDelete(module: string) {
   else {
     console.error(
       red(
-        "it was not removed from the cache because it is not a standard module or deno.land/x or it is not installed."
+        "it was not removed from the cache because it is a standard module or it's not from deno.land/x or it is not installed."
       )
     );
     return false;
