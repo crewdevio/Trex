@@ -15,7 +15,7 @@
     "url": "https://deno.land/x/velociraptor/cli.ts"
   },
   "yolk": {
-    "permissions": ["-A", "-f", "--unstable"],
+    "permissions": ["-A", "--unstable"],
     "url": "https://raw.githubusercontent.com/denjucks/yolk/master/yolk.js"
   },
   "fsCli": {
@@ -49,14 +49,13 @@
       "--allow-read",
       "--allow-write",
       "--allow-run",
-      "-f",
       "-n",
       "das"
     ],
     "url": "https://deno.land/x/deno_app_setuper/cli.ts"
   },
   "denoSearch": {
-    "permissions": ["-f", "--allow-net", "ds"],
+    "permissions": ["--allow-net", "ds"],
     "url": "https://deno.land/x/deno_search/main.ts"
   },
   "denon": {
@@ -65,17 +64,16 @@
       "--allow-run",
       "--allow-write",
       "--allow-net",
-      "-f",
       "--unstable"
     ],
     "url": "https://deno.land/x/denon@v2.2.0/denon.ts"
   },
   "denox": {
-    "permissions": ["-Af", "-n", "denox"],
+    "permissions": ["-A", "-n", "denox"],
     "url": "https://denopkg.com/BentoumiTech/denox/denox.ts"
   },
   "udd": {
-    "permissions": ["-A", "-f", "-n", "udd"],
+    "permissions": ["-A", "-n", "udd"],
     "url": "https://deno.land/x/udd@0.2.0/main.ts"
   },
   "pagic": {
@@ -103,7 +101,7 @@
     "url": "https://deno.land/x/clone@v1.0.3/clone.ts"
   },
   "eggs": {
-    "permissions": ["-A", "-f", "--unstable", "-n", "eggs"],
+    "permissions": ["-A", "--unstable", "-n", "eggs"],
     "url": "https://raw.githubusercontent.com/nestlandofficial/nest.land/master/eggs/mod.ts"
   }
 }
