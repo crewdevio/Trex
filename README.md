@@ -139,9 +139,6 @@ Install a package from some repository
 ```sh
 $ Trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
 ```
-</p>
-</details>
-
 example:
 
 ```sh
@@ -149,6 +146,9 @@ $ Trex install --pkg oakserver/oak/mod.ts oak
 ```
 
 this downloads oak directly from its repository
+
+</p>
+</details>
 
 an import_map.json file will be created with the following.
 
