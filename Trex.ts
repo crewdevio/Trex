@@ -1,13 +1,12 @@
-import { installPackages, exist_imports, customPackage } from "./handlers/handle_packages.ts";
+import { installPackages, exist_imports, customPackage} from "./handlers/handle_packages.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
 import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
+import { showImportDeps, packageTreeInfo } from "./tools/logs.ts"
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
-import { needProxy, Proxy } from "./deps.ts";
-import { importMap } from "./utils/types.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
 import db from "./utils/db.ts";
@@ -121,71 +120,12 @@ async function mainCli() {
   }
 
   else if (_arguments[0] === flags.deps) {
-    const process = Deno.run({
-      cmd: [
-        "deno",
-        "run",
-        "--allow-read",
-        "--allow-net",
-        "--unstable",
-        "https://deno.land/x/trex/tools/CheckUpdatesDeps/main.ts",
-        "-f",
-        "import_map.json",
-      ],
-
-      stdout: "piped",
-    });
-    const decoder = new TextDecoder("utf-8");
-
-    const out = await process.output();
-    console.log(decoder.decode(out));
+    showImportDeps()
   }
 
   else if (_arguments[0] === keyWords.tree) {
+    packageTreeInfo(..._arguments)
 
-    try {
-
-    const map: importMap = JSON.parse(getImportMap());
-
-    for (const pkg in map?.imports) {
-      if (STD.includes(_arguments[1])) {
-        const moduleName = _arguments[1] + '/';
-
-        if (moduleName === pkg) {
-
-          const _pkg = needProxy(_arguments[1])
-            ? Proxy(_arguments[1])
-            : map.imports[pkg] + "mod.ts";
-
-          const process = Deno.run({
-            cmd: ["deno", "info", _pkg]
-          });
-
-          if (!(await process.status()).success) {
-            Somebybroken();
-          }
-        }
-      }
-
-      else {
-        const moduleName = _arguments[1];
-
-        if (moduleName === pkg) {
-          const process = Deno.run({
-            cmd: ["deno", "info", map.imports[pkg]]
-          });
-
-          if (!(await process.status()).success) {
-            Somebybroken();
-          }
-        }
-      }
-    }
-   }
-
-    catch (_) {
-      throw new Error(_).message;
-    }
   }
 
   else if (_arguments[0] === flags.lock) {

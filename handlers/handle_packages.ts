@@ -1,6 +1,6 @@
 import { nestPackageUrl, cacheNestpackage, pkgRepo } from "./handle_third_party_package.ts";
 import { yellow, red, green } from "https://deno.land/std/fmt/colors.ts";
-import { checkPackage, createPackage } from "./handle_files.ts";
+import { getImportMap, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { importMap, objectGen } from "../utils/types.ts";
@@ -167,7 +167,7 @@ export async function installPackages(args: string[]) {
   // * take the packages from the import map file and install them.
   else {
     try {
-      const importmap: importMap = JSON.parse(checkPackage());
+      const importmap: importMap = JSON.parse(getImportMap());
 
       for (const pkg in importmap.imports) {
         const md = importmap.imports[pkg];
@@ -236,7 +236,7 @@ export async function customPackage(...args: string[]) {
   // * if import_map exists update it
   if (existsSync("./import_map.json")) {
     try {
-      const data = JSON.parse(checkPackage());
+      const data = JSON.parse(getImportMap());
       const oldPackage = exist_imports(data);
 
       await createPackage({ ...custom, ...oldPackage }, true);
