@@ -1,12 +1,12 @@
-import { needProxy, Proxy } from "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy.ts";
-import { installPackages, updatePackages, customPackage } from "./handlers/handle_packages.ts";
-import { green, yellow, white, red, cyan } from "https://deno.land/std/fmt/colors.ts";
+import { installPackages, exist_imports, customPackage } from "./handlers/handle_packages.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
+import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
-import { checkPackage, createPackage } from "./handlers/handle_files.ts";
+import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
+import { needProxy, Proxy } from "./deps.ts";
 import { importMap } from "./utils/types.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
@@ -20,21 +20,11 @@ async function mainCli() {
     if (existsSync("./import_map.json")) {
 
       try {
-        const data = JSON.parse(checkPackage());
-        const oldPackage = updatePackages(data) as {
-          error?: string;
-          were?: string;
-        };
+        const data = JSON.parse(getImportMap());
+        const oldPackage = exist_imports(data);
         const newPackage = await installPackages(_arguments);
 
-        if (oldPackage?.error) {
-          console.error(yellow(`in: ${white(`${oldPackage.were}`)}`));
-          console.error(yellow(`error: ${white(`${oldPackage.error}`)}`));
-        }
-
-        else {
-          await createPackage({ ...oldPackage, ...newPackage }, true);
-        }
+        await createPackage({ ...oldPackage, ...newPackage }, true);
       }
 
       catch (_) {
@@ -65,7 +55,7 @@ async function mainCli() {
     if (existsSync("./import_map.json")) {
 
       try {
-        const Packages = JSON.parse(checkPackage());
+        const Packages = JSON.parse(getImportMap());
 
         if (Packages?.imports) {
         delete Packages.imports[
@@ -78,7 +68,7 @@ async function mainCli() {
           DeleteCacheModule(pkg);
         }
 
-        const newPackage = updatePackages(Packages);
+        const newPackage = exist_imports(Packages);
 
         await createPackage(newPackage);
 
@@ -155,8 +145,7 @@ async function mainCli() {
 
     try {
 
-    const RawMap = checkPackage();
-    const map: importMap = JSON.parse(RawMap);
+    const map: importMap = JSON.parse(getImportMap());
 
     for (const pkg in map?.imports) {
       if (STD.includes(_arguments[1])) {
