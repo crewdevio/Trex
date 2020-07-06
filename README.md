@@ -21,6 +21,9 @@
    <a href="https://deno.land">
      <img src="https://img.shields.io/badge/deno-%5E1.0.0-green?logo=deno"/>
    </a>
+   <a href="https://nest.land/package/Trex">
+     <img src="https://nest.land/badge.svg" />
+   </a>
 </p>
 
 ![Use Trex](https://cdn.discordapp.com/attachments/727169454667989016/728363543614980116/ajio.gif)
@@ -55,10 +58,10 @@ For more information about the import maps in deno [import maps](https://deno.la
 
 ### installation:
 
-Download the repository and open the terminal in the folder of the repository and write:
+install from [nest.land](https://nest.land/) module registry:
 
 ```sh
-$  deno install -A --unstable Trex.ts
+$  deno install -A --unstable https://x.nest.land/Trex@1.0.0-rc1/Trex.ts
 ```
 
 > **note**: You should have the last version 1.0.0 >= of deno for no errors.
@@ -139,6 +142,7 @@ Install a package from some repository
 ```sh
 $ Trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
 ```
+
 </p>
 </details>
 
@@ -451,6 +455,7 @@ $ Trex --lock --importmap file.ts
 for more information this is the [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking)
 
 ### Contributing
+
 contributions welcome, create a pull request and send us your feature.
 
 ### [LICENSE MIT](https://opensource.org/licenses/MIT)

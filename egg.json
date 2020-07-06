@@ -1,0 +1,20 @@
+{
+  "name": "Trex",
+  "description": "Package Manager like npm for deno",
+  "version": "1.0.0-rc1",
+  "entry": "./Trex.ts",
+  "stable": true,
+  "unlisted": false,
+  "fmt": false,
+  "repository": "https://github.com/crewdevio/Trex",
+  "files": [
+    "./database.json",
+    "./handlers/**/*",
+    "./utils/**/*",
+    "./tools/**/*",
+    "./README.md",
+    "./Trex.ts",
+    "./deps.ts",
+    "./LINCESE"
+  ]
+}
