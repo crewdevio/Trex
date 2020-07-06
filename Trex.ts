@@ -1,10 +1,10 @@
 import { installPackages, exist_imports, customPackage} from "./handlers/handle_packages.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
 import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
-import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { showImportDeps, packageTreeInfo } from "./tools/logs.ts"
+import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import exec from "./tools/install_tools.ts";
@@ -13,7 +13,7 @@ import db from "./utils/db.ts";
 
 async function mainCli() {
   const _arguments = Deno.args;
-
+  // * install some packages
   if (_arguments[0] === keyWords.install || _arguments[0] === keyWords.i) {
 
     if (existsSync("./import_map.json")) {
@@ -35,7 +35,7 @@ async function mainCli() {
       await createPackage(await installPackages(_arguments), true);
     }
   }
-
+  // * display trex version
   else if (_arguments[0] === flags.version) {
     Version(VERSION.VERSION);
   }
@@ -43,11 +43,11 @@ async function mainCli() {
   else if (_arguments[0] === flags.help) {
     LogHelp(helpsInfo);
   }
-
+  // * install a custom package
   else if (_arguments[0] === flags.custom) {
     customPackage(..._arguments)
   }
-
+  // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
     const pkg: string = _arguments[1].trim();
 
@@ -75,14 +75,15 @@ async function mainCli() {
       }
 
       else {
-        console.error(red("not found imports key in import_map.json"));
-        return;
+        throw new Error(
+          red("not found imports key in import_map.json")
+            ).message;
       }
     }
       catch (_) {
         throw new Error(
           red("the import_map.json file does not have a valid format.")
-            ).message
+            ).message;
       }
     }
 
@@ -91,7 +92,7 @@ async function mainCli() {
       return;
     }
   }
-
+  // * install some tool like Commands
   else if (_arguments[0] === keyWords.tool) {
     const tool = _arguments[1].trim();
     if (Object.keys(dbTool).includes(tool)) {
@@ -103,35 +104,33 @@ async function mainCli() {
       );
       setTimeout(async () => {
         await exec({ config: dbTool[tool] });
-      }, 5000);
+      }, 3000);
     }
 
     else {
-      console.error(
-        red("Error: "),
-        yellow(tool),
-        " is not in the tools database"
-      );
+      throw new Error(
+        red(`${red("Error: ")}${yellow(tool)}is not in the tools database`)
+        ).message;
     }
   }
-
+  // * update to lastest version of trex
   else if (_arguments[0] === keyWords.update) {
     await updateTrex();
   }
-
+  // * shows the list of outdated packages
   else if (_arguments[0] === flags.deps) {
     showImportDeps()
   }
-
+  // * shows the dependency tree of a package
   else if (_arguments[0] === keyWords.tree) {
     packageTreeInfo(..._arguments)
 
   }
-
+  // * create lock file
   else if (_arguments[0] === flags.lock) {
     await LockFile(..._arguments);
   }
-
+  // * displays help information
   else {
     LogHelp(helpsInfo);
   }

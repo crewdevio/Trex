@@ -44,7 +44,7 @@ export const helpsInfo = [
 
   "   --version  Prints version information.\n",
 
-  "   --deps     show dependencies versions.\n",
+  "   --deps     shows the list of outdated packages.\n",
 
   "   --map      add package to import_map.json.\n",
 
