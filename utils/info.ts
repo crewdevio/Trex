@@ -55,7 +55,7 @@ export const helpsInfo = [
   "   --pkg      install package from some repository.\n",
 
   "SUBCOMMANDS:",
-  "   [install or i]  install some pacakege.\n",
+  "   [install or i]  install some package.\n",
 
   "   delete<@version>  delete a package from import_map.json and cache.\n",
 
