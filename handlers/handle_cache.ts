@@ -1,15 +1,24 @@
-import { needProxy, Proxy } from "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy.ts";
-import { green, red, yellow } from "https://deno.land/std/fmt/colors.ts";
+import { green, red } from "https://deno.land/std/fmt/colors.ts";
+import { ErrorInstalling } from "../utils/logs.ts";
+import { needProxy, Proxy } from "../deps.ts";
 import { STD } from "../utils/info.ts";
 import db from "../utils/db.ts";
 
-async function cached(typePkg: string, packageUrl: string) {
+
+/**
+ * caches packages.
+ * @param {string} pkgName - name the package.
+ * @param {string} pkgUrl - package url.
+ * @return void
+ */
+
+async function cached(pkgName: string, pkgUrl: string) {
   const ID = "Trex_Cache_Map";
   let process: Deno.Process;
 
   console.log(green("cache package... \n"));
 
-  if (STD.includes(typePkg) && db.includes(typePkg)) {
+  if (STD.includes(pkgName) && db.includes(pkgName)) {
     process = Deno.run({
       cmd: [
         "deno",
@@ -18,13 +27,17 @@ async function cached(typePkg: string, packageUrl: string) {
         "-n",
         ID,
         "--unstable",
-        needProxy(typePkg) ? Proxy(typePkg) : packageUrl + "mod.ts",
+        needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts",
       ],
     });
+
+    if (!(await process.status()).success) {
+      ErrorInstalling();
+    }
   }
 
   // * install standar party package by defaul use mod.ts
-  else if (STD.includes(typePkg)) {
+  else if (STD.includes(pkgName)) {
     process = Deno.run({
       cmd: [
         "deno",
@@ -33,35 +46,34 @@ async function cached(typePkg: string, packageUrl: string) {
         "-n",
         ID,
         "--unstable",
-        needProxy(typePkg) ? Proxy(typePkg) : packageUrl + "mod.ts",
+        needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts",
       ],
     });
 
-    await process.status();
+    if (!(await process.status()).success) {
+      ErrorInstalling();
+    }
+
     console.log(green("\n Done. \n"));
   }
 
   // * install third party package
-  else if (db.includes(typePkg)) {
+  else if (db.includes(pkgName)) {
     process = Deno.run({
-      cmd: ["deno", "install", "-f", "-n", ID, "--unstable", packageUrl],
+      cmd: ["deno", "install", "-f", "-n", ID, "--unstable", pkgUrl],
     });
 
-    // * if cannot download module, throw error message
+    // * if cannot download package, throw error message
     if (!(await process.status()).success) {
-      const logError = `${red("something be wrong\n")}${green(
-        "maybe this package not have mod.ts file, use custom install.\n"
-      )}${yellow("Trex --custom module=moduleUrl\n")}`;
-
-      throw new Error(logError).message;
+      ErrorInstalling();
     }
 
     console.log(green("\n Done. \n"));
   }
 
   // * log error if package is not found
-  else if (!STD.includes(typePkg) && !db.includes(typePkg)) {
-    console.error(red("package not found"));
+  else if (!STD.includes(pkgName) && !db.includes(pkgName)) {
+    console.error(red("package not found."));
     return;
   }
 }

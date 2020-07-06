@@ -2,6 +2,7 @@ import { DeleteCacheModule, canDelete, getPath } from "../handlers/handle_delete
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import { delay } from "https://deno.land/std/async/delay.ts";
+import { showImportDeps, packageTreeInfo } from "../tools/logs.ts";
 
 // * Install Package from denoland
 Deno.test({
@@ -40,6 +41,32 @@ Deno.test({
     const response = await customPackage(
       ...["--custom", "React=https://dev.jspm.io/react/index.js"]
     );
+    assertEquals(response, true);
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+//* Trex --deps test
+Deno.test({
+  name: "Show deps of the import maps #1",
+
+  fn: async () => {
+    await delay(1000);
+    const response = await showImportDeps() ;
+    assertEquals(response, true);
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+
+Deno.test({
+  name: "Trex treeDeps test #1",
+
+  fn: async () => {
+    await delay(1000);
+    const response = await packageTreeInfo(...["treeDeps", "oak"]) ;
     assertEquals(response, true);
   },
   sanitizeResources: false,

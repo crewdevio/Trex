@@ -1,5 +1,11 @@
 import { red, green } from "https://deno.land/std/fmt/colors.ts";
 
+/**
+ * generate a lock file.
+ * @param {string[]} string[] - input file to generate the lock file
+ * @return {boolean} - State of the process.
+ */
+
 export async function LockFile(...args: string[]) {
   const [_, importmap, file] = args;
 
@@ -20,5 +26,5 @@ export async function LockFile(...args: string[]) {
   }
 
   console.log("|- ", green("lock.json\ndone it."));
-  return (await process.status()).success
+  return (await process.status()).success;
 }

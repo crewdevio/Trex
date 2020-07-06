@@ -2,7 +2,12 @@ import { green, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { writeJson } from "https://deno.land/std/fs/mod.ts";
 import { objectGen } from "../utils/types.ts";
 
-export function checkPackage() {
+/**
+ * takes the import map file and returns its information.
+ * @return {string} string.
+ */
+
+export function getImportMap() {
   const decoder = new TextDecoder("utf-8");
 
   // * get data from import_map and return data
@@ -11,30 +16,44 @@ export function checkPackage() {
   return decoder.decode(Package);
 }
 
-// * Sprt the import_map.json alphabetical
-function sortedPackage(obj: any) {
-  return Object.keys(obj)
+/**
+ * sort the packages in the import map file in alphabetical order.
+ * @param {object} map - object that contains all the packages.
+ * @return {object} the ordered object.
+ */
+
+function sortedPackage(map: any) {
+  return Object.keys(map)
     .sort()
     .reduce((result: objectGen, key) => {
-      result[key] = obj[key];
+      result[key] = map[key];
       return result;
     }, {});
 }
-export async function createPackage(template: Object, log?: Boolean) {
+
+/**
+ * if the import map file does not exist create it and add the packages.
+ * @param {object} map - the object with all the packages.
+ * @param {boolean} log - parameter to display a message after installation.
+ * @return void
+ */
+
+export async function createPackage(map: Object, log?: Boolean) {
+
   // * create import_map.json
   await Deno.createSync("./import_map.json");
-  // * write import config inside import_map.json
 
+  // * write import config inside import_map.json
   await writeJson(
     "./import_map.json",
-    { imports: sortedPackage(template) },
+    { imports: sortedPackage(map) },
     { spaces: 2 }
   );
 
   if (log) {
     // * log packages list
     console.group("Packages list: ");
-    for (const pkg in template) {
+    for (const pkg in map) {
       console.log("|- ", cyan(pkg));
     }
     console.groupEnd();

@@ -1,6 +1,12 @@
-import { red, green, yellow } from "https://deno.land/std/fmt/colors.ts";
+import { offLine,  ErrorInstalling } from "../utils/logs.ts";
 import { NestResponse } from "../utils/types.ts";
-import { offLine } from "../utils/logs.ts";
+
+/**
+ * connects to the nest.land api and returns a url for package installation.
+ * @param {string} pkgName - package name.
+ * @param {string} version - specific version of the package.
+ * @return {string} package url.
+ */
 
 export async function nestPackageUrl(
   pkgName: string,
@@ -23,22 +29,31 @@ export async function nestPackageUrl(
   return data.prefix + data.entry;
 }
 
+/**
+ * download all dependencies and install packages from nest.land.
+ * @param {string} url - the url of the package to install.
+ * @return {void} void
+ */
+
 export async function cacheNestpackage(url: string): Promise<void> {
   const process = Deno.run({
     cmd: ["deno", "install", "-f", "-n", "Trex_Cache_Map", "--unstable", url],
   });
 
   if (!(await process.status()).success) {
-    const logError = `${red("something be wrong\n")}${green(
-      "maybe this package not have mod.ts file, use custom install.\n"
-    )}${yellow("Trex --custom module=moduleUrl\n")}`;
-
-    throw new Error(logError).message;
+    ErrorInstalling();
   }
 }
 
-export function pkgRepo(url: string, pkgName: string | undefined) {
-  const [user, repo, ...path] = url.split("/");
+/**
+ * generates the url for packages that are installed from a repository.
+ * @param {string} repoInfo - repository information { user/repo/path_file }
+ * @param {string} pkgName - the name of the package to be saved in the import map file, by default use repository name.
+ * @return {string} url package.
+ */
+
+export function pkgRepo(repoInfo: string, pkgName: string | undefined) {
+  const [user, repo, ...path] = repoInfo.split("/");
 
   return [
     pkgName ? pkgName : repo,
