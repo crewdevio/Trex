@@ -23,6 +23,8 @@
    </a>
 </p>
 
+![Use Trex](https://cdn.discordapp.com/attachments/727169454667989016/728363543614980116/ajio.gif)
+
 ### What is Trex?
 
 is a Package management for deno similar to npm but maintaining the deno philosophy. packages are cached and only one `import_map.json` file is generated.
@@ -121,6 +123,9 @@ $ Trex install --map fs http fmt
 
 `--map` installs packages from the standard library and those hosted at `deno.land/x`
 
+<details><summary>install package from nest.land or a repository (click me)</summary>
+<p>
+
 Install a package hosted on [nest.land](https://nest.land/gallery)
 
 ```sh
@@ -134,7 +139,6 @@ Install a package from some repository
 ```sh
 $ Trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
 ```
-
 example:
 
 ```sh
@@ -142,6 +146,9 @@ $ Trex install --pkg oakserver/oak/mod.ts oak
 ```
 
 this downloads oak directly from its repository
+
+</p>
+</details>
 
 an import_map.json file will be created with the following.
 
@@ -442,6 +449,9 @@ $ Trex --lock --importmap file.ts
 ```
 
 for more information this is the [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking)
+
+### Contributing
+contributions welcome, create a pull request and send us your feature.
 
 ### [LICENSE MIT](https://opensource.org/licenses/MIT)
 
