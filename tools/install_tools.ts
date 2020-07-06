@@ -1,4 +1,5 @@
 import { Params } from "../utils/types.ts";
+import { Somebybroken } from "../utils/logs.ts";
 
 function installTools(args: string[]) {
   return Deno.run({ cmd: ["deno", ...args], stdout: "piped" });
@@ -21,7 +22,11 @@ export default async function exec(param: Params): Promise<boolean> {
 
   const out = await app.output();
   console.log(decoder.decode(out));
-  const response = (await app.status()).success
-  return response
+  const response = (await app.status()).success;
 
+  if (!response) {
+    Somebybroken();
+  }
+
+  return response;
 }

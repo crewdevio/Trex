@@ -1,45 +1,33 @@
-import { installPackages, updatePackages, customPackage } from "./handlers/handle_packages.ts";
-import { green, yellow, white, red, cyan } from "https://deno.land/std/fmt/colors.ts";
+import { installPackages, exist_imports, customPackage} from "./handlers/handle_packages.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
-import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
+import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
-import { checkPackage, createPackage } from "./handlers/handle_files.ts";
+import { getImportMap, createPackage } from "./handlers/handle_files.ts";
+import { showImportDeps, packageTreeInfo } from "./tools/logs.ts"
+import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
-import { importMap } from "./utils/types.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
 import db from "./utils/db.ts";
 
 async function mainCli() {
   const _arguments = Deno.args;
-
+  // * install some packages
   if (_arguments[0] === keyWords.install || _arguments[0] === keyWords.i) {
 
     if (existsSync("./import_map.json")) {
 
       try {
-        const data = JSON.parse(checkPackage());
-        const oldPackage = updatePackages(data) as {
-          error?: string;
-          were?: string;
-        };
+        const data = JSON.parse(getImportMap());
+        const oldPackage = exist_imports(data);
         const newPackage = await installPackages(_arguments);
 
-        if (oldPackage?.error) {
-          console.error(yellow(`in: ${white(`${oldPackage.were}`)}`));
-          console.error(yellow(`error: ${white(`${oldPackage.error}`)}`));
-        }
-
-        else {
-          await createPackage({ ...oldPackage, ...newPackage }, true);
-        }
+        await createPackage({ ...oldPackage, ...newPackage }, true);
       }
 
       catch (_) {
-        throw new Error(
-          red("the import_map.json file does not have a valid format.")
-            ).message
+        throw new Error(_).message;
       }
     }
 
@@ -47,7 +35,7 @@ async function mainCli() {
       await createPackage(await installPackages(_arguments), true);
     }
   }
-
+  // * display trex version
   else if (_arguments[0] === flags.version) {
     Version(VERSION.VERSION);
   }
@@ -55,18 +43,18 @@ async function mainCli() {
   else if (_arguments[0] === flags.help) {
     LogHelp(helpsInfo);
   }
-
+  // * install a custom package
   else if (_arguments[0] === flags.custom) {
     customPackage(..._arguments)
   }
-
+  // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
     const pkg: string = _arguments[1].trim();
 
     if (existsSync("./import_map.json")) {
 
       try {
-        const Packages = JSON.parse(checkPackage());
+        const Packages = JSON.parse(getImportMap());
 
         if (Packages?.imports) {
         delete Packages.imports[
@@ -79,7 +67,7 @@ async function mainCli() {
           DeleteCacheModule(pkg);
         }
 
-        const newPackage = updatePackages(Packages);
+        const newPackage = exist_imports(Packages);
 
         await createPackage(newPackage);
 
@@ -87,14 +75,15 @@ async function mainCli() {
       }
 
       else {
-        console.error(red("not found imports key in import_map.json"));
-        return;
+        throw new Error(
+          red("not found imports key in import_map.json")
+            ).message;
       }
     }
       catch (_) {
         throw new Error(
           red("the import_map.json file does not have a valid format.")
-            ).message
+            ).message;
       }
     }
 
@@ -103,7 +92,7 @@ async function mainCli() {
       return;
     }
   }
-
+  // * install some tool like Commands
   else if (_arguments[0] === keyWords.tool) {
     const tool = _arguments[1].trim();
     if (Object.keys(dbTool).includes(tool)) {
@@ -115,84 +104,33 @@ async function mainCli() {
       );
       setTimeout(async () => {
         await exec({ config: dbTool[tool] });
-      }, 5000);
+      }, 3000);
     }
 
     else {
-      console.error(
-        red("Error: "),
-        yellow(tool),
-        " is not in the tools database"
-      );
+      throw new Error(
+        red(`${red("Error: ")}${yellow(tool)}is not in the tools database`)
+        ).message;
     }
   }
-
+  // * update to lastest version of trex
   else if (_arguments[0] === keyWords.update) {
     await updateTrex();
   }
-
+  // * shows the list of outdated packages
   else if (_arguments[0] === flags.deps) {
-    const process = Deno.run({
-      cmd: [
-        "deno",
-        "run",
-        "--allow-read",
-        "--allow-net",
-        "--unstable",
-        "https://deno.land/x/trex/tools/CheckUpdatesDeps/main.ts",
-        "-f",
-        "import_map.json",
-      ],
-
-      stdout: "piped",
-    });
-    const decoder = new TextDecoder("utf-8");
-
-    const out = await process.output();
-    console.log(decoder.decode(out));
+    showImportDeps()
   }
-
+  // * shows the dependency tree of a package
   else if (_arguments[0] === keyWords.tree) {
+    packageTreeInfo(..._arguments)
 
-    const RawMap = checkPackage();
-
-    const map: importMap = JSON.parse(RawMap);
-
-    for (const pkg in map?.imports) {
-      if (STD.includes(_arguments[1])) {
-        const moduleName = _arguments[1] + '/';
-
-        if (moduleName === pkg) {
-          const process = Deno.run({
-            cmd: ["deno", "info", map.imports[pkg] + "mod.ts"]
-          });
-
-          if (!(await process.status()).success) {
-            Somebybroken();
-          }
-        }
-      }
-
-      else {
-        const moduleName = _arguments[1];
-
-        if (moduleName === pkg) {
-          const process = Deno.run({
-            cmd: ["deno", "info", map.imports[pkg]]
-          });
-
-          if (!(await process.status()).success) {
-            Somebybroken();
-          }
-        }
-      }
-    }
   }
-
+  // * create lock file
   else if (_arguments[0] === flags.lock) {
     await LockFile(..._arguments);
   }
-
+  // * displays help information
   else {
     LogHelp(helpsInfo);
   }

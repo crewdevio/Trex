@@ -1,33 +1,41 @@
-import { nestPackageUrl, cacheNestpackage, pkgRepo } from './handle_third_party_package.ts';
+import { nestPackageUrl, cacheNestpackage, pkgRepo } from "./handle_third_party_package.ts";
 import { yellow, red, green } from "https://deno.land/std/fmt/colors.ts";
-import { checkPackage, createPackage } from "./handle_files.ts";
+import { getImportMap, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { importMap, objectGen } from "../utils/types.ts";
-import { Somebybroken } from '../utils/logs.ts';
+import { Somebybroken } from "../utils/logs.ts";
 import cache from "./handle_cache.ts";
 import db from "../utils/db.ts";
 
-export function updatePackages(Package: importMap) {
-  if (Package?.imports) {
+
+/**
+ * verify that the imports key exists in the import map file.
+ * @param {object} map - the import map json object.
+ * @returns {object} return object
+ */
+
+export function exist_imports(map: importMap) {
+  if (map?.imports) {
     // * if exist in import_map the key import return all modules
-    return Package.imports;
-  } else {
-    // * else return error obj
-    return {
-      error: "imports not found",
-      were: "import_map.json",
-    };
+    return map.imports;
   }
+
+  throw new Error(
+    red("the import map.json file does not have the imports key")
+    ).message;
 }
 
 /**
- * * get pkg name to create uri
+ * * create url for std/ or x/ packages depending on version or master branch.
+ * @param {string} pkgName - package name.
+ * @return {string} url for the package.
  */
 
 function detectVersion(pkgName: string): string {
   let uri: string = "";
 
+  // * url for packages with a specific version
   if (pkgName.includes("@")) {
     const ModuleRelease = pkgName.split("@");
 
@@ -60,10 +68,12 @@ function detectVersion(pkgName: string): string {
 
     else if (!STD.includes(pkgName) && !db.includes(pkgName)) {
       throw new Error(
-        `\n${red("=>")} ${yellow(pkgName)} not is a third party modules\n${
-          green("install using custom install")
-        }\n`
-        ).message;
+        `\n${red("=>")} ${yellow(
+          pkgName
+        )} not is a third party modules\n${green(
+          "install using custom install"
+        )}\n`
+      ).message;
     }
   }
 
@@ -71,11 +81,15 @@ function detectVersion(pkgName: string): string {
 }
 
 /**
- * * get pkg name and depure by type pkg
+ * get package name to add to import map file
+ * @param {string} pkg - package name.
+ * @return {string} package name.
  */
 
 function getNamePkg(pkg: string): string {
   let name: string = "";
+
+  // * name for packages with a specific version
   if (pkg.includes("@")) {
     const Facts = pkg.split("@");
 
@@ -110,6 +124,12 @@ function getNamePkg(pkg: string): string {
   return name;
 }
 
+/**
+ * Take the packages and cache them and generate the object for the import_map.json file.
+ * @param {string[]} args - list of packages to install.
+ * @returns {Promise} returns a promise of a { [ key: string ]: string }
+ */
+
 export async function installPackages(args: string[]) {
   // * package to push in import_map.json
   const map: objectGen = {};
@@ -119,52 +139,40 @@ export async function installPackages(args: string[]) {
   if (args[1] === flags.map) {
     for (let index = 2; index < args.length; index++) {
 
-      ////  test on linux and macOs
-        await cache(
-          args[index].split("@")[0],
-          detectVersion(args[index]),
-        );
-        map[getNamePkg(args[index])] = detectVersion(args[index]);
+      await cache(args[index].split("@")[0], detectVersion(args[index]));
+      map[getNamePkg(args[index])] = detectVersion(args[index]);
     }
-
   }
 
-  // * integration on nest.land
+  // * install packages hosted on nest.land.
   else if (args[1] === flags.nest) {
     for (let index = 2; index < args.length; index++) {
 
-      //// test on linux and macOs
-        const [name, version] = args[index].split("@");
-        const packageList = { name, version, url: await  nestPackageUrl(name, version)};
+      const [name, version] = args[index].split("@");
+      const url = await nestPackageUrl(name, version)
 
-        await cacheNestpackage(packageList.url);
-        map[packageList.name.toLowerCase()] = packageList.url;
-
+      await cacheNestpackage(url);
+      map[name.toLowerCase()] = url;
     }
   }
 
   // * install from repo using denopkg.com
   else if (args[1] === flags.pkg) {
-
     const [name, url] = pkgRepo(args[2], args[3]);
     await cacheNestpackage(url);
 
     map[name] = url;
   }
 
-  // * install all package in import_map.josn
+  // * take the packages from the import map file and install them.
   else {
-
     try {
-      const importmap: importMap = JSON.parse(checkPackage());
+      const importmap: importMap = JSON.parse(getImportMap());
 
-      //// add nest.land package install scape.
       for (const pkg in importmap.imports) {
-
         const md = importmap.imports[pkg];
 
         if (md.includes("deno.land")) {
-
           const mod = pkg.split("/").join("");
           await cache(mod, detectVersion(mod));
 
@@ -177,7 +185,6 @@ export async function installPackages(args: string[]) {
           map[pkg] = importmap.imports[pkg];
         }
       }
-
     }
 
     catch (_) {
@@ -188,11 +195,18 @@ export async function installPackages(args: string[]) {
   // * show installation time
   const afterTime = Date.now();
   console.log(
-    'time to installation:',
-    ((afterTime - beforeTime) / 1000).toString() + "s");
+    "time to installation:",
+    ((afterTime - beforeTime) / 1000).toString() + "s"
+  );
 
   return map;
 }
+
+/**
+ * install and cached custom packages
+ * @param {string[]} args - get the custom package.
+ * @returns {boolean} return installation state
+ */
 
 export async function customPackage(...args: string[]) {
   const data = args[1].includes("=")
@@ -205,36 +219,39 @@ export async function customPackage(...args: string[]) {
   // * cache custom module
   const cache = Deno.run({
     cmd: [
-          "deno",
-          "install",
-          "-f",
-          "-n",
-          "Trex_Cache_Map",
-          "--unstable",
-          data[1]
-        ],
+      "deno",
+      "install",
+      "-f",
+      "-n",
+      "Trex_Cache_Map",
+      "--unstable",
+      data[1],
+    ],
   });
 
-  if (!(await cache.status()).success){
+  if (!(await cache.status()).success) {
     Somebybroken();
   }
 
   // * if import_map exists update it
   if (existsSync("./import_map.json")) {
     try {
-      const data = JSON.parse(checkPackage());
-      const oldPackage = updatePackages(data);
+      const data = JSON.parse(getImportMap());
+      const oldPackage = exist_imports(data);
 
       await createPackage({ ...custom, ...oldPackage }, true);
     }
 
-    catch(_) {
-      console.error(red("the import_map.json file does not have a valid format."))
+    catch (_) {
+      console.error(
+        red("the import_map.json file does not have a valid format.")
+      );
     }
+  }
 
-  } else {
+  else {
     // * else create package
     await createPackage(custom, true);
   }
-  return (await cache.status()).success
+  return (await cache.status()).success;
 }

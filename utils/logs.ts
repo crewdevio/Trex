@@ -23,12 +23,12 @@ export async function updateTrex(): Promise<void> {
     setTimeout(async () => {
       await exec({
         config: {
-          permissions: ["-f", "-A", "--unstable"],
+          permissions: ["-A", "--unstable"],
           url: "https://deno.land/x/trex/Trex.ts",
         },
       });
       console.log(repoVersion.VERSION);
-    }, 5000);
+    }, 1000);
   } else {
     console.log(cyan("Trex is already update"));
   }
@@ -38,8 +38,8 @@ export function offLine() {
   throw new Error(red("you are not online, check your connection.")).message;
 }
 
-export function Somebybroken() {
-  throw new Error(red("some process is broken.")).message;
+export function Somebybroken(message: string = "some process is broken.") {
+  throw new Error(red(message)).message;
 }
 
 export function ErrorInstalling() {

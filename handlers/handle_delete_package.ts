@@ -4,117 +4,162 @@ import { STD } from "../utils/info.ts";
 
 const { env, removeSync, build } = Deno;
 
-export function haveVersion(module: string) {
+/**
+ * if a package has a version it returns only the name.
+ * @param {string} pkgName - package name.
+ * @return {string} package name.
+ */
 
-  if (module.includes("@")) {
-    return module.split("@")[0];
+export function haveVersion(pkgName: string) {
+  const [name, _] = pkgName.split("@");
+  if (pkgName.includes("@")) {
+    return name;
   }
 
   else {
-    return module;
+    return pkgName;
   }
 }
 
-// * return std version
-function Version(module: string) {
-  return module.includes("@") ? "@" + module.split("@")[1] : "";
+/**
+ * return the package along with its version.
+ * @param {string} pkgName - package name.
+ * @return {string} package name with the version.
+ */
+
+function Version(pkgName: string) {
+
+  const [_, version] = pkgName.split("@");
+
+  return pkgName.includes("@") ? "@" + version : "";
 }
 
-// * return module name only
-function Name(module: string) {
-  return module.includes("@") ? module.split("@")[0] : module;
+
+/**
+ * return module name only.
+ * @param {string} pkgName - package name.
+ * @return {string} package name.
+ */
+
+function Name(pkgName: string) {
+
+  const [name, _] = pkgName.split("@");
+
+  return pkgName.includes("@") ? name : pkgName;
 }
 
-function existModule(user: string, module: string) {
+/**
+ * verify that the package exists in the cache.
+ * @param {string} home - operating system type name.
+ * @param {string} pkgName - package name.
+ * @return {boolean} boolean
+ */
+
+function existModule(home: string, pkgName: string) {
   if (Deno.build.os === "windows") {
     // * for std modules
-    if (STD.includes(haveVersion(module))) {
-      return existsSync(
-        `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/std${Version(
-          module
-        )}/${Name(module)}`
-      );
+    if (STD.includes(haveVersion(pkgName))) {
+      return undefined;
     }
 
     // * deno.land/x modules
     else {
       return existsSync(
-        `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/x/${module}`
+        `C:/Users/${home}/AppData/Local/deno/gen/https/deno.land/x/${pkgName}`
       );
     }
   }
 
   else {
     // * for std modules
-    if (STD.includes(haveVersion(module))) {
-      return existsSync(
-        `${user}/.cache/deno/gen/https/deno.land/std${Version(
-          module
-        )}/${Name(module)}`
-      );
+    if (STD.includes(haveVersion(pkgName))) {
+      return undefined;
     }
 
     // * deno.land/x modules
     else {
-      return existsSync(`${user}/.cache/deno/gen/https/deno.land/x/${module}`);
+      return existsSync(`${home}/.cache/deno/gen/https/deno.land/x/${pkgName}`);
     }
   }
 }
-// * return module path to delete
-export function getPath(user: string, module: string) {
+
+/**
+ * returns the package path to remove it.
+ * @param {string} home - operating system type name.
+ * @param {string} pkgName - package name.
+ * @return {string} package path.
+ */
+
+
+export function getPath(home: string, pkgName: string) {
+
+  // * for windows based
   if (Deno.build.os === "windows") {
 
-    if (STD.includes(haveVersion(module))) {
-      return `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/std${Version(
-        module
-      )}/${Name(module)}`;
+    if (STD.includes(haveVersion(pkgName))) {
+      return `C:/Users/${home}/AppData/Local/deno/gen/https/deno.land/std${Version(
+        pkgName
+      )}/${Name(pkgName)}`;
     }
 
     else {
-      return `C:/Users/${user}/AppData/Local/deno/gen/https/deno.land/x/${module}`;
+      return `C:/Users/${home}/AppData/Local/deno/gen/https/deno.land/x/${pkgName}`;
     }
   }
 
+  // * for unix based
   else {
 
-    if (STD.includes(haveVersion(module))) {
-      return `${user}/.cache/deno/gen/https/deno.land/std${Version(
-        module
-      )}/${Name(module)}`;
+    if (STD.includes(haveVersion(pkgName))) {
+      return `${home}/.cache/deno/gen/https/deno.land/std${Version(
+        pkgName
+      )}/${Name(pkgName)}`;
     }
 
     else {
-      return `${user}/.cache/deno/gen/https/deno.land/x/${module}`;
+      return `${home}/.cache/deno/gen/https/deno.land/x/${pkgName}`;
     }
   }
 }
-// * if can delete return module path dir
-export function canDelete(module: string) {
+
+/**
+ * check if a package can be removed from cache and return the package path.
+ * @param {string} pkgName - package name.
+ * @returns {string} package path or false.
+ */
+
+export function canDelete(pkgName: string) {
   const user = (build.os === "windows"
     ? env.get("USERNAME")
     : env.get("HOME")) as string;
 
-  if (existModule(user, module)) {
+  if (existModule(user, pkgName)) {
 
-    return getPath(user, module);
+    return getPath(user, pkgName);
   }
 
   else {
     console.error(
       red(
-        "it was not removed from the cache because it is not a standard module or deno.land/x or it is not installed."
+        "it was not removed from the cache because it is a standard module or it's not from deno.land/x or it is not installed."
       )
     );
     return false;
   }
 }
 
-export function DeleteCacheModule(module: string) {
+/**
+ * remove a package from the cache.
+ * @param {string} pkgName - package name.
+ * @returns {void} void.
+ */
+
+export function DeleteCacheModule(pkgName: string) {
   try {
-    if (canDelete(module)) {
-      const path = canDelete(module) as string;
+    if (canDelete(pkgName)) {
+      const path = canDelete(pkgName) as string;
       removeSync(path, { recursive: true });
-      console.log(green(yellow(module + ":") + " deleted from cache."));
+      console.log(green(yellow(pkgName + ":") + " deleted from cache."));
     }
   }
   catch (error) {
