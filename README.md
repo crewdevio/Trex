@@ -459,7 +459,7 @@ for more information this is the [deno document](https://deno.land/manual/linkin
 
 ### Contributing
 
-contributions welcome, create a pull request and send us your feature.
+contributions are welcome, create a pull request and send us your feature, first check the [CONTRIBUTING GUIDELINES](CONTRIBUTING.md).
 
 ### [LICENSE MIT](https://opensource.org/licenses/MIT)
 
