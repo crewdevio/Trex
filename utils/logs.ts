@@ -19,7 +19,7 @@ export async function updateTrex(): Promise<void> {
   ); // * get the plain text
   const repoVersion = (await response.json()) as { VERSION: string };
 
-  if (repoVersion.VERSION !== VERSION.VERSION) {
+  if (repoVersion.VERSION !== "") {
     setTimeout(async () => {
       await exec({
         config: {
@@ -35,7 +35,9 @@ export async function updateTrex(): Promise<void> {
 }
 
 export function offLine() {
-  throw new Error(red("you are not online, check your connection.")).message;
+  throw new Error(
+    red(
+      "something went wrong making the request, maybe you're offline, check your connection.")).message;
 }
 
 export function Somebybroken(message: string = "some process is broken.") {

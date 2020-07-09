@@ -163,6 +163,6 @@ export function DeleteCacheModule(pkgName: string) {
     }
   }
   catch (error) {
-    console.error(red(error));
+    throw new Error(red(error)).message;
   }
 }
