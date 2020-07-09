@@ -57,7 +57,7 @@ export async function packageTreeInfo(...args:string[]){
               });
 
               if (!(await process.status()).success) {
-                Somebybroken();
+                Somebybroken("package information could not be obtained");
               }
               return (await process.status()).success
             }
@@ -72,7 +72,7 @@ export async function packageTreeInfo(...args:string[]){
               });
 
               if (!(await process.status()).success) {
-                Somebybroken();
+                Somebybroken("package information could not be obtained");
               }
               return (await process.status()).success
             }
@@ -81,6 +81,7 @@ export async function packageTreeInfo(...args:string[]){
        }
 
         catch (_) {
-          throw new Error(_).message;
+          throw new Error(
+            "the import_map.json file does not have a valid format").message;
         }
 }

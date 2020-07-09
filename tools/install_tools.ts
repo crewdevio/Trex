@@ -25,7 +25,7 @@ export default async function exec(param: Params): Promise<boolean> {
   const response = (await app.status()).success;
 
   if (!response) {
-    Somebybroken();
+    Somebybroken("something went wrong in the installation");
   }
 
   return response;
