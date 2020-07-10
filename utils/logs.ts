@@ -19,7 +19,7 @@ export async function updateTrex(): Promise<void> {
   ); // * get the plain text
   const repoVersion = (await response.json()) as { VERSION: string };
 
-  if (repoVersion.VERSION !== "") {
+  if (repoVersion.VERSION !== VERSION.VERSION) {
     setTimeout(async () => {
       await exec({
         config: {
