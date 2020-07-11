@@ -103,5 +103,16 @@
   "eggs": {
     "permissions": ["-A", "--unstable", "-n", "eggs"],
     "url": "https://raw.githubusercontent.com/nestlandofficial/nest.land/master/eggs/mod.ts"
+  },
+
+  "mandarineCli": {
+    "permissions": [
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "-n",
+      "mandarine"
+    ],
+    "url": "https://deno.land/x/mandarinets/cli.ts"
   }
 }
