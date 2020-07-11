@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Crew Dev.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
 import { cyan, red, green, yellow } from "https://deno.land/std/fmt/colors.ts";
 import exec from "../tools/install_tools.ts";
 import { VERSION } from "./info.ts";

@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Crew Dev.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
 import { getImportMap } from "../handlers/handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import { importMap } from "../utils/types.ts";
