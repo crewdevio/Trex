@@ -35,7 +35,7 @@ async function mainCli() {
       }
 
       catch (_) {
-        throw new Error(red("the import_map.json file don't have a valid format")).message;
+        throw new Error(_).message;
       }
     }
 
