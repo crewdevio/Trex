@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Crew Dev.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
 import { green, yellow, red } from "https://deno.land/std/fmt/colors.ts";
 import { proxyPkg } from "https://deno.land/x/trex/utils/types.ts";
 
@@ -41,9 +49,17 @@ const modulesProxys: Array<proxyPkg> = [
 
 const modules = ["_util", "archive", "encoding", "fmt", "node", "testing", "wasi"];
 
+/**
+ * verify if a any module need a proxy url
+ */
+
 export function needProxy(pkg: string) {
   return modules.includes(pkg);
 }
+
+/**
+ * return package proxy url.
+ */
 
 export function Proxy(pkg: string): string {
   console.log(yellow("warning: "), red(pkg), green(" is using a proxy. \n"));

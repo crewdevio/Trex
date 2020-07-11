@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Crew Dev.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
 import * as base64url from "https://deno.land/std/encoding/base64url.ts";
 import * as base32 from "https://deno.land/std/encoding/base32.ts";
 import * as base64 from "https://deno.land/std/encoding/base64.ts";
