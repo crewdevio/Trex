@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Crew Dev.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
 import { cyan, red, green, yellow } from "https://deno.land/std/fmt/colors.ts";
 import exec from "../tools/install_tools.ts";
 import { VERSION } from "./info.ts";
@@ -35,7 +43,9 @@ export async function updateTrex(): Promise<void> {
 }
 
 export function offLine() {
-  throw new Error(red("you are not online, check your connection.")).message;
+  throw new Error(
+    red(
+      "something went wrong making the request, maybe you're offline, check your connection.")).message;
 }
 
 export function Somebybroken(message: string = "some process is broken.") {

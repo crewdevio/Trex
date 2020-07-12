@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Crew Dev.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
 import { Params } from "../utils/types.ts";
 import { Somebybroken } from "../utils/logs.ts";
 
@@ -25,7 +33,7 @@ export default async function exec(param: Params): Promise<boolean> {
   const response = (await app.status()).success;
 
   if (!response) {
-    Somebybroken();
+    Somebybroken("something went wrong in the installation");
   }
 
   return response;

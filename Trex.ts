@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Crew Dev.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
 import { installPackages, exist_imports, customPackage} from "./handlers/handle_packages.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
 import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
