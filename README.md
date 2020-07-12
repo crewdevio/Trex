@@ -61,7 +61,7 @@ For more information about the import maps in deno [import maps](https://deno.la
 install from [nest.land](https://nest.land/) module registry
 
 ```sh
-$  deno install -A --unstable https://x.nest.land/Trex@1.0.0-rc1/Trex.ts
+$  deno install -A --unstable https://x.nest.land/Trex@1.0.0-rc2/Trex.ts
 ```
 
 > **note**: You should have the last version 1.0.0 >= of deno for no errors.
