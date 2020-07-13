@@ -60,7 +60,7 @@ export async function createPackage(map: Object, log?: Boolean) {
 
   if (log) {
     // * log packages list
-    console.group("Packages list: ");
+    console.group("Package list: ");
     for (const pkg in map) {
       console.log("|- ", cyan(pkg));
     }
