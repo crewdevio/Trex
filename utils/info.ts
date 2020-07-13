@@ -41,19 +41,19 @@ export const STD = [
 export const VERSION = { VERSION: "v1.0.0-rc2" };
 
 export const helpsInfo = [
-  green("advance package management for deno to implement an import_map.json\n"),
+  green("advanced package management for deno, based on import_map.json\n"),
 
   green("USAGE:"),
   `   Trex ${yellow('[OPTIONS]')} ${yellow('[SUBCOMMAND]')}\n`,
 
   green("OPTIONS:"),
-  `   ${yellow('--help')}     Prints help information.\n`,
+  `   ${yellow('--help')}     print help information.\n`,
 
   `   ${yellow('--custom')}   install custom package.\n`,
 
-  `   ${yellow('--version')}  Prints version information.\n`,
+  `   ${yellow('--version')}  print version information.\n`,
 
-  `   ${yellow('--deps')}     shows the list of outdated packages.\n`,
+  `   ${yellow('--deps')}     show the list of outdated packages.\n`,
 
   `   ${yellow('--map')}      add package to import_map.json.\n`,
 
@@ -64,15 +64,15 @@ export const helpsInfo = [
   `   ${yellow('--pkg')}      install package from some repository.\n`,
 
   green("SUBCOMMANDS:"),
-  `   ${yellow('[install or i]')}  install some package.\n`,
+  `   ${yellow('[install or i]')}  install a package.\n`,
 
   `   ${yellow(`delete${red(' <@version>')}`)}  delete a package from import map and cache.\n`,
 
-  `   ${yellow('getTool')}  install some tool.\n`,
+  `   ${yellow('getTool')}  install a tool.\n`,
 
   `   ${yellow('update')}  update Trex.\n`,
 
-  `   ${yellow('treeDeps')}  view dependencie tree.\n`,
+  `   ${yellow('treeDeps')}  view dependency tree.\n`,
 ];
 
 export const flags = {

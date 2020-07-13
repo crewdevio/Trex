@@ -38,14 +38,14 @@ export async function updateTrex(): Promise<void> {
       console.log(repoVersion.VERSION);
     }, 1000);
   } else {
-    console.log(cyan("Trex is already update"));
+    console.log(cyan("Trex is already up to date"));
   }
 }
 
 export function offLine() {
   throw new Error(
     red(
-      "something went wrong making the request, maybe you're offline, check your connection.")).message;
+      "something went wrong when making the request, maybe you're offline, check your connection.")).message;
 }
 
 export function Somebybroken(message: string = "some process is broken.") {
@@ -53,8 +53,8 @@ export function Somebybroken(message: string = "some process is broken.") {
 }
 
 export function ErrorInstalling() {
-  const logError = `${red("something be wrong\n")}${green(
-    "maybe this package not have mod.ts file, use custom install.\n"
+  const logError = `${red("something went wrong\n")}${green(
+    "maybe this package is missing a mod.ts file, use custom install.\n"
   )}${yellow("Trex --custom module=moduleUrl\n")}`;
 
   throw new Error(logError).message;

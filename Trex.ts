@@ -84,7 +84,7 @@ async function mainCli() {
 
       else {
         throw new Error(
-          red("not found imports key in import_map.json")
+          red("'imports' key not found in import_map.json")
             ).message;
       }
     }
@@ -117,7 +117,7 @@ async function mainCli() {
 
     else {
       throw new Error(
-        red(`${red("Error: ")}${yellow(tool)}is not in the tools database`)
+        red(`${red("Error: ")}${yellow(tool)} not found in the tools database`)
         ).message;
     }
   }
