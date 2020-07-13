@@ -41,6 +41,7 @@ Report a bug by [opening a new issue](); it's that easy!
 
 - You can use the extension prettier with the default setting
 - All the imports should be in-line and a pyramide
+- For commits we now implement [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 ## License
 
