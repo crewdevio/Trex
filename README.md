@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="http://clipart-library.com/image_gallery/3119.png" width="350">
-  <p align="center">Package management for deno</p>
+  <p align="center">Package management for deno (pronounced "tee rex") </p>
 </p>
 
 <p align="center">
