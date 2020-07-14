@@ -9,10 +9,10 @@
 import { installPackages, exist_imports, customPackage} from "./handlers/handle_packages.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
 import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
+import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { showImportDeps, packageTreeInfo } from "./tools/logs.ts"
-import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import exec from "./tools/install_tools.ts";
@@ -138,6 +138,26 @@ async function mainCli() {
   else if (_arguments[0] === flags.lock) {
     await LockFile(..._arguments);
   }
+
+  else if (_arguments[0] === keyWords.run){
+
+    const process = Deno.run({
+      cmd: [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-run",
+        "--unstable",
+        "https://deno.land/x/commands/Commands.ts",
+        _arguments[1]
+      ]
+    });
+
+    if (!(await process.status()).success) {
+      Somebybroken();
+    }
+  }
+
   // * displays help information
   else {
     LogHelp(helpsInfo);
