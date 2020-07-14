@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-16.04
     strategy:
       matrix:
-        deno: [1.0.1, 1.0.2, 1.0.3, 1.0.4]
+        deno: [1.2.0]
     name: Deno Trex cli test
     steps:
       - uses: actions/checkout@master
@@ -26,6 +26,6 @@ jobs:
       - run: deno install --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts
       - run: deno run --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts update
       - run: deno run --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts --version
-      - run: deno run --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts install --map fs http@0.54.0 oak ws
+      - run: deno run --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts install --map fs http@0.61.0 oak ws
       - run: deno run --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts --deps
       - run: deno run --allow-read --allow-write --allow-net --allow-run --unstable https://deno.land/x/trex/Trex.ts getTool dpx
