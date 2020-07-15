@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to Trex 🐱‍🐉</h1>
+<h1 align="center">Trex 🦕</h1>
 
 <p align="center">
   <img src="http://clipart-library.com/image_gallery/3119.png" width="350">
