@@ -231,7 +231,7 @@ export async function customPackage(...args: string[]) {
       "install",
       "-f",
       "-n",
-      "Trex_Cache_Map",
+      "trex_Cache_Map",
       "--unstable",
       data[1],
     ],

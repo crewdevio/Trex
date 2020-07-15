@@ -21,7 +21,7 @@ import db from "../utils/db.ts";
  */
 
 async function cached(pkgName: string, pkgUrl: string) {
-  const ID = "Trex_Cache_Map";
+  const ID = "trex_Cache_Map";
   let process: Deno.Process;
 
   console.log(green("cache package... \n"));

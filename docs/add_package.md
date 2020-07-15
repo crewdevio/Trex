@@ -9,11 +9,11 @@ You can make your package available to download from trex by hosting them at:
 ### From `deno.land/std and deno.land/x`:
 
 ```sh
-$ Trex install --map [packageName]
+$ trex install --map [packageName]
 ```
 
 ```sh
-$ Trex install --map [packageName]@[version]
+$ trex install --map [packageName]@[version]
 ```
 
 With this command you can install packages from the standard deno library and those hosted at `deno.land/x`
@@ -21,7 +21,7 @@ With this command you can install packages from the standard deno library and th
 ### From `nest.land`:
 
 ```sh
-$ Trex install --nest [packageName]@[version]
+$ trex install --nest [packageName]@[version]
 ```
 
 this will download package from nest.land
@@ -29,13 +29,13 @@ this will download package from nest.land
 ### From your own repository:
 
 ```sh
-$ Trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
+$ trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
 ```
 
 example:
 
 ```sh
-$ Trex install --pkg oakserver/oak/mod.ts oak
+$ trex install --pkg oakserver/oak/mod.ts oak
 ```
 
 this downloads oak directly from its repository

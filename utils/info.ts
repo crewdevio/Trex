@@ -38,13 +38,13 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.0.0-rc2" };
+export const VERSION = { VERSION: "v1.1.0" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
 
   green("USAGE:"),
-  `   Trex ${yellow('[OPTIONS]')} ${yellow('[SUBCOMMAND]')}\n`,
+  `   trex ${yellow('[OPTIONS]')} ${yellow('[SUBCOMMAND]')}\n`,
 
   green("OPTIONS:"),
   `   ${yellow('--help')}     print help information.\n`,
@@ -66,13 +66,14 @@ export const helpsInfo = [
   green("SUBCOMMANDS:"),
   `   ${yellow('[install or i]')}  install a package.\n`,
 
-  `   ${yellow(`delete${red(' <@version>')}`)}  delete a package from import map and cache.\n`,
+  `   ${yellow(`delete${red('<@version>')}`)}  delete a package from import map and cache.\n`,
 
-  `   ${yellow('getTool')}  install a tool.\n`,
+  `   ${yellow('getTool')}   install a tool.\n`,
 
-  `   ${yellow('update')}  update Trex.\n`,
+  `   ${yellow('update')}    update Trex.\n`,
 
-  `   ${yellow('treeDeps')}  view dependency tree.\n`,
+  `   ${yellow('treeDeps')}  view dependency tree.\n`
+
 ];
 
 export const flags = {
@@ -93,4 +94,5 @@ export const keyWords = {
   tool: "getTool",
   update: "update",
   tree: "treeDeps",
+  run: "run"
 };

@@ -18,3 +18,4 @@ in the [proxy folder](https://github.com/crewdevio/Trex/tree/proxy) are the brid
 - fmt
 - node
 - testing
+- wasi

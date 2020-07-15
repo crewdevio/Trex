@@ -45,7 +45,7 @@ export async function nestPackageUrl(
 
 export async function cacheNestpackage(url: string): Promise<void> {
   const process = Deno.run({
-    cmd: ["deno", "install", "-f", "-n", "Trex_Cache_Map", "--unstable", url],
+    cmd: ["deno", "install", "-f", "-n", "trex_Cache_Map", "--unstable", url],
   });
 
   if (!(await process.status()).success) {
