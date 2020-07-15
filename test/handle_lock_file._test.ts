@@ -6,7 +6,7 @@ Deno.test({
   name: "Lock File Trex.ts",
 
   fn: async () => {
-    const input = ["--unstable", "--lock", "Trex.ts"];
+    const input = ["--unstable", "--lock", "cli.ts"];
     await delay(1000);
     const response = await LockFile(...input);
     assertEquals(response, true);
