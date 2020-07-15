@@ -44,7 +44,7 @@ export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
 
   green("USAGE:"),
-  `   Trex ${yellow('[OPTIONS]')} ${yellow('[SUBCOMMAND]')}\n`,
+  `   trex ${yellow('[OPTIONS]')} ${yellow('[SUBCOMMAND]')}\n`,
 
   green("OPTIONS:"),
   `   ${yellow('--help')}     print help information.\n`,
@@ -72,9 +72,8 @@ export const helpsInfo = [
 
   `   ${yellow('update')}    update Trex.\n`,
 
-  `   ${yellow('treeDeps')}  view dependency tree.\n`,
+  `   ${yellow('treeDeps')}  view dependency tree.\n`
 
-  `   ${yellow('run')}       run commands shortcuts.\n`
 ];
 
 export const flags = {

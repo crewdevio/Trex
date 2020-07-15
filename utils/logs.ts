@@ -31,14 +31,14 @@ export async function updateTrex(): Promise<void> {
     setTimeout(async () => {
       await exec({
         config: {
-          permissions: ["-A", "--unstable"],
-          url: "https://deno.land/x/trex/Trex.ts",
+          permissions: ["-A", "--unstable", "-n", "trex"],
+          url: "https://deno.land/x/trex/cli.ts",
         },
       });
       console.log(repoVersion.VERSION);
     }, 1000);
   } else {
-    console.log(cyan("Trex is already up to date"));
+    console.log(cyan("trex is already up to date"));
   }
 }
 
@@ -55,7 +55,7 @@ export function Somebybroken(message: string = "some process is broken.") {
 export function ErrorInstalling() {
   const logError = `${red("something went wrong\n")}${green(
     "maybe this package is missing a mod.ts file, use custom install.\n"
-  )}${yellow("Trex --custom module=moduleUrl\n")}`;
+  )}${yellow("trex --custom module=moduleUrl\n")}`;
 
   throw new Error(logError).message;
 }

@@ -61,7 +61,7 @@ For more information about the import maps in deno [import maps](https://deno.la
 install from [nest.land](https://nest.land/) module registry
 
 ```sh
-$  deno install -A --unstable https://x.nest.land/Trex@1.0.0-rc2/Trex.ts
+$  deno install -A --unstable -n trex https://x.nest.land/Trex@1.1.0/cli.ts
 ```
 
 > **note**: You should have the last version 1.0.0 >= of deno for no errors.
@@ -69,7 +69,7 @@ $  deno install -A --unstable https://x.nest.land/Trex@1.0.0-rc2/Trex.ts
 or in your terminal you can write
 
 ```sh
-$  deno install -A --unstable https://deno.land/x/trex/Trex.ts
+$  deno install -A --unstable -n trex https://deno.land/x/trex/cli.ts
 ```
 
 **we shorten the install command so it's not that long**
@@ -87,13 +87,13 @@ you can give those permissions explicitly
 ### update Trex using
 
 ```sh
-$  deno install -f -A --unstable https://deno.land/x/trex/Trex.ts
+$  deno install -f -A --unstable -n trex https://deno.land/x/trex/cli.ts
 ```
 
 **or use:**
 
 ```sh
-$ Trex update
+$ trex update
 ```
 
 for versions 0.2.0 or higher.
@@ -101,7 +101,7 @@ for versions 0.2.0 or higher.
 check for the installation of the Trex tool writing in the terminal:
 
 ```sh
-$  Trex --version
+$  trex --version
 ```
 
 and the console should presente the Trex version.
@@ -109,7 +109,7 @@ and the console should presente the Trex version.
 for any help of the commands of Trex write:
 
 ```sh
-$  Trex --help
+$  trex --help
 ```
 
 for a better implementation of this tool you can use the tool Commands of deno [Commands](https://deno.land/x/commands)
@@ -119,10 +119,10 @@ for a better implementation of this tool you can use the tool Commands of deno [
 in your command line write:
 
 ```sh
-$ Trex install --map fs http fmt
+$ trex install --map fs http fmt
 ```
 
-> **note**: you can use **Trex i --map fs http fmt**
+> **note**: you can use **trex i --map fs http fmt**
 
 `--map` installs packages from the standard library and those hosted at `deno.land/x`
 
@@ -132,7 +132,7 @@ $ Trex install --map fs http fmt
 Install a package hosted on [nest.land](https://nest.land/gallery)
 
 ```sh
-$ Trex install --nest opine@0.13.0
+$ trex install --nest opine@0.13.0
 ```
 
 > **note**: if you install a package using nest.land you must specify the version, example: `$ Trex i --nest opine@0.13.0`
@@ -140,7 +140,7 @@ $ Trex install --nest opine@0.13.0
 Install a package from some repository
 
 ```sh
-$ Trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
+$ trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
 ```
 
 </p>
@@ -149,7 +149,7 @@ $ Trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
 example:
 
 ```sh
-$ Trex install --pkg oakserver/oak/mod.ts oak
+$ trex install --pkg oakserver/oak/mod.ts oak
 ```
 
 this downloads oak directly from its repository
@@ -199,7 +199,7 @@ $ deno run --allow-net --importmap=import_map.json --unstable server.ts
 example using [oak](https://deno.land/x/oak)
 
 ```sh
-$ Trex i --map oak
+$ trex i --map oak
 ```
 
 in import_map.json
@@ -241,7 +241,7 @@ $ deno run --allow-net --importmap=import_map.json --unstable server.ts
 ### download packages from an `import_map.json` file.
 
 ```sh
-$ Trex install
+$ trex install
 ```
 
 this downloads all the packages listed in the `import_map.json` similar to `npm install`
@@ -251,7 +251,7 @@ this downloads all the packages listed in the `import_map.json` similar to `npm 
 in your command line write:
 
 ```sh
-$ Trex --custom React=https://dev.jspm.io/react/index.js
+$ trex --custom React=https://dev.jspm.io/react/index.js
 ```
 
 in import_map.json
@@ -275,7 +275,7 @@ in import_map.json
 in your command line write:
 
 ```sh
-$ Trex getTool Commands
+$ trex getTool Commands
 ```
 
 this will install the tool
@@ -287,13 +287,13 @@ this will install the tool
 in your command line write:
 
 ```sh
-$ Trex delete React
+$ trex delete React
 ```
 
 to remove a specific version from the cache and import_map.json, it only works with standard packages and those installed from `deno.land/x`
 
 ```sh
-$ Trex delete fs@0.52.0
+$ trex delete fs@0.52.0
 ```
 
 in import_map.json
@@ -318,7 +318,7 @@ write the name of the package more **@\<Version\>**
 example:
 
 ```sh
-$ Trex install --map fs@0.54.0
+$ trex install --map fs@0.54.0
 ```
 
 in import_map.json
@@ -336,7 +336,7 @@ in import_map.json
 ### check the versions of dependencies using
 
 ```sh
-$ Trex --deps
+$ trex --deps
 ```
 
 you should see something like that on the console.
@@ -361,7 +361,7 @@ thanks to [Fzwael](https://github.com/Fzwael) this functionality is based on you
 ### see pacakge dependency tree.
 
 ```sh
-$ Trex treeDeps fs
+$ trex treeDeps fs
 ```
 
 you should see this in the terminal
@@ -444,7 +444,7 @@ info from [deno page](https://deno.land/manual/linking_to_external_code/integrit
 **use:**
 
 ```sh
-$ Trex --lock file.ts
+$ trex --lock file.ts
 ```
 
 this generates a `lock.json` file.
@@ -452,7 +452,7 @@ this generates a `lock.json` file.
 if in input file you use `import_map.json` you can specify it.
 
 ```sh
-$ Trex --lock --importmap file.ts
+$ trex --lock --importmap file.ts
 ```
 
 for more information this is the [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking)
