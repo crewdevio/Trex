@@ -14,8 +14,8 @@ if you get this error after installing a module.
 
 run your project to cache all dependencies.
 
-> **note**: when installing a module using ( Trex install --map someModule )
-> or ( Trex --custom someModule=someModule.com/someModule.ts ) this is automatically cached
+> **note**: when installing a module using ( trex install --map someModule )
+> or ( trex --custom someModule=someModule.com/someModule.ts ) this is automatically cached
 
 ## Setup [Atom](https://atom.io/)
 

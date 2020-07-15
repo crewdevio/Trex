@@ -4,6 +4,7 @@ if you want your tool to be available to install from trex just add it to [datab
 
 it must have the following scheme:
 
+> **note**: no need to add `-f` or `--force`
 ```json
 // database.json
 {
