@@ -469,7 +469,7 @@ contributions are welcome, create a pull request and send us your feature, first
     <h3 align="center">Trex is powered by</h3>
     <p align="center">
        <a href="https://nest.land/">
-	  <img src="https://raw.githubusercontent.com/nestlandofficial/nest.land/master/web/public/favicon.png" width="85" height="85">
+	  <img src="https://raw.githubusercontent.com/nestdotland/nest.land/master/public/favicon.png" width="85" height="85">
        </a>
        <a href="https://deno.land/">
 	  <img src="https://raw.githubusercontent.com/denoland/deno_website2/master/public/logo.svg" width="85" height="85">
