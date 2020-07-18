@@ -30,6 +30,7 @@ export async function LockFile(...args: string[]) {
   });
 
   if (!(await process.status()).success) {
+    process.close();
     throw Error(red("Error: creating lock.json file")).message;
   }
 

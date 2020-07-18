@@ -12,7 +12,6 @@ import { needProxy, Proxy } from "../deps.ts";
 import { STD } from "../utils/info.ts";
 import db from "../utils/db.ts";
 
-
 /**
  * caches packages.
  * @param {string} pkgName - name the package.
@@ -40,6 +39,7 @@ async function cached(pkgName: string, pkgUrl: string) {
     });
 
     if (!(await process.status()).success) {
+      process.close();
       ErrorInstalling();
     }
   }
@@ -59,6 +59,7 @@ async function cached(pkgName: string, pkgUrl: string) {
     });
 
     if (!(await process.status()).success) {
+      process.close();
       ErrorInstalling();
     }
 
@@ -73,6 +74,7 @@ async function cached(pkgName: string, pkgUrl: string) {
 
     // * if cannot download package, throw error message
     if (!(await process.status()).success) {
+      process.close();
       ErrorInstalling();
     }
 

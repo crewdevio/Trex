@@ -238,6 +238,7 @@ export async function customPackage(...args: string[]) {
   });
 
   if (!(await cache.status()).success) {
+    cache.close();
     Somebybroken();
   }
 

@@ -154,6 +154,7 @@ async function mainCli() {
     });
 
     if (!(await process.status()).success) {
+      process.close();
       Somebybroken();
     }
   }

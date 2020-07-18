@@ -49,6 +49,7 @@ export async function cacheNestpackage(url: string): Promise<void> {
   });
 
   if (!(await process.status()).success) {
+    process.close();
     ErrorInstalling();
   }
 }
