@@ -13,7 +13,7 @@ function installTools(args: string[]) {
   return Deno.run({ cmd: ["deno", ...args], stdout: "piped" });
 }
 
-/*
+/**
  * install script from database.json
  */
 
