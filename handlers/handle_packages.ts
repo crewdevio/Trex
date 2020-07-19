@@ -35,7 +35,7 @@ export function exist_imports(map: importMap) {
 }
 
 /**
- * * create url for std/ or x/ packages depending on version or master branch.
+ * create url for std/ or x/ packages depending on version or master branch.
  * @param {string} pkgName - package name.
  * @return {string} url for the package.
  */

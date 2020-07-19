@@ -6,7 +6,7 @@
  *
  */
 
-import { installPackages, exist_imports, customPackage} from "./handlers/handle_packages.ts";
+import { installPackages, exist_imports, customPackage } from "./handlers/handle_packages.ts";
 import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
 import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";

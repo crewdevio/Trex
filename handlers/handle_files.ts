@@ -8,6 +8,7 @@
 
 import { green, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { writeJson } from "https://deno.land/std/fs/mod.ts";
+import { KillProcess } from "../tools/killProcess.ts";
 import { objectGen } from "../utils/types.ts";
 
 /**
@@ -66,5 +67,6 @@ export async function createPackage(map: Object, log?: Boolean) {
     }
     console.groupEnd();
     console.log(green("Happy Coding"));
+    KillProcess(Deno.resources());
   }
 }
