@@ -248,7 +248,7 @@ export async function customPackage(...args: string[]) {
       const data = JSON.parse(getImportMap());
       const oldPackage = exist_imports(data);
 
-      await createPackage({ ...custom, ...oldPackage }, true);
+      createPackage({ ...custom, ...oldPackage }, true);
     }
 
     catch (_) {
@@ -260,7 +260,7 @@ export async function customPackage(...args: string[]) {
 
   else {
     // * else create package
-    await createPackage(custom, true);
+    createPackage(custom, true);
   }
   return (await cache.status()).success;
 }

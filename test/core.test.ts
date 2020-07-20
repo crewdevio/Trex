@@ -1,8 +1,11 @@
 import { DeleteCacheModule, canDelete, getPath } from "../handlers/handle_delete_package.ts";
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import { delay } from "https://deno.land/std/async/delay.ts";
 import { showImportDeps, packageTreeInfo } from "../tools/logs.ts";
+import { delay } from "https://deno.land/std/async/delay.ts";
+import { LockFile } from "../handlers/handle_lock_file.ts";
+import exec from "../tools/install_tools.ts";
+import dbTool from "../tools/database.ts";
 
 // * Install Package from denoland
 Deno.test({
@@ -46,6 +49,32 @@ Deno.test({
   sanitizeResources: false,
   sanitizeOps: false,
 });
+
+Deno.test({
+  name: "Lock File Trex.ts",
+
+  fn: async () => {
+    const input = ["--unstable", "--lock", "cli.ts"];
+    await delay(1000);
+    const response = await LockFile(...input);
+    assertEquals(response, true);
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Install Tool #1",
+
+  fn: async () => {
+    await delay(1000);
+    const response = await exec({ config: dbTool["dpm"] });
+    assertEquals(response, true);
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
 
 //* Trex --deps test
 Deno.test({
