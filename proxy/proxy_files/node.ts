@@ -11,6 +11,7 @@ import * as process from "https://deno.land/std/node/process.ts";
 import * as module from "https://deno.land/std/node/module.ts";
 import * as buffer from "https://deno.land/std/node/buffer.ts";
 import * as events from "https://deno.land/std/node/events.ts";
+import * as timers from "https://deno.land/std/node/timers.ts";
 import * as _util from "https://deno.land/std/node/_utils.ts";
 import * as util from "https://deno.land/std/node/util.ts";
 import * as path from "https://deno.land/std/node/path.ts";
@@ -24,6 +25,7 @@ export {
   module,
   buffer,
   events,
+  timers,
   util,
   path,
   url,

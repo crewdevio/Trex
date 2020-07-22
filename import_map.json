@@ -1,0 +1,9 @@
+{
+  "imports": {
+    "datetime/": "https://deno.land/std/datetime/",
+    "dinoenv": "https://deno.land/x/dinoenv/mod.ts",
+    "fs": "https://x.nest.land/std@0.61.0/fs/mod.ts",
+    "oak": "https://deno.land/x/oak/mod.ts",
+    "opine": "https://arweave.net/0DLwSxCEGUgDR0FpKaxhAm8RRMOaUZbcawoXxvHONAc/mod.ts"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "config": {
+    "start": "https://deno.land/std/examples/welcome.ts"
+  },
+  "files": ["server.ts"]
+}
