@@ -36,7 +36,12 @@ export async function showImportDeps(): Promise<boolean> {
 
   const out = await process.output();
   console.log(decoder.decode(out));
-  return (await process.status()).success;
+  const status = (await process.status()).success;
+  if (!status) {
+    process.close();
+    Somebybroken();
+  }
+  return status;
 }
 
 /**
@@ -63,6 +68,7 @@ export async function packageTreeInfo(...args: string[]) {
           });
 
           if (!(await process.status()).success) {
+            process.close();
             Somebybroken("package information could not be obtained");
           }
           return (await process.status()).success;
@@ -78,6 +84,7 @@ export async function packageTreeInfo(...args: string[]) {
           });
 
           if (!(await process.status()).success) {
+            process.close();
             Somebybroken("package information could not be obtained");
           }
           return (await process.status()).success;

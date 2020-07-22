@@ -61,7 +61,7 @@ For more information about the import maps in deno [import maps](https://deno.la
 install from [nest.land](https://nest.land/) module registry
 
 ```sh
-$  deno install -A --unstable -n trex https://x.nest.land/Trex@1.1.0/cli.ts
+$  deno install -A --unstable -n trex https://x.nest.land/Trex@1.1.1/cli.ts
 ```
 
 > **note**: You should have the last version 1.0.0 >= of deno for no errors.
@@ -137,14 +137,17 @@ $ trex install --nest opine@0.13.0
 
 > **note**: if you install a package using nest.land you must specify the version, example: `$ Trex i --nest opine@0.13.0`
 
+you can install packages from the standard deno library hosted in nest.land specifying the package and the version.
+
+```sh
+$ trex install --nest fs@0.61.0
+```
+
 Install a package from some repository
 
 ```sh
 $ trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
 ```
-
-</p>
-</details>
 
 example:
 
@@ -469,7 +472,7 @@ contributions are welcome, create a pull request and send us your feature, first
     <h3 align="center">Trex is powered by</h3>
     <p align="center">
        <a href="https://nest.land/">
-	  <img src="https://raw.githubusercontent.com/nestdotland/nest.land/master/public/favicon.png" width="85" height="85">
+	  <img src="https://cdn.discordapp.com/attachments/656976424778989602/735587312448176132/favicon_light.svg" width="85" height="85">
        </a>
        <a href="https://deno.land/">
 	  <img src="https://raw.githubusercontent.com/denoland/deno_website2/master/public/logo.svg" width="85" height="85">

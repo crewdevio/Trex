@@ -67,7 +67,7 @@ function existModule(home: string, pkgName: string) {
   if (Deno.build.os === "windows") {
     // * for std modules
     if (STD.includes(haveVersion(pkgName))) {
-      return undefined;
+      return false;
     }
 
     // * deno.land/x modules
@@ -81,7 +81,7 @@ function existModule(home: string, pkgName: string) {
   else {
     // * for std modules
     if (STD.includes(haveVersion(pkgName))) {
-      return undefined;
+      return false;
     }
 
     // * deno.land/x modules

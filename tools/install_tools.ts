@@ -13,7 +13,7 @@ function installTools(args: string[]) {
   return Deno.run({ cmd: ["deno", ...args], stdout: "piped" });
 }
 
-/*
+/**
  * install script from database.json
  */
 
@@ -33,6 +33,7 @@ export default async function exec(param: Params): Promise<boolean> {
   const response = (await app.status()).success;
 
   if (!response) {
+    app.close();
     Somebybroken("something went wrong in the installation");
   }
 

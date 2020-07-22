@@ -23,9 +23,4 @@ jobs:
         uses: denolib/setup-deno@master
         with:
           deno-version: ${{ matrix.deno }}
-      - run: deno install -f -A -n trex --unstable https://deno.land/x/trex/cli.ts
-      - run: deno run -A --unstable https://deno.land/x/trex/cli.ts update
-      - run: deno run -A --unstable https://deno.land/x/trex/cli.ts --version
-      - run: deno run -A --unstable https://deno.land/x/trex/cli.ts install --map fs http@0.61.0 oak ws
-      - run: deno run -A --unstable https://deno.land/x/trex/cli.ts --deps
-      - run: deno run -A --unstable https://deno.land/x/trex/cli.ts getTool dpx
+      - run: deno test -A --unstable
