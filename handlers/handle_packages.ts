@@ -148,7 +148,7 @@ export async function installPackages(args: string[]) {
     for (let index = 2; index < args.length; index++) {
 
       await cache(args[index].split("@")[0], detectVersion(args[index]));
-      map[getNamePkg(args[index])] = detectVersion(args[index]);
+      map[getNamePkg(args[index]).toLowerCase()] = detectVersion(args[index]);
     }
   }
 
@@ -157,7 +157,7 @@ export async function installPackages(args: string[]) {
     for (let index = 2; index < args.length; index++) {
 
       const [name, version] = args[index].split("@");
-      const url = await nestPackageUrl(name, version)
+      const url = await nestPackageUrl(name, version);
 
       await cacheNestpackage(url);
       map[name.toLowerCase()] = url;
@@ -169,7 +169,7 @@ export async function installPackages(args: string[]) {
     const [name, url] = pkgRepo(args[2], args[3]);
     await cacheNestpackage(url);
 
-    map[name] = url;
+    map[name.toLowerCase()] = url;
   }
 
   // * take the packages from the import map file and install them.
@@ -184,13 +184,13 @@ export async function installPackages(args: string[]) {
           const mod = pkg.split("/").join("");
           await cache(mod, detectVersion(mod));
 
-          map[getNamePkg(mod)] = detectVersion(mod);
+          map[getNamePkg(mod).toLowerCase()] = detectVersion(mod);
         }
 
         else {
           await cacheNestpackage(importmap.imports[pkg]);
 
-          map[pkg] = importmap.imports[pkg];
+          map[pkg.toLowerCase()] = importmap.imports[pkg];
         }
       }
     }
