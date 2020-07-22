@@ -6,7 +6,8 @@
  *
  */
 
+import * as property from "https://deno.land/std/_util/has_own_property.ts";
 import * as deep_assign from "https://deno.land/std/_util/deep_assign.ts";
 import * as assert from "https://deno.land/std/_util/assert.ts";
 
-export { assert, deep_assign };
+export { assert, deep_assign, property };
