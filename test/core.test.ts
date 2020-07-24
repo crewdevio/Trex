@@ -1,143 +1,138 @@
 import { DeleteCacheModule, canDelete, getPath } from "../handlers/handle_delete_package.ts";
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
-import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import { Merlin } from "https://denopkg.com/crewdevio/merlin/mod.ts" ;
 import { showImportDeps, packageTreeInfo } from "../tools/logs.ts";
 import { delay } from "https://deno.land/std/async/delay.ts";
 import { LockFile } from "../handlers/handle_lock_file.ts";
 import exec from "../tools/install_tools.ts";
 import dbTool from "../tools/database.ts";
 
-// * Install Package from denoland
-Deno.test({
-  name: "Install Package #1",
+const merlin = new Merlin();
 
-  fn: async () => {
-    await delay(1000);
-    const response = await installPackages(["i", "--map", "oak"]);
-    assertEquals(response, { oak: "https://deno.land/x/oak/mod.ts" });
+merlin.testEqual("install package from deno.land", {
+  async expect() {
+    const pkg = await installPackages(["i", "--map", "oak"]);
+
+    return pkg;
   },
-  sanitizeResources: false,
-  sanitizeOps: false,
+  toBe() {
+    return { oak: "https://deno.land/x/oak/mod.ts" };
+  },
+  Ops: false,
+  Resources: false,
 });
 
-// * install package from nest.land
-Deno.test({
-  name: "Install Package #2",
+merlin.testEqual("install package from nest.land", {
+  async expect() {
+    const pkg = await installPackages(["i", "--nest", "importql@0.1.0 "]);
 
-  fn: async () => {
-    await delay(1000);
-    const response = await installPackages(["i", "--nest", "importql@0.1.0 "]);
-    assertEquals(response, {
+    return pkg;
+  },
+  toBe() {
+    return {
       importql:
         "https://arweave.net/F8armYyxSykulJmJ3kx1KzLh40VDCzEa_OQjUnpnsqo/mod.ts",
-    });
+    };
   },
-  sanitizeResources: false,
-  sanitizeOps: false,
+  Ops: false,
+  Resources: false,
 });
 
-Deno.test({
-  name: "Install custom package #1",
-
-  fn: async () => {
-    await delay(1000);
-    const response = await customPackage(
+merlin.testEqual("install custom package", {
+  async expect() {
+    const data = await customPackage(
       ...["--custom", "React=https://dev.jspm.io/react/index.js"]
     );
-    assertEquals(response, true);
+
+    return data;
   },
-  sanitizeResources: false,
-  sanitizeOps: false,
+  toBe() {
+    return true;
+  },
+  Ops: false,
+  Resources: false,
 });
 
-Deno.test({
-  name: "Lock File Trex.ts",
-
-  fn: async () => {
-    const input = ["--unstable", "--lock", "cli.ts"];
+merlin.testEqual("install tool", {
+  async expect() {
     await delay(1000);
-    const response = await LockFile(...input);
-    assertEquals(response, true);
+    const data = await exec({
+      config: dbTool["dpm"],
+    });
+
+    return true;
   },
-  sanitizeResources: false,
-  sanitizeOps: false,
+  toBe() {
+    return true;
+  },
+  Ops: false,
+  Resources: false,
 });
 
-Deno.test({
-  name: "Install Tool #1",
-
-  fn: async () => {
-    await delay(1000);
-    const response = await exec({ config: dbTool["dpm"] });
-    assertEquals(response, true);
+merlin.testEqual("Lock File", {
+  async expect() {
+    return await LockFile(...["--unstable", "--lock", "cli.ts"]);
   },
-  sanitizeResources: false,
-  sanitizeOps: false,
+  toBe() {
+    return true;
+  },
+  Resources: false,
+  Ops: false,
 });
 
-
-//* Trex --deps test
-Deno.test({
-  name: "Show deps of the import maps #1",
-
-  fn: async () => {
-    await delay(1000);
-    const response = await showImportDeps() ;
-    assertEquals(response, true);
+merlin.testEqual("Show deps of the import maps", {
+  async expect() {
+    return await showImportDeps();
   },
-  sanitizeResources: false,
-  sanitizeOps: false,
+  toBe() {
+    return true;
+  },
+  Resources: false,
+  Ops: false,
 });
 
-
-Deno.test({
-  name: "Trex treeDeps test #1",
-
-  fn: async () => {
-    await delay(1000);
-    const response = await packageTreeInfo(...["treeDeps", "oak"]) ;
-    assertEquals(response, true);
+merlin.testEqual("Trex treeDeps test", {
+  async expect() {
+    return await packageTreeInfo(...["treeDeps", "oak"]);
   },
-  sanitizeResources: false,
-  sanitizeOps: false,
+  toBe() {
+    return undefined;
+  },
+  Ops: false,
+  Resources: false,
 });
 
-Deno.test({
-  name: "Can Delete Package #1",
-
-  fn: async () => {
+merlin.testEqual("Can Delete Package #1", {
+  async expect() {
+    return await canDelete("oak");
+  },
+  toBe() {
     const user = (Deno.build.os === "windows"
       ? Deno.env.get("USERNAME")
       : Deno.env.get("HOME")) as string;
 
-    await delay(1000);
-    const response = await canDelete("oak");
-    assertEquals(response, getPath(user, "oak"));
+    return getPath(user, "oak");
   },
-  sanitizeResources: false,
-  sanitizeOps: false,
 });
 
-Deno.test({
-  name: "Delete package #1",
-
-  fn: async () => {
-    await delay(1000);
-    const response = await DeleteCacheModule("oak");
-    assertEquals(response, undefined);
+merlin.testEqual("Delete package #1", {
+  async expect() {
+    return await DeleteCacheModule("oak");
   },
-  sanitizeResources: false,
-  sanitizeOps: false,
+  toBe() {
+    return undefined;
+  },
+  Ops: false,
+  Resources: false,
 });
 
-Deno.test({
-  name: "Delete package #2",
-
-  fn: async () => {
-    await delay(1000);
-    const response = await DeleteCacheModule("importql");
-    assertEquals(response, undefined);
+merlin.testEqual("Delete package #2", {
+  async expect() {
+    return await DeleteCacheModule("importql");
   },
-  sanitizeResources: false,
-  sanitizeOps: false,
+  toBe() {
+    return undefined;
+  },
+  Ops: false,
+  Resources: false,
 });
