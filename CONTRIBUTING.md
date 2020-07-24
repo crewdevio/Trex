@@ -15,7 +15,7 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 2. If you've added code that should be tested, add tests.
 3. If you've changed something important, update the documentation.
 4. Ensure the test passes
-5. Your pull request should go to the branch `beta-test`
+5. Your pull request should go to the branch `master
 6. Issue that pull request!
 
 ## Any contributions you make will be under the MIT Software License
