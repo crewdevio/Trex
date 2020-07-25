@@ -59,8 +59,7 @@ merlin.testEqual("install tool", {
     const data = await exec({
       config: dbTool["dpm"],
     });
-
-    return true;
+    return data;
   },
   toBe() {
     return true;
@@ -91,12 +90,9 @@ merlin.testEqual("Show deps of the import maps", {
   Ops: false,
 });
 
-merlin.testEqual("Trex treeDeps test", {
-  async expect() {
+merlin.isUndefined("Trex treeDeps test", {
+  async value() {
     return await packageTreeInfo(...["treeDeps", "oak"]);
-  },
-  toBe() {
-    return undefined;
   },
   Ops: false,
   Resources: false,
@@ -115,23 +111,17 @@ merlin.testEqual("Can Delete Package #1", {
   },
 });
 
-merlin.testEqual("Delete package #1", {
-  async expect() {
+merlin.isUndefined("Delete package #1", {
+  async value() {
     return await DeleteCacheModule("oak");
-  },
-  toBe() {
-    return undefined;
   },
   Ops: false,
   Resources: false,
 });
 
-merlin.testEqual("Delete package #2", {
-  async expect() {
+merlin.isUndefined("Delete package #2", {
+  async value() {
     return await DeleteCacheModule("importql");
-  },
-  toBe() {
-    return undefined;
   },
   Ops: false,
   Resources: false,
