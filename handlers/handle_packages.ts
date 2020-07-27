@@ -202,6 +202,7 @@ export async function installPackages(args: string[]) {
 
   // * show installation time
   const afterTime = Date.now();
+  console.clear();
   console.log(
     "time to installation:",
     ((afterTime - beforeTime) / 1000).toString() + "s"
