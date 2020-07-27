@@ -24,6 +24,9 @@
    <a href="https://nest.land/package/Trex">
      <img src="https://nest.land/badge.svg" />
    </a>
+   <a href="https://cdn.discordapp.com/attachments/727169454667989016/728363543614980116/ajio.gif">
+     <img src="http://hits.dwyl.com/crewdevio/Trex.svg" />
+   </a>
 </p>
 
 ![Use Trex](https://cdn.discordapp.com/attachments/727169454667989016/728363543614980116/ajio.gif)
