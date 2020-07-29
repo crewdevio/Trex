@@ -240,7 +240,7 @@ export async function customPackage(...args: string[]) {
 
   if (!(await cache.status()).success) {
     cache.close();
-    Somebybroken();
+    Somebybroken("this package is invalid or the url is invalid");
   }
 
   // * if import_map exists update it
