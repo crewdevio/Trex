@@ -112,6 +112,8 @@ async function mainCli() {
       );
       setTimeout(async () => {
         await exec({ config: dbTool[tool] });
+        console.clear();
+        console.log(`✅ Successfully installed ${tool}`);
       }, 3000);
     }
 
