@@ -10,8 +10,8 @@ import { red, green } from "https://deno.land/std/fmt/colors.ts";
 
 /**
  * generate a lock file.
- * @param {string[]} string[] - input file to generate the lock file
- * @return {boolean} - State of the process.
+ * @param {string[]} args - input file to generate the lock file
+ * @return {boolean} State of the process.
  */
 
 export async function LockFile(...args: string[]) {
