@@ -19,7 +19,7 @@
      <img alt="GitHub license" src="https://img.shields.io/github/license/crewdevio/Trex">
    </a>
    <a href="https://deno.land">
-     <img src="https://img.shields.io/badge/deno-%5E1.0.0-green?logo=deno"/>
+     <img src="https://img.shields.io/badge/deno-%5E1.2.0-green?logo=deno"/>
    </a>
    <a href="https://nest.land/package/Trex">
      <img src="https://nest.land/badge.svg" />

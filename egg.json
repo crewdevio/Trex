@@ -15,6 +15,6 @@
     "./README.md",
     "./Trex.ts",
     "./deps.ts",
-    "./LINCESE"
+    "./LICENSE"
   ]
 }

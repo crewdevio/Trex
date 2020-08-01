@@ -98,7 +98,6 @@ function existModule(home: string, pkgName: string) {
  * @return {string} package path.
  */
 
-
 export function getPath(home: string, pkgName: string) {
 
   // * for windows based
