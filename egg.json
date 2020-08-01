@@ -13,7 +13,7 @@
     "./utils/**/*",
     "./tools/**/*",
     "./README.md",
-    "./Trex.ts",
+    "./cli.ts",
     "./deps.ts",
     "./LICENSE"
   ]
