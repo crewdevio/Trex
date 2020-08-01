@@ -1,7 +1,7 @@
 {
   "name": "Trex",
   "description": "Package Manager like npm for deno",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "entry": "./cli.ts",
   "stable": true,
   "unlisted": false,
