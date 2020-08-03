@@ -14,7 +14,7 @@ import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { importMap, objectGen } from "../utils/types.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import cache from "./handle_cache.ts";
-import db from "../utils/db.ts";
+import { denoApidb } from "../utils/db.ts";
 
 
 /**
@@ -47,7 +47,7 @@ function detectVersion(pkgName: string): string {
   if (pkgName.includes("@")) {
     const ModuleRelease = pkgName.split("@");
 
-    if (STD.includes(ModuleRelease[0]) && db.includes(ModuleRelease[0])) {
+    if (STD.includes(ModuleRelease[0])) {
       uri = `${URI_STD}@${ModuleRelease[1]}/${ModuleRelease[0]}/`;
     }
 
@@ -55,14 +55,14 @@ function detectVersion(pkgName: string): string {
       uri = `${URI_STD}@${ModuleRelease[1]}/${ModuleRelease[0]}/`;
     }
 
-    else if (db.includes(ModuleRelease[0])) {
+    else if (true) {
       uri = `${URI_X + ModuleRelease[0]}@${ModuleRelease[1]}/mod.ts`;
     }
   }
 
   else {
 
-    if (STD.includes(pkgName) && db.includes(pkgName)) {
+    if (STD.includes(pkgName)) {
       uri = `${URI_STD}/${pkgName}/`;
     }
 
@@ -70,11 +70,11 @@ function detectVersion(pkgName: string): string {
       uri = `${URI_STD}/${pkgName}/`;
     }
 
-    else if (db.includes(pkgName)) {
+    else if (true) {
       uri = `${URI_X}${pkgName}/mod.ts`;
     }
 
-    else if (!STD.includes(pkgName) && !db.includes(pkgName)) {
+    else if (!STD.includes(pkgName)) {
       throw new Error(
         `\n${red("=>")} ${yellow(
           pkgName
@@ -94,14 +94,14 @@ function detectVersion(pkgName: string): string {
  * @return {string} package name.
  */
 
-function getNamePkg(pkg: string): string {
+async function getNamePkg(pkg: string): Promise<string> {
   let name: string = "";
 
   // * name for packages with a specific version
   if (pkg.includes("@")) {
     const Facts = pkg.split("@");
 
-    if (STD.includes(Facts[0]) && db.includes(Facts[0])) {
+    if (STD.includes(Facts[0]) && (await denoApidb(Facts[0])).length) {
       name = Facts[0] + "/";
     }
 
@@ -109,14 +109,14 @@ function getNamePkg(pkg: string): string {
       name = Facts[0] + "/";
     }
 
-    else if (db.includes(Facts[0])) {
+    else if ((await denoApidb(Facts[0])).length) {
       name = Facts[0];
     }
   }
 
   else {
 
-    if (STD.includes(pkg) && db.includes(pkg)) {
+    if (STD.includes(pkg) && (await denoApidb(pkg)).length) {
       name = pkg + "/";
     }
 
@@ -124,7 +124,7 @@ function getNamePkg(pkg: string): string {
       name = pkg + "/";
     }
 
-    else if (db.includes(pkg)) {
+    else if ((await denoApidb(pkg)).length) {
       name = pkg;
     }
   }
@@ -148,7 +148,7 @@ export async function installPackages(args: string[]) {
     for (let index = 2; index < args.length; index++) {
 
       await cache(args[index].split("@")[0], detectVersion(args[index]));
-      map[getNamePkg(args[index]).toLowerCase()] = detectVersion(args[index]);
+      map[(await getNamePkg(args[index])).toLowerCase()] = detectVersion(args[index]);
     }
   }
 
@@ -184,7 +184,7 @@ export async function installPackages(args: string[]) {
           const mod = pkg.split("/").join("");
           await cache(mod, detectVersion(mod));
 
-          map[getNamePkg(mod).toLowerCase()] = detectVersion(mod);
+          map[(await getNamePkg(mod)).toLowerCase()] = detectVersion(mod);
         }
 
         else {

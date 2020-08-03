@@ -6,13 +6,27 @@
  *
  */
 
-import { offLine } from './logs.ts';
+import { offLine } from "./logs.ts";
 
-// * get all thirt party
-const response = await fetch(
-  "https://raw.githubusercontent.com/denoland/deno_website2/master/database.json"
-  ).catch( (_) => offLine()) as Response;
+type pkgResponse = {
+  name: string;
+  description: string;
+  star_count: number;
+};
 
-const database = await response.json();
+export async function denoApidb(query: string) {
+  // * get all thirt party
+  const response = (await fetch(
+    `https://api.deno.land/modules?limit=100&query=${query}`
+  ).catch((_) => offLine())) as Response;
 
-export default Object.keys(database);
+  const database = await response.json();
+
+  if (database?.success) {
+    return database?.data?.results.filter(
+      ({ name }: pkgResponse) => name === query
+    ) as Array<pkgResponse>;
+  } else {
+    return [];
+  }
+}
