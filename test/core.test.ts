@@ -24,14 +24,14 @@ merlin.testEqual("install package from deno.land", {
 
 merlin.testEqual("install package from nest.land", {
   async expect() {
-    const pkg = await installPackages(["i", "--nest", "importql@0.1.0 "]);
+    const pkg = await installPackages(["i", "--nest", "denon@2.3.0 "]);
 
     return pkg;
   },
   toBe() {
     return {
-      importql:
-        "https://arweave.net/F8armYyxSykulJmJ3kx1KzLh40VDCzEa_OQjUnpnsqo/mod.ts",
+      denon:
+      "https://arweave.net/G5QiryC37Jpi6mgrtKgzjRJfWkypIiHxcWyRnKBlChk/mod.ts",
     };
   },
   Ops: false,
@@ -53,20 +53,20 @@ merlin.testEqual("install custom package", {
   Resources: false,
 });
 
-merlin.testEqual("install tool", {
-  async expect() {
-    await delay(1000);
-    const data = await exec({
-      config: dbTool["dpm"],
-    });
-    return data;
-  },
-  toBe() {
-    return true;
-  },
-  Ops: false,
-  Resources: false,
-});
+// merlin.testEqual("install tool", {
+//   async expect() {
+//     await delay(1000);
+//     const data = await exec({
+//       config: dbTool["dpm"],
+//     });
+//     return data;
+//   },
+//   toBe() {
+//     return true;
+//   },
+//   Ops: false,
+//   Resources: false,
+// });
 
 merlin.testEqual("Lock File", {
   async expect() {
@@ -109,6 +109,7 @@ merlin.testEqual("Can Delete Package #1", {
 
     return getPath(user, "oak");
   },
+  ignore: true
 });
 
 merlin.isUndefined("Delete package #1", {
@@ -121,7 +122,7 @@ merlin.isUndefined("Delete package #1", {
 
 merlin.isUndefined("Delete package #2", {
   async value() {
-    return await DeleteCacheModule("importql");
+    return await DeleteCacheModule("denon");
   },
   Ops: false,
   Resources: false,
