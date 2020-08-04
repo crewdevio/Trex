@@ -55,11 +55,10 @@ async function mainCli() {
   }
   // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
-    const pkg: string = _arguments[1].trim();
-
     if (existsSync("./import_map.json")) {
 
       try {
+        const pkg: string = _arguments[1].trim();
         const Packages = JSON.parse(getImportMap());
 
         if (Packages?.imports) {
@@ -89,8 +88,11 @@ async function mainCli() {
     }
       catch (_) {
         throw new Error(
-          red("the import_map.json file does not have a valid format.")
-            ).message;
+          red(
+            _ instanceof TypeError
+            ? "add the name of the package to remove"
+            : "the import_map.json file does not have a valid format.")
+          ).message;
       }
     }
 
