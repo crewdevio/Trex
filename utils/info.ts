@@ -66,8 +66,6 @@ export const helpsInfo = [
 
   `   ${yellow(`delete${red('<@version>')}`)}  delete a package from import map and cache.\n`,
 
-  `   ${yellow('getTool')}   install a tool.\n`,
-
   `   ${yellow('update')}    update Trex.\n`,
 
   `   ${yellow('treeDeps')}  view dependency tree.\n`
@@ -79,7 +77,6 @@ export const flags = {
   version: "--version",
   custom: "--custom",
   help: "--help",
-  deps: "--deps",
   lock: "--lock",
   nest: "--nest",
   pkg: "--pkg",
@@ -89,7 +86,6 @@ export const keyWords = {
   install: "install",
   i: "i",
   uninstall: "delete",
-  tool: "getTool",
   update: "update",
   tree: "treeDeps",
   run: "run"

@@ -12,11 +12,9 @@ import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
-import { showImportDeps, packageTreeInfo } from "./tools/logs.ts"
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
-import exec from "./tools/install_tools.ts";
-import dbTool from "./tools/database.ts";
+import { packageTreeInfo } from "./tools/logs.ts"
 import { denoApidb } from "./utils/db.ts";
 
 async function mainCli() {
@@ -101,36 +99,9 @@ async function mainCli() {
       return;
     }
   }
-  // * install some tool like Commands
-  else if (_arguments[0] === keyWords.tool) {
-    const tool = _arguments[1].trim();
-    if (Object.keys(dbTool).includes(tool)) {
-      console.log(
-        yellow("warning: "),
-        cyan(tool),
-        " have permissions: ",
-        dbTool[tool].permissions
-      );
-      setTimeout(async () => {
-        await exec({ config: dbTool[tool] });
-        console.clear();
-        console.log(`✅ Successfully installed ${tool}`);
-      }, 3000);
-    }
-
-    else {
-      throw new Error(
-        red(`${red("Error: ")}${yellow(tool)} not found in the tools database`)
-        ).message;
-    }
-  }
   // * update to lastest version of trex
   else if (_arguments[0] === keyWords.update) {
     await updateTrex();
-  }
-  // * shows the list of outdated packages
-  else if (_arguments[0] === flags.deps) {
-    showImportDeps()
   }
   // * shows the dependency tree of a package
   else if (_arguments[0] === keyWords.tree) {
