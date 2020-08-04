@@ -2,10 +2,7 @@ import { DeleteCacheModule, canDelete, getPath } from "../handlers/handle_delete
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
 import { Merlin } from "https://denopkg.com/crewdevio/merlin/mod.ts" ;
 import { showImportDeps, packageTreeInfo } from "../tools/logs.ts";
-import { delay } from "https://deno.land/std/async/delay.ts";
 import { LockFile } from "../handlers/handle_lock_file.ts";
-import exec from "../tools/install_tools.ts";
-import dbTool from "../tools/database.ts";
 
 const merlin = new Merlin();
 
@@ -24,14 +21,14 @@ merlin.testEqual("install package from deno.land", {
 
 merlin.testEqual("install package from nest.land", {
   async expect() {
-    const pkg = await installPackages(["i", "--nest", "importql@0.1.0 "]);
+    const pkg = await installPackages(["i", "--nest", "dinoenv@1.0.0"]);
 
     return pkg;
   },
   toBe() {
     return {
-      importql:
-        "https://arweave.net/F8armYyxSykulJmJ3kx1KzLh40VDCzEa_OQjUnpnsqo/mod.ts",
+      dinoenv:
+        "https://arweave.net/Rru09TE8WVU_0eMY5lWAM6xsZxbVDScnqkrGvZPjEs4/mod.ts"
     };
   },
   Ops: false,
@@ -53,32 +50,6 @@ merlin.testEqual("install custom package", {
   Resources: false,
 });
 
-merlin.testEqual("install tool", {
-  async expect() {
-    await delay(1000);
-    const data = await exec({
-      config: dbTool["dpm"],
-    });
-    return data;
-  },
-  toBe() {
-    return true;
-  },
-  Ops: false,
-  Resources: false,
-});
-
-merlin.testEqual("Lock File", {
-  async expect() {
-    return await LockFile(...["--unstable", "--lock", "cli.ts"]);
-  },
-  toBe() {
-    return true;
-  },
-  Resources: false,
-  Ops: false,
-});
-
 merlin.testEqual("Show deps of the import maps", {
   async expect() {
     return await showImportDeps();
@@ -90,25 +61,15 @@ merlin.testEqual("Show deps of the import maps", {
   Ops: false,
 });
 
-merlin.isUndefined("Trex treeDeps test", {
-  async value() {
-    return await packageTreeInfo(...["treeDeps", "oak"]);
-  },
-  Ops: false,
-  Resources: false,
-});
-
 merlin.testEqual("Can Delete Package #1", {
   async expect() {
     return await canDelete("oak");
   },
   toBe() {
-    const user = (Deno.build.os === "windows"
-      ? Deno.env.get("USERNAME")
-      : Deno.env.get("HOME")) as string;
-
-    return getPath(user, "oak");
+    return false;
   },
+  Ops: false,
+  Resources: false
 });
 
 merlin.isUndefined("Delete package #1", {
@@ -125,4 +86,23 @@ merlin.isUndefined("Delete package #2", {
   },
   Ops: false,
   Resources: false,
+});
+
+merlin.isUndefined("Trex treeDeps test", {
+  async value() {
+    return await packageTreeInfo(...["treeDeps", "React"]);
+  },
+  Ops: false,
+  Resources: false,
+});
+
+merlin.testEqual("Lock File", {
+  async expect() {
+    return await LockFile(...["--unstable", "--lock", "./cli.ts"]);
+  },
+  toBe() {
+    return true;
+  },
+  Resources: false,
+  Ops: false,
 });

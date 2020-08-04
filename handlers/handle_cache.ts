@@ -10,7 +10,7 @@ import { green, red } from "https://deno.land/std/fmt/colors.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
 import { needProxy, Proxy } from "../deps.ts";
 import { STD } from "../utils/info.ts";
-import db from "../utils/db.ts";
+import { denoApidb } from "../utils/db.ts";
 
 /**
  * caches packages.
@@ -25,7 +25,7 @@ async function cached(pkgName: string, pkgUrl: string) {
 
   console.log(green("cache package... \n"));
 
-  if (STD.includes(pkgName) && db.includes(pkgName)) {
+  if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({
       cmd: [
         "deno",
@@ -67,7 +67,7 @@ async function cached(pkgName: string, pkgUrl: string) {
   }
 
   // * install third party package
-  else if (db.includes(pkgName)) {
+  else if ((await denoApidb(pkgName)).length) {
     process = Deno.run({
       cmd: ["deno", "install", "-f", "-n", ID, "--unstable", pkgUrl],
     });
@@ -82,7 +82,7 @@ async function cached(pkgName: string, pkgUrl: string) {
   }
 
   // * log error if package is not found
-  else if (!STD.includes(pkgName) && !db.includes(pkgName)) {
+  else if (!STD.includes(pkgName) && !(await denoApidb(pkgName)).length) {
     console.error(red("package not found."));
     return;
   }

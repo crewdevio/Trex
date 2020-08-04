@@ -341,6 +341,8 @@ in import_map.json
 
 ### check the versions of dependencies using
 
+## Deprecated!
+
 ```sh
 $ trex --deps
 ```

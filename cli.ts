@@ -17,7 +17,7 @@ import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import exec from "./tools/install_tools.ts";
 import dbTool from "./tools/database.ts";
-import db from "./utils/db.ts";
+import { denoApidb } from "./utils/db.ts";
 
 async function mainCli() {
   const _arguments = Deno.args;
@@ -71,7 +71,8 @@ async function mainCli() {
           : haveVersion(pkg)
         ];
 
-        if (STD.includes(haveVersion(pkg)) || db.includes(haveVersion(pkg))) {
+        if (STD.includes(haveVersion(pkg)) ||
+            (await denoApidb(haveVersion(pkg)))?.length) {
           DeleteCacheModule(pkg);
         }
 
