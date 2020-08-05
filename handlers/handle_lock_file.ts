@@ -20,13 +20,20 @@ export async function LockFile(...args: string[]) {
   let conf: string[] = [file];
 
   if (file && importmap) {
-    conf = ["--importmap=import_map.json", "--unstable", file];
+    conf = ["--importmap=import_map.json", file];
   } else if (!file) {
     conf = [importmap];
   }
 
   const process = Deno.run({
-    cmd: ["deno", "cache", "--lock=lock.json", "--lock-write", ...conf],
+    cmd: [
+      "deno",
+      "cache",
+      "--unstable",
+      "--lock=lock.json",
+      "--lock-write",
+      ...conf,
+    ],
   });
 
   if (!(await process.status()).success) {
