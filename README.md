@@ -61,10 +61,10 @@ For more information about the import maps in deno see [import maps](https://den
 
 ## Installation
 
-Install from the [nest.land](https://nest.land/) module registry:
+Install from the [nest.land](https://nest.land/) module registry (explicit version is required):
 
 ```console
-deno install -A --unstable -n trex https://x.nest.land/Trex@latest/cli.ts
+deno install -A --unstable -n trex https://x.nest.land/Trex@<version>/cli.ts
 ```
 
 > **note**: Works with deno >= 1.0.0.
