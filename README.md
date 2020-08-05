@@ -57,8 +57,6 @@ For more information about the import maps in deno see [import maps](https://den
 
 - [How can I have my package available to download with Trex?](docs/add_package.md)
 
-- [How can I add my tool to make it available on Trex?](docs/add_tool.md)
-
 ## Installation
 
 Install from the [nest.land](https://nest.land/) module registry:
@@ -206,7 +204,7 @@ trex --custom React=https://dev.jspm.io/react/index.js
 }
 ```
 
-### Installing global scripts (cmdline tools etc.)
+### **Deprecated!** Installing global scripts (cmdline tools etc.)
 
 Trex allows installing executable scripts from its database, for example:
 
@@ -224,7 +222,6 @@ trex getTool Commands
 > **note**: If you are a linux/MacOs user you'll have to specificate the PATH manually to use tools: **`export PATH="/home/username/.deno/bin:\$PATH"`**
 
 ### Deleting packages
-
 
 ```console
 trex delete React
