@@ -18,30 +18,9 @@ import { STD } from "../utils/info.ts";
  */
 
 export async function showImportDeps(): Promise<boolean> {
-  // const process = Deno.run({
-  //   cmd: [
-  //     "deno",
-  //     "run",
-  //     "--allow-read",
-  //     "--allow-net",
-  //     "--unstable",
-  //     "https://deno.land/x/trex/tools/CheckUpdatesDeps/main.ts",
-  //     "-f",
-  //     "import_map.json",
-  //   ],
-
-  //   stdout: "piped",
-  // });
-  // const decoder = new TextDecoder("utf-8");
-
-  // const out = await process.output();
-  // console.log(decoder.decode(out));
-  // const status = (await process.status()).success;
-  // if (!status) {
-  //   process.close();
-  //   Somebybroken();
-  // }
-  console.log("with the new deno.land registration this feature is deprecated 😥");
+  console.log(
+    "with the new deno.land registration this feature is deprecated 😥"
+  );
   return true;
 }
 

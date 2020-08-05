@@ -7,17 +7,14 @@
  */
 
 import { installPackages, exist_imports, customPackage } from "./handlers/handle_packages.ts";
-import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
 import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
-import { showImportDeps, packageTreeInfo } from "./tools/logs.ts"
+import { haveVersion } from "./handlers/handle_delete_package.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
-import exec from "./tools/install_tools.ts";
-import dbTool from "./tools/database.ts";
-import { denoApidb } from "./utils/db.ts";
+import { packageTreeInfo } from "./tools/logs.ts"
 
 async function mainCli() {
   const _arguments = Deno.args;
@@ -57,11 +54,10 @@ async function mainCli() {
   }
   // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
-    const pkg: string = _arguments[1].trim();
-
     if (existsSync("./import_map.json")) {
 
       try {
+        const pkg: string = _arguments[1].trim();
         const Packages = JSON.parse(getImportMap());
 
         if (Packages?.imports) {
@@ -70,11 +66,6 @@ async function mainCli() {
           ? haveVersion(pkg) + "/"
           : haveVersion(pkg)
         ];
-
-        if (STD.includes(haveVersion(pkg)) ||
-            (await denoApidb(haveVersion(pkg)))?.length) {
-          DeleteCacheModule(pkg);
-        }
 
         const newPackage = exist_imports(Packages);
 
@@ -91,8 +82,11 @@ async function mainCli() {
     }
       catch (_) {
         throw new Error(
-          red("the import_map.json file does not have a valid format.")
-            ).message;
+          red(
+            _ instanceof TypeError
+            ? "add the name of the package to remove"
+            : "the import_map.json file does not have a valid format.")
+          ).message;
       }
     }
 
@@ -101,36 +95,9 @@ async function mainCli() {
       return;
     }
   }
-  // * install some tool like Commands
-  else if (_arguments[0] === keyWords.tool) {
-    const tool = _arguments[1].trim();
-    if (Object.keys(dbTool).includes(tool)) {
-      console.log(
-        yellow("warning: "),
-        cyan(tool),
-        " have permissions: ",
-        dbTool[tool].permissions
-      );
-      setTimeout(async () => {
-        await exec({ config: dbTool[tool] });
-        console.clear();
-        console.log(`✅ Successfully installed ${tool}`);
-      }, 3000);
-    }
-
-    else {
-      throw new Error(
-        red(`${red("Error: ")}${yellow(tool)} not found in the tools database`)
-        ).message;
-    }
-  }
   // * update to lastest version of trex
   else if (_arguments[0] === keyWords.update) {
     await updateTrex();
-  }
-  // * shows the list of outdated packages
-  else if (_arguments[0] === flags.deps) {
-    showImportDeps()
   }
   // * shows the dependency tree of a package
   else if (_arguments[0] === keyWords.tree) {
