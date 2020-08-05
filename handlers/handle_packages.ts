@@ -40,7 +40,7 @@ export function exist_imports(map: importMap) {
  * @return {string} url for the package.
  */
 
-function detectVersion(pkgName: string): string {
+async function detectVersion(pkgName: string): Promise<string> {
   let uri: string = "";
 
   // * url for packages with a specific version
@@ -70,7 +70,7 @@ function detectVersion(pkgName: string): string {
       uri = `${URI_STD}/${pkgName}/`;
     }
 
-    else if (true) {
+    else if ((await denoApidb(pkgName)).length) {
       uri = `${URI_X}${pkgName}/mod.ts`;
     }
 
@@ -147,8 +147,10 @@ export async function installPackages(args: string[]) {
   if (args[1] === flags.map) {
     for (let index = 2; index < args.length; index++) {
 
-      await cache(args[index].split("@")[0], detectVersion(args[index]));
-      map[(await getNamePkg(args[index])).toLowerCase()] = detectVersion(args[index]);
+      await cache(args[index].split("@")[0], await detectVersion(args[index]));
+      map[
+        (await getNamePkg(args[index])).toLowerCase()
+      ] = await detectVersion(args[index]);
     }
   }
 
@@ -182,9 +184,11 @@ export async function installPackages(args: string[]) {
 
         if (md.includes("deno.land")) {
           const mod = pkg.split("/").join("");
-          await cache(mod, detectVersion(mod));
+          await cache(mod, await detectVersion(mod));
 
-          map[(await getNamePkg(mod)).toLowerCase()] = detectVersion(mod);
+          map[
+            (await getNamePkg(mod)).toLowerCase()
+          ] = await detectVersion(mod);
         }
 
         else {
