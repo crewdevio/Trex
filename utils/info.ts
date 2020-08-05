@@ -38,7 +38,7 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.1.3" };
+export const VERSION = { VERSION: "v1.2.0" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),

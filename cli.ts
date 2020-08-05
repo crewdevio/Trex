@@ -7,15 +7,14 @@
  */
 
 import { installPackages, exist_imports, customPackage } from "./handlers/handle_packages.ts";
-import { DeleteCacheModule, haveVersion } from "./handlers/handle_delete_package.ts";
 import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
+import { haveVersion } from "./handlers/handle_delete_package.ts";
 import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import { packageTreeInfo } from "./tools/logs.ts"
-import { denoApidb } from "./utils/db.ts";
 
 async function mainCli() {
   const _arguments = Deno.args;
@@ -67,11 +66,6 @@ async function mainCli() {
           ? haveVersion(pkg) + "/"
           : haveVersion(pkg)
         ];
-
-        if (STD.includes(haveVersion(pkg)) ||
-            (await denoApidb(haveVersion(pkg)))?.length) {
-          DeleteCacheModule(pkg);
-        }
 
         const newPackage = exist_imports(Packages);
 
