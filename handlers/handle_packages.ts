@@ -6,16 +6,19 @@
  *
  */
 
-import { nestPackageUrl, cacheNestpackage, pkgRepo } from "./handle_third_party_package.ts";
-import { yellow, red, green } from "https://deno.land/std/fmt/colors.ts";
-import { getImportMap, createPackage } from "./handle_files.ts";
+import {
+  nestPackageUrl,
+  cacheNestpackage,
+  pkgRepo } from "./handle_third_party_package.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
-import { existsSync } from "https://deno.land/std/fs/mod.ts";
-import { importMap, objectGen } from "../utils/types.ts";
+import { WriteImport } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
-import cache from "./handle_cache.ts";
+import { objectGen } from "../utils/types.ts";
+import { existsSync } from "../imports/fs.ts";
+import { Proxy, needProxy } from "../deps.ts";
+import { colors } from "../imports/fmt.ts";
 import { denoApidb } from "../utils/db.ts";
-
+import cache from "./handle_cache.ts";
 
 /**
  * verify that the imports key exists in the import map file.
@@ -23,14 +26,14 @@ import { denoApidb } from "../utils/db.ts";
  * @returns {object} return object
  */
 
-export function exist_imports(map: importMap) {
-  if (map?.imports) {
+export function importsFolder() {
+  if (existsSync("./imports/")) {
     // * if exist in import_map the key import return all modules
-    return map.imports;
+    return true;
   }
 
   throw new Error(
-    red("the import map.json file does not have the imports key")
+    colors.red("the import imports folder not exist")
     ).message;
 }
 
@@ -55,7 +58,7 @@ async function detectVersion(pkgName: string): Promise<string> {
       uri = `${URI_STD}@${ModuleRelease[1]}/${ModuleRelease[0]}/`;
     }
 
-    else if (true) {
+    else if ((await denoApidb(pkgName)).length) {
       uri = `${URI_X + ModuleRelease[0]}@${ModuleRelease[1]}/mod.ts`;
     }
   }
@@ -66,7 +69,7 @@ async function detectVersion(pkgName: string): Promise<string> {
       uri = `${URI_STD}/${pkgName}/`;
     }
 
-    else if (STD.includes(pkgName)) {
+    else if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
       uri = `${URI_STD}/${pkgName}/`;
     }
 
@@ -76,9 +79,9 @@ async function detectVersion(pkgName: string): Promise<string> {
 
     else if (!STD.includes(pkgName)) {
       throw new Error(
-        `\n${red("=>")} ${yellow(
+        `\n${colors.red("=>")} ${colors.yellow(
           pkgName
-        )} not is a third party modules\n${green(
+        )} not is a third party modules\n${colors.green(
           "install using custom install"
         )}\n`
       ).message;
@@ -102,11 +105,11 @@ async function getNamePkg(pkg: string): Promise<string> {
     const Facts = pkg.split("@");
 
     if (STD.includes(Facts[0]) && (await denoApidb(Facts[0])).length) {
-      name = Facts[0] + "/";
+      name = Facts[0];
     }
 
     else if (STD.includes(Facts[0])) {
-      name = Facts[0] + "/";
+      name = Facts[0];
     }
 
     else if ((await denoApidb(Facts[0])).length) {
@@ -117,11 +120,11 @@ async function getNamePkg(pkg: string): Promise<string> {
   else {
 
     if (STD.includes(pkg) && (await denoApidb(pkg)).length) {
-      name = pkg + "/";
+      name = pkg;
     }
 
     else if (STD.includes(pkg)) {
-      name = pkg + "/";
+      name = pkg;
     }
 
     else if ((await denoApidb(pkg)).length) {
@@ -140,17 +143,19 @@ async function getNamePkg(pkg: string): Promise<string> {
 
 export async function installPackages(args: string[]) {
   // * package to push in import_map.json
-  const map: objectGen = {};
 
   const beforeTime = Date.now();
 
   if (args[1] === flags.map) {
     for (let index = 2; index < args.length; index++) {
+      const name = args[index];
+      await cache(name.split("@")[0], await detectVersion(name));
 
-      await cache(args[index].split("@")[0], await detectVersion(args[index]));
-      map[
-        (await getNamePkg(args[index])).toLowerCase()
-      ] = await detectVersion(args[index]);
+      const url = needProxy(await getNamePkg(name))
+        ? Proxy(await getNamePkg(name))
+        : await detectVersion(name) + "mod.ts";
+
+      WriteImport((await getNamePkg(name)), url);
     }
   }
 
@@ -162,7 +167,7 @@ export async function installPackages(args: string[]) {
       const url = await nestPackageUrl(name, version);
 
       await cacheNestpackage(url);
-      map[name.toLowerCase()] = url;
+      WriteImport(name.toLowerCase(), url);
     }
   }
 
@@ -170,37 +175,36 @@ export async function installPackages(args: string[]) {
   else if (args[1] === flags.pkg) {
     const [name, url] = pkgRepo(args[2], args[3]);
     await cacheNestpackage(url);
-
-    map[name.toLowerCase()] = url;
+    WriteImport(name.toLowerCase(), url);
   }
 
   // * take the packages from the import map file and install them.
   else {
     try {
-      const importmap: importMap = JSON.parse(getImportMap());
+      // const importmap: importMap = JSON.parse(getImportMap());
 
-      for (const pkg in importmap.imports) {
-        const md = importmap.imports[pkg];
+      // for (const pkg in importmap.imports) {
+      //   const md = importmap.imports[pkg];
 
-        if (md.includes("deno.land")) {
-          const mod = pkg.split("/").join("");
-          await cache(mod, await detectVersion(mod));
+      //   if (md.includes("deno.land")) {
+      //     const mod = pkg.split("/").join("");
+      //     await cache(mod, await detectVersion(mod));
 
-          map[
-            (await getNamePkg(mod)).toLowerCase()
-          ] = await detectVersion(mod);
-        }
+      //     map[
+      //       (await getNamePkg(mod)).toLowerCase()
+      //     ] = await detectVersion(mod);
+      //   }
 
-        else {
-          await cacheNestpackage(importmap.imports[pkg]);
+      //   else {
+      //     await cacheNestpackage(importmap.imports[pkg]);
 
-          map[pkg.toLowerCase()] = importmap.imports[pkg];
-        }
-      }
+      //     map[pkg.toLowerCase()] = importmap.imports[pkg];
+      //   }
+      // }
     }
 
     catch (_) {
-      console.error(red("import_map.json file not found"));
+      console.error(colors.red("import_map.json file not found"));
     }
   }
 
@@ -212,7 +216,7 @@ export async function installPackages(args: string[]) {
     ((afterTime - beforeTime) / 1000).toString() + "s"
   );
 
-  return map;
+  return true;
 }
 
 /**
@@ -250,22 +254,22 @@ export async function customPackage(...args: string[]) {
   // * if import_map exists update it
   if (existsSync("./import_map.json")) {
     try {
-      const data = JSON.parse(getImportMap());
-      const oldPackage = exist_imports(data);
+      // const data = JSON.parse(getImportMap());
+      // const oldPackage = exist_imports(data);
 
-      createPackage({ ...custom, ...oldPackage }, true);
+      // createPackage({ ...custom, ...oldPackage }, true);
     }
 
     catch (_) {
       console.error(
-        red("the import_map.json file does not have a valid format.")
+        colors.red("the import_map.json file does not have a valid format.")
       );
     }
   }
 
   else {
     // * else create package
-    createPackage(custom, true);
+    // createPackage(custom, true);
   }
   return (await cache.status()).success;
 }

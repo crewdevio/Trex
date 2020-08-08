@@ -6,7 +6,7 @@
  *
  */
 
-import { getImportMap } from "../handlers/handle_files.ts";
+// import { getImportMap } from "../handlers/handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import { importMap } from "../utils/types.ts";
 import { needProxy, Proxy } from "../deps.ts";
@@ -31,48 +31,48 @@ export async function showImportDeps(): Promise<boolean> {
  */
 
 export async function packageTreeInfo(...args: string[]) {
-  try {
-    const map: importMap = JSON.parse(getImportMap());
+  // try {
+  //   const map: importMap = JSON.parse(getImportMap());
 
-    for (const pkg in map?.imports) {
-      if (STD.includes(args[1])) {
-        const moduleName = args[1] + "/";
+  //   for (const pkg in map?.imports) {
+  //     if (STD.includes(args[1])) {
+  //       const moduleName = args[1] + "/";
 
-        if (moduleName === pkg) {
-          const _pkg = needProxy(args[1])
-            ? Proxy(args[1])
-            : map.imports[pkg] + "mod.ts";
+  //       if (moduleName === pkg) {
+  //         const _pkg = needProxy(args[1])
+  //           ? Proxy(args[1])
+  //           : map.imports[pkg] + "mod.ts";
 
-          const process = Deno.run({
-            cmd: ["deno", "info", "--unstable", _pkg],
-          });
+  //         const process = Deno.run({
+  //           cmd: ["deno", "info", "--unstable", _pkg],
+  //         });
 
-          if (!(await process.status()).success) {
-            process.close();
-            Somebybroken("package information could not be obtained");
-          }
-          return (await process.status()).success;
-        }
-      }
+  //         if (!(await process.status()).success) {
+  //           process.close();
+  //           Somebybroken("package information could not be obtained");
+  //         }
+  //         return (await process.status()).success;
+  //       }
+  //     }
 
-      else {
-        const moduleName = args[1];
+  //     else {
+  //       const moduleName = args[1];
 
-        if (moduleName === pkg) {
-          const process = Deno.run({
-            cmd: ["deno", "info", map.imports[pkg]],
-          });
+  //       if (moduleName === pkg) {
+  //         const process = Deno.run({
+  //           cmd: ["deno", "info", map.imports[pkg]],
+  //         });
 
-          if (!(await process.status()).success) {
-            process.close();
-            Somebybroken("package information could not be obtained");
-          }
-          return (await process.status()).success;
-        }
-      }
-    }
-  } catch (_) {
-    throw new Error("the import_map.json file does not have a valid format")
-      .message;
-  }
+  //         if (!(await process.status()).success) {
+  //           process.close();
+  //           Somebybroken("package information could not be obtained");
+  //         }
+  //         return (await process.status()).success;
+  //       }
+  //     }
+  //   }
+  // } catch (_) {
+  //   throw new Error("the import_map.json file does not have a valid format")
+  //     .message;
+  // }
 }

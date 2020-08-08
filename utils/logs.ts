@@ -6,12 +6,12 @@
  *
  */
 
-import { cyan, red, green, yellow } from "https://deno.land/std/fmt/colors.ts";
 import exec from "../tools/install_tools.ts";
+import { colors } from "../imports/fmt.ts";
 import { VERSION } from "./info.ts";
 
 export function Version(version: string) {
-  console.log(version, cyan("༼ つ ◕_◕ ༽つ"));
+  console.log(version, colors.cyan("༼ つ ◕_◕ ༽つ"));
 }
 
 export function LogHelp(helpsInfo: string[]) {
@@ -38,24 +38,24 @@ export async function updateTrex(): Promise<void> {
       console.log(repoVersion.VERSION);
     }, 1000);
   } else {
-    console.log(cyan("trex is already up to date"));
+    console.log(colors.cyan("trex is already up to date"));
   }
 }
 
 export function offLine() {
   throw new Error(
-    red(
+    colors.red(
       "something went wrong when making the request, maybe you're offline, check your connection.")).message;
 }
 
 export function Somebybroken(message: string = "some process is broken.") {
-  throw new Error(red(message)).message;
+  throw new Error(colors.red(message)).message;
 }
 
 export function ErrorInstalling() {
-  const logError = `${red("something went wrong\n")}${green(
+  const logError = `${colors.red("something went wrong\n")}${colors.green(
     "maybe this package is missing a mod.ts file, use custom install.\n"
-  )}${yellow("trex --custom module=moduleUrl\n")}`;
+  )}${colors.yellow("trex --custom module=moduleUrl\n")}`;
 
   throw new Error(logError).message;
 }

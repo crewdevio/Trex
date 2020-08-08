@@ -6,7 +6,7 @@
  *
  */
 
-import { green, yellow, red } from "https://deno.land/std/fmt/colors.ts";
+import { colors } from "../imports/fmt.ts";
 
 export const URI_STD = "https://deno.land/std";
 
@@ -38,37 +38,37 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.2.0" };
+export const VERSION = { VERSION: "v2.0.0" };
 
 export const helpsInfo = [
-  green("advanced package management for deno, based on import_map.json\n"),
+  colors.green("advanced package management for deno, based on import_map.json\n"),
 
-  green("USAGE:"),
-  `   trex ${yellow('[OPTIONS]')} ${yellow('[SUBCOMMAND]')}\n`,
+  colors.green("USAGE:"),
+  `   trex ${colors.yellow('[OPTIONS]')} ${colors.yellow('[SUBCOMMAND]')}\n`,
 
-  green("OPTIONS:"),
-  `   ${yellow('--help')}     print help information.\n`,
+  colors.green("OPTIONS:"),
+  `   ${colors.yellow('--help')}     print help information.\n`,
 
-  `   ${yellow('--custom')}   install custom package.\n`,
+  `   ${colors.yellow('--custom')}   install custom package.\n`,
 
-  `   ${yellow('--version')}  print version information.\n`,
+  `   ${colors.yellow('--version')}  print version information.\n`,
 
-  `   ${yellow('--map')}      add package to import_map.json.\n`,
+  `   ${colors.yellow('--map')}      add package to import_map.json.\n`,
 
-  `   ${yellow('--lock')}     create a lock files.\n`,
+  `   ${colors.yellow('--lock')}     create a lock files.\n`,
 
-  `   ${yellow('--nest')}     install package from nest.land.\n`,
+  `   ${colors.yellow('--nest')}     install package from nest.land.\n`,
 
-  `   ${yellow('--pkg')}      install package from some repository.\n`,
+  `   ${colors.yellow('--pkg')}      install package from some repository.\n`,
 
-  green("SUBCOMMANDS:"),
-  `   ${yellow('[install or i]')}  install a package.\n`,
+  colors.green("SUBCOMMANDS:"),
+  `   ${colors.yellow('[install or i]')}  install a package.\n`,
 
-  `   ${yellow(`delete${red('<@version>')}`)}  delete a package from import map and cache.\n`,
+  `   ${colors.yellow(`delete${colors.red('<@version>')}`)}  delete a package from import map and cache.\n`,
 
-  `   ${yellow('update')}    update Trex.\n`,
+  `   ${colors.yellow('update')}    update Trex.\n`,
 
-  `   ${yellow('treeDeps')}  view dependency tree.\n`
+  `   ${colors.yellow('treeDeps')}  view dependency tree.\n`
 
 ];
 

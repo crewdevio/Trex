@@ -6,7 +6,7 @@
  *
  */
 
-import { red, green } from "https://deno.land/std/fmt/colors.ts";
+import { colors } from "../imports/fmt.ts";
 
 /**
  * generate a lock file.
@@ -38,9 +38,9 @@ export async function LockFile(...args: string[]) {
 
   if (!(await process.status()).success) {
     process.close();
-    throw Error(red("Error: creating lock.json file")).message;
+    throw Error(colors.red("Error: creating lock.json file")).message;
   }
 
-  console.log("|- ", green("lock.json\ndone it."));
+  console.log("|- ", colors.green("lock.json\ndone it."));
   return (await process.status()).success;
 }

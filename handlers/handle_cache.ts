@@ -6,11 +6,11 @@
  *
  */
 
-import { green, red } from "https://deno.land/std/fmt/colors.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
 import { needProxy, Proxy } from "../deps.ts";
-import { STD } from "../utils/info.ts";
 import { denoApidb } from "../utils/db.ts";
+import { colors } from "../imports/fmt.ts";
+import { STD } from "../utils/info.ts";
 
 /**
  * caches packages.
@@ -23,7 +23,7 @@ async function cached(pkgName: string, pkgUrl: string) {
   const ID = "trex_Cache_Map";
   let process: Deno.Process;
 
-  console.log(green("cache package... \n"));
+  console.log(colors.green("cache package... \n"));
 
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({
@@ -63,7 +63,7 @@ async function cached(pkgName: string, pkgUrl: string) {
       ErrorInstalling();
     }
 
-    console.log(green("\n Done. \n"));
+    console.log(colors.green("\n Done. \n"));
   }
 
   // * install third party package
@@ -78,12 +78,12 @@ async function cached(pkgName: string, pkgUrl: string) {
       ErrorInstalling();
     }
 
-    console.log(green("\n Done. \n"));
+    console.log(colors.green("\n Done. \n"));
   }
 
   // * log error if package is not found
   else if (!STD.includes(pkgName) && !(await denoApidb(pkgName)).length) {
-    console.error(red("package not found."));
+    console.error(colors.red("package not found."));
     return;
   }
 }
