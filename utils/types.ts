@@ -9,8 +9,8 @@
 export type objectGen = { [key: string]: string };
 export type proxyPkg = { module: string; url: string };
 
-export interface importMap {
-  imports: objectGen;
+export interface deps {
+  meta: objectGen;
 }
 
 export interface Params {
@@ -42,4 +42,13 @@ export interface NestResponse {
     };
   };
   createdAt: string;
+}
+
+export const enum errorsMessage {
+  keyNotFound = "deps.json file does not have meta key",
+  lockFile = "Error: creating lock.json file",
+  importsFolder = "the imports folder does not exist",
+  depsNotFound = "deps.json file not found",
+  deleteError = "the package cannot be removed from the imports folder",
+  depsFormat = "the deps.json file is not in a valid format",
 }

@@ -1,1 +1,1 @@
-export * from "https://denopkg.com/crewdevio/merlin/mod.ts";
+export * from "https://deno.land/x/merlin/mod.ts";

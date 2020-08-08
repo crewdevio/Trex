@@ -6,6 +6,7 @@
  *
  */
 
+import { errorsMessage } from "../utils/types.ts";
 import { colors } from "../imports/fmt.ts";
 
 /**
@@ -15,16 +16,6 @@ import { colors } from "../imports/fmt.ts";
  */
 
 export async function LockFile(...args: string[]) {
-  const [_, importmap, file] = args;
-
-  let conf: string[] = [file];
-
-  if (file && importmap) {
-    conf = ["--importmap=import_map.json", file];
-  } else if (!file) {
-    conf = [importmap];
-  }
-
   const process = Deno.run({
     cmd: [
       "deno",
@@ -32,13 +23,15 @@ export async function LockFile(...args: string[]) {
       "--unstable",
       "--lock=lock.json",
       "--lock-write",
-      ...conf,
+      ...args,
     ],
   });
 
   if (!(await process.status()).success) {
     process.close();
-    throw Error(colors.red("Error: creating lock.json file")).message;
+    throw Error(
+      colors.red(errorsMessage.lockFile)
+      ).message;
   }
 
   console.log("|- ", colors.green("lock.json\ndone it."));

@@ -8,11 +8,11 @@
 
 import { installPackages, customPackage } from "./handlers/handle_packages.ts";
 import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
-import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
-import { haveVersion } from "./handlers/handle_delete_package.ts";
+import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import { createFolder } from "./handlers/handle_files.ts";
 import { packageTreeInfo } from "./tools/logs.ts"
+import { errorsMessage } from "./utils/types.ts";
 import { existsSync } from "./imports/fs.ts";
 import { colors } from "./imports/fmt.ts";
 
@@ -26,9 +26,8 @@ async function mainCli() {
       try {
         await installPackages(_arguments);
       }
-
-      catch (_) {
-        throw new Error(_).message;
+      catch (err) {
+        throw new Error(err).message;
       }
     }
     else {
@@ -54,42 +53,26 @@ async function mainCli() {
     if (existsSync("./imports/")) {
 
       try {
-      //   const pkg: string = _arguments[1].trim();
-      //   const Packages = JSON.parse(getImportMap());
+        const { removeSync } = Deno;
 
-      //   if (Packages?.imports) {
-      //   delete Packages.imports[
-      //     STD.includes(haveVersion(pkg))
-      //     ? haveVersion(pkg) + "/"
-      //     : haveVersion(pkg)
-      //   ];
-
-      //   const newPackage = exist_imports(Packages);
-
-      //   await createPackage(newPackage);
-
-      //   console.log(yellow(pkg + ":"), green(" removed from import_map.json"));
-      // }
-
-      // else {
-      //   throw new Error(
-      //     red("'imports' key not found in import_map.json")
-      //       ).message;
-      // }
+        for (let i = 1; i < _arguments.length; i++) {
+          const pkgName = _arguments[i];
+          removeSync(`./imports/${pkgName}.ts`, { recursive: true });
+        }
     }
-      catch (_) {
+    catch (_) {
         throw new Error(
           colors.red(
-            _ instanceof TypeError
-            ? "add the name of the package to remove"
-            : "the import_map.json file does not have a valid format.")
-          ).message;
+            errorsMessage.deleteError
+            )).message;
       }
     }
 
     else {
-      console.error(colors.red("import_map.json"));
-      return;
+      throw new Error(
+        colors.red(
+          errorsMessage.importsFolder
+          )).message;
     }
   }
   // * update to lastest version of trex
@@ -98,7 +81,7 @@ async function mainCli() {
   }
   // * shows the dependency tree of a package
   else if (_arguments[0] === keyWords.tree) {
-    packageTreeInfo(..._arguments)
+    await packageTreeInfo()
 
   }
   // * create lock file

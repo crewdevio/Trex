@@ -11,31 +11,14 @@ import {
   cacheNestpackage,
   pkgRepo } from "./handle_third_party_package.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
-import { WriteImport } from "./handle_files.ts";
+import { WriteImport, WriteDeps } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
-import { objectGen } from "../utils/types.ts";
-import { existsSync } from "../imports/fs.ts";
+import { objectGen, errorsMessage, deps } from "../utils/types.ts";
+import { existsSync, readJsonSync } from "../imports/fs.ts";
 import { Proxy, needProxy } from "../deps.ts";
 import { colors } from "../imports/fmt.ts";
 import { denoApidb } from "../utils/db.ts";
 import cache from "./handle_cache.ts";
-
-/**
- * verify that the imports key exists in the import map file.
- * @param {object} map - the import map json object.
- * @returns {object} return object
- */
-
-export function importsFolder() {
-  if (existsSync("./imports/")) {
-    // * if exist in import_map the key import return all modules
-    return true;
-  }
-
-  throw new Error(
-    colors.red("the import imports folder not exist")
-    ).message;
-}
 
 /**
  * create url for std/ or x/ packages depending on version or master branch.
@@ -44,51 +27,22 @@ export function importsFolder() {
  */
 
 async function detectVersion(pkgName: string): Promise<string> {
-  let uri: string = "";
+  const [name, maybeVersion] = pkgName.split("@");
+  const versionSuffix = maybeVersion ? `@${maybeVersion}` : "";
 
-  // * url for packages with a specific version
-  if (pkgName.includes("@")) {
-    const ModuleRelease = pkgName.split("@");
-
-    if (STD.includes(ModuleRelease[0])) {
-      uri = `${URI_STD}@${ModuleRelease[1]}/${ModuleRelease[0]}/`;
-    }
-
-    else if (STD.includes(ModuleRelease[0])) {
-      uri = `${URI_STD}@${ModuleRelease[1]}/${ModuleRelease[0]}/`;
-    }
-
-    else if ((await denoApidb(pkgName)).length) {
-      uri = `${URI_X + ModuleRelease[0]}@${ModuleRelease[1]}/mod.ts`;
-    }
+  if (STD.includes(name)) {
+    return `${URI_STD}${versionSuffix}/${name}/`;
+  } else if ((await denoApidb(name)).length) {
+    return `${URI_X}${name}${versionSuffix}/mod.ts`;
   }
 
-  else {
-
-    if (STD.includes(pkgName)) {
-      uri = `${URI_STD}/${pkgName}/`;
-    }
-
-    else if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
-      uri = `${URI_STD}/${pkgName}/`;
-    }
-
-    else if ((await denoApidb(pkgName)).length) {
-      uri = `${URI_X}${pkgName}/mod.ts`;
-    }
-
-    else if (!STD.includes(pkgName)) {
-      throw new Error(
-        `\n${colors.red("=>")} ${colors.yellow(
-          pkgName
-        )} not is a third party modules\n${colors.green(
-          "install using custom install"
-        )}\n`
-      ).message;
-    }
-  }
-
-  return uri;
+  throw new Error(
+    `\n${colors.red("=>")} ${colors.yellow(
+      pkgName
+    )} is not a third party module\n${colors.green(
+      "install using custom install"
+    )}\n`
+  ).message;
 }
 
 /**
@@ -153,9 +107,13 @@ export async function installPackages(args: string[]) {
 
       const url = needProxy(await getNamePkg(name))
         ? Proxy(await getNamePkg(name))
-        : await detectVersion(name) + "mod.ts";
+        : await (await detectVersion(name)).includes("mod.ts")
+          ? await detectVersion(name)
+          : await detectVersion(name) + "mod.ts";
+
 
       WriteImport((await getNamePkg(name)), url);
+      WriteDeps((await getNamePkg(name)), url);
     }
   }
 
@@ -168,43 +126,53 @@ export async function installPackages(args: string[]) {
 
       await cacheNestpackage(url);
       WriteImport(name.toLowerCase(), url);
+      WriteDeps(name.toLowerCase(), url);
     }
   }
 
   // * install from repo using denopkg.com
   else if (args[1] === flags.pkg) {
     const [name, url] = pkgRepo(args[2], args[3]);
+
     await cacheNestpackage(url);
     WriteImport(name.toLowerCase(), url);
+    WriteDeps(name.toLowerCase(), url);
   }
 
-  // * take the packages from the import map file and install them.
+  // * take the packages from the deps.json file and install them.
   else {
     try {
-      // const importmap: importMap = JSON.parse(getImportMap());
+        if (!existsSync("./imports/deps.json")) {
+          throw new Error(
+            colors.red(
+              errorsMessage.depsNotFound
+            )).message;
+        }
+        else {
+          const deps = readJsonSync("./imports/deps.json") as deps;
+          const allPkg = Object.keys(deps.meta).length;
 
-      // for (const pkg in importmap.imports) {
-      //   const md = importmap.imports[pkg];
-
-      //   if (md.includes("deno.land")) {
-      //     const mod = pkg.split("/").join("");
-      //     await cache(mod, await detectVersion(mod));
-
-      //     map[
-      //       (await getNamePkg(mod)).toLowerCase()
-      //     ] = await detectVersion(mod);
-      //   }
-
-      //   else {
-      //     await cacheNestpackage(importmap.imports[pkg]);
-
-      //     map[pkg.toLowerCase()] = importmap.imports[pkg];
-      //   }
-      // }
+          if (!allPkg) {
+            throw new Error(
+              colors.red(
+                "The deps.json file has no registered packages"
+              )).message;
+          }
+          else {
+            for (const pkg of Object.entries(deps.meta)) {
+              await cacheNestpackage(pkg[1]);
+              WriteImport(pkg[0], pkg[1]);
+            }
+          }
+        }
     }
-
-    catch (_) {
-      console.error(colors.red("import_map.json file not found"));
+    catch (err) {
+      throw new Error(
+        colors.red(
+          err instanceof TypeError
+          ? errorsMessage.depsFormat
+          : err
+        )).message;
     }
   }
 

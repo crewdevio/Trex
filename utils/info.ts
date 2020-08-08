@@ -41,7 +41,9 @@ export const STD = [
 export const VERSION = { VERSION: "v2.0.0" };
 
 export const helpsInfo = [
-  colors.green("advanced package management for deno, based on import_map.json\n"),
+  colors.green(
+    "advanced package management for deno, handling dependencies at any scale\n"
+    ),
 
   colors.green("USAGE:"),
   `   trex ${colors.yellow('[OPTIONS]')} ${colors.yellow('[SUBCOMMAND]')}\n`,
