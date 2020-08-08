@@ -31,7 +31,7 @@ export function exist_imports(map: importMap) {
 
   throw new Error(
     red("the import map.json file does not have the imports key")
-    ).message;
+  ).message;
 }
 
 /**
@@ -41,51 +41,22 @@ export function exist_imports(map: importMap) {
  */
 
 async function detectVersion(pkgName: string): Promise<string> {
-  let uri: string = "";
+  const [name, maybeVersion] = pkgName.split("@");
+  const versionSuffix = maybeVersion ? `@${maybeVersion}` : "";
 
-  // * url for packages with a specific version
-  if (pkgName.includes("@")) {
-    const ModuleRelease = pkgName.split("@");
-
-    if (STD.includes(ModuleRelease[0])) {
-      uri = `${URI_STD}@${ModuleRelease[1]}/${ModuleRelease[0]}/`;
-    }
-
-    else if (STD.includes(ModuleRelease[0])) {
-      uri = `${URI_STD}@${ModuleRelease[1]}/${ModuleRelease[0]}/`;
-    }
-
-    else if (true) {
-      uri = `${URI_X + ModuleRelease[0]}@${ModuleRelease[1]}/mod.ts`;
-    }
+  if (STD.includes(name)) {
+    return `${URI_STD}${versionSuffix}/${name}/`;
+  } else if ((await denoApidb(name)).length) {
+    return `${URI_X}${name}${versionSuffix}/mod.ts`;
   }
 
-  else {
-
-    if (STD.includes(pkgName)) {
-      uri = `${URI_STD}/${pkgName}/`;
-    }
-
-    else if (STD.includes(pkgName)) {
-      uri = `${URI_STD}/${pkgName}/`;
-    }
-
-    else if ((await denoApidb(pkgName)).length) {
-      uri = `${URI_X}${pkgName}/mod.ts`;
-    }
-
-    else if (!STD.includes(pkgName)) {
-      throw new Error(
-        `\n${red("=>")} ${yellow(
-          pkgName
-        )} not is a third party modules\n${green(
-          "install using custom install"
-        )}\n`
-      ).message;
-    }
-  }
-
-  return uri;
+  throw new Error(
+    `\n${red("=>")} ${yellow(
+      pkgName
+    )} is not a third party module\n${green(
+      "install using custom install"
+    )}\n`
+  ).message;
 }
 
 /**
@@ -146,11 +117,11 @@ export async function installPackages(args: string[]) {
 
   if (args[1] === flags.map) {
     for (let index = 2; index < args.length; index++) {
-
-      await cache(args[index].split("@")[0], await detectVersion(args[index]));
+      const url = await detectVersion(args[index]);
+      await cache(args[index].split("@")[0], url);
       map[
         (await getNamePkg(args[index])).toLowerCase()
-      ] = await detectVersion(args[index]);
+      ] = url;
     }
   }
 
