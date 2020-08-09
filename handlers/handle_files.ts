@@ -26,22 +26,28 @@ export function WriteImport(name: string, url: string) {
 
 export async function WriteDeps(name: string, url: string) {
 
-  if (existsSync("./imports/deps.json")) {
-    const map = await readJson("./imports/deps.json") as deps;
+  try {
+    if (existsSync("./imports/deps.json")) {
+      const map = (await readJson("./imports/deps.json")) as deps;
 
-    if (!(map?.meta)) {
-        throw new Error(
-          colors.red(
-            errorsMessage.keyNotFound
-          )).message;
+      if (!map?.meta) {
+        throw new Error(colors.red(errorsMessage.keyNotFound)).message;
+      }
+      const deps = { ...map?.meta, ...{ [name]: url } };
+
+      writeJsonSync("./imports/deps.json", { meta: deps }, { spaces: 2 });
     }
-    const deps = { ...map?.meta, ...{ [name]: url } };
 
-    writeJsonSync("./imports/deps.json", { meta: deps }, { spaces: 2 });
+    else {
+      const deps = { [name]: url };
+      writeJsonSync("./imports/deps.json", { meta: deps }, { spaces: 2 });
+    }
   }
 
-  else {
-    const deps = { [name]: url };
-    writeJsonSync("./imports/deps.json", { meta: deps }, { spaces: 2 });
+  catch (_) {
+    throw new Error(
+      colors.red(
+        errorsMessage.depsFormat
+      )).message;
   }
 }

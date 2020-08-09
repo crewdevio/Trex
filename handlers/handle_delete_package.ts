@@ -6,17 +6,24 @@
  *
  */
 
-/**
- * if a package has a version it returns only the name.
- * @param {string} pkgName - package name.
- * @return {string} package name.
- */
+import { errorsMessage } from "../utils/types.ts";
+import { existsSync } from "../imports/fs.ts";
+import { colors } from "../imports/fmt.ts";
 
-export function haveVersion(pkgName: string) {
-  const [name, _] = pkgName.split("@");
-  if (pkgName.includes("@")) {
-    return name;
+export function deletePackage(_arguments: string[]) {
+  // * test if exist imports folder
+  if (existsSync("./imports/")) {
+    try {
+      const { removeSync } = Deno;
+
+      for (let i = 1; i < _arguments.length; i++) {
+        const pkgName = _arguments[i];
+        removeSync(`./imports/${pkgName}.ts`, { recursive: true });
+      }
+    } catch (_) {
+      throw new Error(colors.red(errorsMessage.deleteError)).message;
+    }
   } else {
-    return pkgName;
+    throw new Error(colors.red(errorsMessage.importsFolder)).message;
   }
 }

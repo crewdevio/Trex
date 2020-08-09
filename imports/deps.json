@@ -2,6 +2,7 @@
   "meta": {
     "fmt": "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy_files/fmt.ts",
     "fs": "https://deno.land/std/fs/mod.ts",
-    "merlin": "https://deno.land/x/merlin/mod.ts"
+    "merlin": "https://deno.land/x/merlin/mod.ts",
+    "proxy": "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy.ts"
   }
 }

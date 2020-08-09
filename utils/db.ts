@@ -6,13 +6,8 @@
  *
  */
 
+import { pkgResponse } from "./types.ts";
 import { offLine } from "./logs.ts";
-
-type pkgResponse = {
-  name: string;
-  description: string;
-  star_count: number;
-};
 
 export async function denoApidb(query: string) {
   // * get all thirt party
@@ -26,7 +21,9 @@ export async function denoApidb(query: string) {
     return database?.data?.results.filter(
       ({ name }: pkgResponse) => name === query
     ) as Array<pkgResponse>;
-  } else {
+  }
+
+  else {
     return [];
   }
 }

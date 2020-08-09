@@ -7,8 +7,8 @@
  */
 
 import { offLine, ErrorInstalling } from "../utils/logs.ts";
+import { needProxy, Proxy } from "../imports/proxy.ts";
 import { NestResponse } from "../utils/types.ts";
-import { needProxy, Proxy } from "../deps.ts";
 import { STD } from "../utils/info.ts";
 
 /**
@@ -49,12 +49,12 @@ export async function nestPackageUrl(
 }
 
 /**
- * download all dependencies and install packages from nest.land.
+ * download all dependencies and install packages from url.
  * @param {string} url - the url of the package to install.
  * @return {void} void
  */
 
-export async function cacheNestpackage(url: string): Promise<void> {
+export async function cachePackage(url: string): Promise<void> {
   const process = Deno.run({
     cmd: ["deno", "install", "-f", "-n", "trex_Cache_Map", "--unstable", url],
   });

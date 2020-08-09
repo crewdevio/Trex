@@ -44,6 +44,12 @@ export interface NestResponse {
   createdAt: string;
 }
 
+export type pkgResponse = {
+  name: string;
+  description: string;
+  star_count: number;
+};
+
 export const enum errorsMessage {
   keyNotFound = "deps.json file does not have meta key",
   lockFile = "Error: creating lock.json file",
@@ -51,4 +57,5 @@ export const enum errorsMessage {
   depsNotFound = "deps.json file not found",
   deleteError = "the package cannot be removed from the imports folder",
   depsFormat = "the deps.json file is not in a valid format",
+  noPackge = "The deps.json file has no registered packages",
 }

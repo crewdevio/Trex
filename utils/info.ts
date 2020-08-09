@@ -89,6 +89,5 @@ export const keyWords = {
   i: "i",
   uninstall: "delete",
   update: "update",
-  tree: "treeDeps",
-  run: "run"
+  tree: "treeDeps"
 };

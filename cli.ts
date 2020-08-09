@@ -7,14 +7,13 @@
  */
 
 import { installPackages, customPackage } from "./handlers/handle_packages.ts";
-import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
 import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
+import { deletePackage } from "./handlers/handle_delete_package.ts";
+import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import { createFolder } from "./handlers/handle_files.ts";
 import { packageTreeInfo } from "./tools/logs.ts"
-import { errorsMessage } from "./utils/types.ts";
 import { existsSync } from "./imports/fs.ts";
-import { colors } from "./imports/fmt.ts";
 
 async function mainCli() {
   const _arguments = Deno.args;
@@ -49,31 +48,7 @@ async function mainCli() {
   }
   // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
-    // * test if exist imports folder
-    if (existsSync("./imports/")) {
-
-      try {
-        const { removeSync } = Deno;
-
-        for (let i = 1; i < _arguments.length; i++) {
-          const pkgName = _arguments[i];
-          removeSync(`./imports/${pkgName}.ts`, { recursive: true });
-        }
-    }
-    catch (_) {
-        throw new Error(
-          colors.red(
-            errorsMessage.deleteError
-            )).message;
-      }
-    }
-
-    else {
-      throw new Error(
-        colors.red(
-          errorsMessage.importsFolder
-          )).message;
-    }
+    deletePackage(_arguments);
   }
   // * update to lastest version of trex
   else if (_arguments[0] === keyWords.update) {
@@ -88,27 +63,6 @@ async function mainCli() {
   else if (_arguments[0] === flags.lock) {
     await LockFile(..._arguments);
   }
-
-  else if (_arguments[0] === keyWords.run){
-
-    const process = Deno.run({
-      cmd: [
-        "deno",
-        "run",
-        "--allow-read",
-        "--allow-run",
-        "--unstable",
-        "https://deno.land/x/commands/Commands.ts",
-        _arguments[1]
-      ]
-    });
-
-    if (!(await process.status()).success) {
-      process.close();
-      Somebybroken();
-    }
-  }
-
   // * displays help information
   else {
     LogHelp(helpsInfo);

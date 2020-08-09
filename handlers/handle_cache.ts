@@ -6,8 +6,8 @@
  *
  */
 
+import { needProxy, Proxy } from "../imports/proxy.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
-import { needProxy, Proxy } from "../deps.ts";
 import { denoApidb } from "../utils/db.ts";
 import { colors } from "../imports/fmt.ts";
 import { STD } from "../utils/info.ts";
@@ -34,7 +34,7 @@ async function cached(pkgName: string, pkgUrl: string) {
         "-n",
         ID,
         "--unstable",
-        needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts",
+        needProxy(pkgName) ? Proxy(pkgName) : pkgUrl,
       ],
     });
 
@@ -54,7 +54,7 @@ async function cached(pkgName: string, pkgUrl: string) {
         "-n",
         ID,
         "--unstable",
-        needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts",
+        needProxy(pkgName) ? Proxy(pkgName) : pkgUrl,
       ],
     });
 
