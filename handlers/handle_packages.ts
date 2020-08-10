@@ -11,9 +11,10 @@ import {
   cachePackage,
   pkgRepo,
 } from "./handle_third_party_package.ts";
+import { WriteImport, WriteDeps, createFolder } from "./handle_files.ts";
+import { showPackageList } from "../tools/show_package_list.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { existsSync, readJsonSync } from "../imports/fs.ts";
-import { WriteImport, WriteDeps } from "./handle_files.ts";
 import { errorsMessage, deps } from "../utils/types.ts";
 import { Proxy, needProxy } from "../imports/proxy.ts";
 import { colors } from "../imports/fmt.ts";
@@ -122,7 +123,7 @@ export async function installPackages(args: string[]) {
         const allPkg = Object.keys(deps.meta).length;
 
         if (!allPkg) {
-          throw new Error(colors.red(errorsMessage.noPackge)).message;
+          throw new Error(colors.red(errorsMessage.noPackage)).message;
         }
 
         else {
@@ -140,6 +141,7 @@ export async function installPackages(args: string[]) {
       ).message;
     }
   }
+  const deps = readJsonSync("./imports/deps.json") as deps;
 
   // * show installation time
   const afterTime = Date.now();
@@ -148,7 +150,7 @@ export async function installPackages(args: string[]) {
     "time to installation:",
     ((afterTime - beforeTime) / 1000).toString() + "s"
   );
-
+  showPackageList(deps.meta);
   return true;
 }
 
@@ -160,32 +162,33 @@ export async function installPackages(args: string[]) {
 
 export async function customPackage(...args: string[]) {
 
-  try {
+  const beforeTime = Date.now();
+  if (!existsSync("./imports")) {
+    await createFolder();
+  }
 
+  try {
+    const [name, url] = args[1].split("=");
+
+    await cachePackage(url);
+    WriteImport(name, url);
+    await WriteDeps(name, url);
   }
 
   catch (_) {
-
+    throw new Error(
+      colors.red(
+        errorsMessage.installationError
+        )).message;
   }
-  const [name, url] = args[1].split("=");
+  const deps = readJsonSync("./imports/deps.json") as deps;
 
-  await cachePackage(url);
-  WriteImport(name, url);
-
-  // * if import_map exists update it
-  if (existsSync("./import_map.json")) {
-    try {
-      // const data = JSON.parse(getImportMap());
-      // const oldPackage = exist_imports(data);
-      // createPackage({ ...custom, ...oldPackage }, true);
-    } catch (_) {
-      console.error(
-        colors.red("the import_map.json file does not have a valid format.")
-      );
-    }
-  } else {
-    // * else create package
-    // createPackage(custom, true);
-  }
+  const afterTime = Date.now();
+  console.clear();
+  console.log(
+    "time to installation:",
+    ((afterTime - beforeTime) / 1000).toString() + "s"
+  );
+  showPackageList(deps.meta);
   return true;
 }
