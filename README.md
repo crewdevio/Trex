@@ -29,29 +29,15 @@
    </a>
 </p>
 
-![Use Trex](https://cdn.discordapp.com/attachments/727169454667989016/728363543614980116/ajio.gif)
+<!-- ![Use Trex](https://cdn.discordapp.com/attachments/727169454667989016/728363543614980116/ajio.gif) -->
 
 ## About
 
-Trex is a package management tool for deno similar to npm but keeping close to the deno philosophy. Packages are cached and only one `import_map.json` file is generated.
-
-```javascript
-// import_map.json
-
-{
-  "imports":  {
-    "http/":  "https://deno.land/std/http/"
-  }
-}
-```
-
-For more information about the import maps in deno see [import maps](https://deno.land/manual/linking_to_external_code/import_maps).
+Trex is a package management tool for deno similar to npm but keeping close to the deno philosophy.
 
 ## Additional topics
 
 - [Proxy](docs/proxy.md)
-
-- [Setup your IDE](docs/setup.md)
 
 - [Integration with nest.land](docs/nest_land_setup.md)
 
@@ -65,7 +51,7 @@ Install from the [nest.land](https://nest.land/) module registry (explicit versi
 deno install -A --unstable -n trex https://x.nest.land/Trex@<version>/cli.ts
 ```
 
-> **note**: Works with deno >= 1.0.0.
+> **note**: Works with deno >= 1.2.0.
 
 Or from deno.land:
 
@@ -81,7 +67,6 @@ The permissions that Trex uses are:
 - --allow-read
 - --allow-write
 - --allow-run
-- --allow-env
 
 You can give those permissions explicitly.
 
@@ -161,23 +146,35 @@ trex install --pkg oakserver/oak/mod.ts oak
 
 The above downloads oak directly from its repository.
 
-### Example import map
+### structure
 
-All installation methods produce an import_map.json file:
+all installation methods produce a folder with the following structure:
 
-```json
+`example`
+
+```console
+imports/
+  |- fmt.ts
+  |- oak.ts
+  |- dinoenv.ts
+  |- deps.json
+```
+the deps.json file is used as an import map for internal functionalities.
+
+`deps.json`
+```js
 {
-  "imports": {
-    "fs/": "https://deno.land/std/fs/",
-    "http/": "https://deno.land/std/http/",
-    "fmt/": "https://deno.land/std/fmt/"
+  "meta": {
+    "fmt": "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy_files/fmt.ts",
+    "oak": "https://deno.land/x/oak/mod.ts",
+    "dinoenv": "https://deno.land/x/dinoenv/mod.ts"
   }
 }
 ```
 
 ### Downloading packages
 
-Download all the packages listed in the `import_map.json` similar to `npm install`:
+Download all the packages listed in the `deps.json` similar to `npm install`:
 
 ```console
 trex install
@@ -188,38 +185,20 @@ trex install
 Install a package from a custom URL source:
 
 ```console
-trex --custom React=https://dev.jspm.io/react/index.js
+trex --custom react=https://dev.jspm.io/react/index.js
 ```
 
-`import_map.json`:
-
-```json
-{
-  "imports": {
-    "http/": "https://deno.land/std/http/",
-    "fmt/": "https://deno.land/std/fmt/",
-    "oak": "https://deno.land/x/oak/mod.ts",
-    "React": "https://dev.jspm.io/react/index.js"
-  }
-}
-```
-
-### **Deprecated!** Installing global scripts (cmdline tools etc.)
-
-Trex allows installing executable scripts from its database, for example:
-
-- [velociraptor](https://github.com/umbopepato/velociraptor)
-- [Commands](https://deno.land/x/commands)
-
-[List of installable tools](https://crewdevio.github.io/Trex-tools/)
-
-Use the `getTool` subcommand:
+`imports`:
 
 ```console
-trex getTool Commands
+imports/
+  |- fmt.ts
+  |- oak.ts
+  |- http.ts
+  |- react.ts
+  |- deps.json
 ```
-
-> **note**: If you are a linux/MacOs user you'll have to specificate the PATH manually to use tools: **`export PATH="/home/username/.deno/bin:\$PATH"`**
+```
 
 ### Deleting packages
 
@@ -267,34 +246,6 @@ trex install --map fs@0.54.0
 ```
 
 > **note**: can be used with third party packages.
-
-### **Deprecated!** Verifying dependency versions
-
-```console
-trex --deps
-```
-
-For the following import map:
-
-```json
-// in import_map.json
-{
-  "imports": {
-    "oak": "https://deno.land/x/oak@v4.0.0/mod.ts",
-    "http/": "https://deno.land/std@0.51.0/http/"
-  }
-}
-```
-
-The `--deps` flag prints out:
-
-| name  | module |                   url                   | version  |  latest  | upToDate |
-| :---: | :----: | :-------------------------------------: | :------: | :------: | :------: |
-|  oak  |  oak   | "https://deno.land/x/oak@v4.0.0/mod.ts" | "v4.0.0" | "v5.0.0" |  false   |
-| http/ |  std   |  "https://deno.land/std@0.54.0/http/"   | "0.54.0" | "0.54.0" |   true   |
-
-This functionality is based on the
-[deno-check-updates](https://github.com/Fzwael/deno-check-updates) tool by [Fzwael](https://github.com/Fzwael).
 
 ### Checking a package's dependency tree
 
@@ -391,12 +342,6 @@ trex --lock file.ts
 
 The above generates a `lock.json` file.
 
-If you use `import_map.json` in input file, you can specify it:
-
-```console
-trex --lock --importmap file.ts
-```
-
 See [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking) for more info.
 
 ## Complete example
@@ -413,11 +358,11 @@ Create a simple server:
 
 ```typescript
 // server.ts
-import { serve } from "http/server.ts";
-import { green } from "fmt/colors.ts";
+import { serve } from "./imports/http.ts";
+import { colors } from "./imports/fmt.ts";
 
 const server = serve({ port: 8000 });
-console.log(green("http://localhost:8000/"));
+console.log(colors.green("http://localhost:8000/"));
 
 for await (const req of server) {
   req.respond({ body: "Hello World\n" });
@@ -427,10 +372,8 @@ for await (const req of server) {
 Run the server:
 
 ```console
-deno run --allow-net --importmap=import_map.json --unstable server.ts
+deno run --allow-net server.ts
 ```
-
-> **note**: it is important to use **--importmap=import_map.json --unstable**
 
 ### Adding third party packages
 
@@ -460,7 +403,7 @@ Then create an oak application. Note the `import` statement.
 
 ```typescript
 // app.ts
-import { Application } from "oak";
+import { Application } from "./imports/oak.ts";
 
 const app = new Application();
 
@@ -474,7 +417,7 @@ await app.listen({ port: 8000 });
 Run the server:
 
 ```console
-deno run --allow-net --importmap=import_map.json --unstable app.ts
+deno run --allow-net app.ts
 ```
 
 ## Contributing
