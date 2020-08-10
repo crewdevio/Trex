@@ -57,5 +57,6 @@ export const enum errorsMessage {
   depsNotFound = "deps.json file not found",
   deleteError = "the package cannot be removed from the imports folder",
   depsFormat = "the deps.json file is not in a valid format",
-  noPackge = "The deps.json file has no registered packages",
+  noPackage = "The deps.json file has no registered packages",
+  installationError = "something went wrong in the installation",
 }
