@@ -68,7 +68,7 @@ export async function cachePackage(url: string): Promise<void> {
 /**
  * generates the url for packages that are installed from a repository.
  * @param {string} repoInfo - repository information { user/repo/path_file }
- * @param {string} pkgName - the name of the package to be saved in the import map file, by default use repository name.
+ * @param {string} pkgName - the name of the package to be saved in the imports folder, by default use repository name.
  * @return {string} url package.
  */
 

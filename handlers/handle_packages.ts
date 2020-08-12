@@ -49,7 +49,7 @@ async function detectVersion(pkgName: string): Promise<string> {
 }
 
 /**
- * get package name to add to import map file
+ * get package name.
  * @param {string} pkg - package name.
  * @return {string} package name.
  */
@@ -66,9 +66,9 @@ function getNamePkg(pkg: string): string {
 }
 
 /**
- * Take the packages and cache them and generate the object for the import_map.json file.
+ * create an imports folder with all the dependencies and generate a deps.json file
  * @param {string[]} args - list of packages to install.
- * @returns {Promise} returns a promise of a { [ key: string ]: string }
+ * @returns {Promise} returns a boolean promise.
  */
 
 export async function installPackages(args: string[]) {
