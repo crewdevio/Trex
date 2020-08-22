@@ -6,11 +6,13 @@
  *
  */
 
-import { green, red } from "https://deno.land/std/fmt/colors.ts";
+import { needProxy, Proxy } from "../imports/proxy.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
-import { needProxy, Proxy } from "../deps.ts";
-import { STD } from "../utils/info.ts";
+import { colors } from "../imports/fmt.ts";
 import { denoApidb } from "../utils/db.ts";
+import { STD } from "../utils/info.ts";
+
+const { green, red } = colors;
 
 /**
  * caches packages.

@@ -1,0 +1,8 @@
+{
+  "meta": {
+    "fmt": "http://denopkg.com/crewdevio/Trex@proxy/proxy/files/fmt.ts",
+    "fs": "https://deno.land/std@0.66.0/fs/mod.ts",
+    "proxy": "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy.ts",
+    "merlin": "https://denopkg.com/crewdevio/merlin/mod.ts"
+  }
+}

@@ -7,9 +7,9 @@
  */
 
 import { getImportMap } from "../handlers/handle_files.ts";
+import { needProxy, Proxy } from "../imports/proxy.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import { importMap } from "../utils/types.ts";
-import { needProxy, Proxy } from "../deps.ts";
 import { STD } from "../utils/info.ts";
 
 /**

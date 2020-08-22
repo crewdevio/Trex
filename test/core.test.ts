@@ -1,7 +1,7 @@
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
-import { Merlin } from "https://denopkg.com/crewdevio/merlin/mod.ts";
 import { LockFile } from "../handlers/handle_lock_file.ts";
 import { packageTreeInfo } from "../tools/logs.ts";
+import { Merlin } from "../imports/merlin.ts";
 
 const merlin = new Merlin();
 

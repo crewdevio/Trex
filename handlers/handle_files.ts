@@ -6,11 +6,12 @@
  *
  */
 
-import { green, cyan } from "https://deno.land/std/fmt/colors.ts";
-import { writeJson } from "https://deno.land/std/fs/mod.ts";
 import { KillProcess } from "../tools/killProcess.ts";
 import { objectGen } from "../utils/types.ts";
+import { writeJson } from "../imports/fs.ts";
+import { colors } from "../imports/fmt.ts";
 
+const { green, cyan } = colors;
 /**
  * takes the import map file and returns its information.
  * @return {string} string.
