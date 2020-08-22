@@ -83,8 +83,7 @@ async function cached(pkgName: string, pkgUrl: string) {
 
   // * log error if package is not found
   else if (!STD.includes(pkgName) && !(await denoApidb(pkgName)).length) {
-    console.error(red("package not found."));
-    return;
+    throw new Error(red("package not found.")).message;
   }
 }
 
