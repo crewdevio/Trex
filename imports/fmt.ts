@@ -1,1 +1,1 @@
-export * from "http://denopkg.com/crewdevio/Trex@proxy/proxy/files/fmt.ts";
+export * from "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/files/fmt.ts";
