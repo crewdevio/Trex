@@ -3,6 +3,7 @@
     "fmt": "http://denopkg.com/crewdevio/Trex@proxy/proxy/files/fmt.ts",
     "fs": "https://deno.land/std@0.66.0/fs/mod.ts",
     "merlin": "https://deno.land/x/merlin/mod.ts",
-    "proxy": "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy.ts"
+    "proxy": "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy.ts",
+    "hash": "https://deno.land/std@0.66.0/hash/mod.ts"
   }
 }
