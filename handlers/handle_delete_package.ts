@@ -10,6 +10,10 @@ import { errorsMessage } from "../utils/types.ts";
 import { existsSync } from "../imports/fs.ts";
 import { colors } from "../imports/fmt.ts";
 
+/**
+ * remove the package from the imports folder
+ * @param _arguments string[ ]
+ */
 export function deletePackage(_arguments: string[]) {
   // * test if exist imports folder
   if (existsSync("./imports/")) {

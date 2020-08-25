@@ -11,7 +11,12 @@ import {
   cachePackage,
   pkgRepo,
 } from "./handle_third_party_package.ts";
-import { WriteImport, WriteDeps, createFolder } from "./handle_files.ts";
+import {
+  WriteImport,
+  WriteDeps,
+  createFolder,
+  validateHash
+} from "./handle_files.ts";
 import { showPackageList } from "../tools/show_package_list.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { existsSync, readJsonSync } from "../imports/fs.ts";
@@ -72,7 +77,7 @@ function getNamePkg(pkg: string): string {
  */
 
 export async function installPackages(args: string[]) {
-  // * package to push in import_map.json
+  // * package to push in deps.json
 
   const beforeTime = Date.now();
 
@@ -128,8 +133,19 @@ export async function installPackages(args: string[]) {
 
         else {
           for (const pkg of Object.entries(deps.meta)) {
-            await cachePackage(pkg[1]);
-            WriteImport(pkg[0], pkg[1]);
+
+            // * verify fingerprints are correct
+            if (await validateHash(pkg[1].url, pkg[1].hash)) {
+              await cachePackage(pkg[1].url);
+              WriteImport(pkg[0], pkg[1].url);
+            }
+
+            else {
+              throw new Error(
+                colors.white(
+                  `\nthe generated hash does not match the package "${colors.green(pkg[0])}",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${colors.red('=>')} ${colors.cyan('https://github.com/crewdevio/Trex/tree/imports')}`
+                  )).message;
+            }
           }
         }
       }
