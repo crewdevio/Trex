@@ -10,7 +10,12 @@ export type objectGen = { [key: string]: string };
 export type proxyPkg = { module: string; url: string };
 
 export interface deps {
-  meta: objectGen;
+  meta: {
+    [key: string]: {
+      url: string;
+      hash: string;
+    }
+  };
 }
 
 export interface Params {

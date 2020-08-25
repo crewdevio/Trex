@@ -23,7 +23,7 @@ export function LogHelp(helpsInfo: string[]) {
 export async function updateTrex(): Promise<void> {
   // * get the version of the repo in github
   const response = await fetch(
-    "https://raw.githubusercontent.com/crewdevio/Trex/master/utils/version.json"
+    "https://denopkg.com/crewdevio/Trex@imports/utils/version.json"
   ); // * get the plain text
   const repoVersion = (await response.json()) as { VERSION: string };
 
@@ -32,7 +32,7 @@ export async function updateTrex(): Promise<void> {
       await exec({
         config: {
           permissions: ["-A", "--unstable", "-n", "trex"],
-          url: "https://deno.land/x/trex/cli.ts",
+          url: "https://denopkg.com/crewdevio/Trex@imports/cli.ts",
         },
       });
       console.log(repoVersion.VERSION);

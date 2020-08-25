@@ -38,7 +38,7 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v2.0.0" };
+export const VERSION = { VERSION: "v1.2.1-imports" };
 
 export const helpsInfo = [
   colors.green(
