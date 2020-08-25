@@ -12,31 +12,31 @@ import { proxyPkg } from "https://deno.land/x/trex/utils/types.ts";
 const modulesProxys: Array<proxyPkg> = [
   {
     module: "_util",
-    url: "http://denopkg.com/crewdevio/Trex@proxy/proxy/files/_util.ts",
+    url: "https://denopkg.com/crewdevio/Trex@proxy/proxy/files/_util.ts",
   },
   {
     module: "archive",
-    url: "http://denopkg.com/crewdevio/Trex@proxy/proxy/files/archive.ts",
+    url: "https://denopkg.com/crewdevio/Trex@proxy/proxy/files/archive.ts",
   },
   {
     module: "encoding",
-    url: "http://denopkg.com/crewdevio/Trex@proxy/proxy/files/encoding.ts",
+    url: "https://denopkg.com/crewdevio/Trex@proxy/proxy/files/encoding.ts",
   },
   {
     module: "fmt",
-    url: "http://denopkg.com/crewdevio/Trex@proxy/proxy/files/fmt.ts",
+    url: "https://denopkg.com/crewdevio/Trex@proxy/proxy/files/fmt.ts",
   },
   {
     module: "node",
-    url: "http://denopkg.com/crewdevio/Trex@proxy/proxy/files/node.ts",
+    url: "https://denopkg.com/crewdevio/Trex@proxy/proxy/files/node.ts",
   },
   {
     module: "testing",
-    url: "http://denopkg.com/crewdevio/Trex@proxy/proxy/files/testing.ts",
+    url: "https://denopkg.com/crewdevio/Trex@proxy/proxy/files/testing.ts",
   },
   {
     module: "wasi",
-    url: "http://denopkg.com/crewdevio/Trex@proxy/proxy/files/wasi.ts",
+    url: "https://denopkg.com/crewdevio/Trex@proxy/proxy/files/wasi.ts",
   },
 ];
 
