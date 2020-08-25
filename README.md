@@ -29,8 +29,6 @@
    </a>
 </p>
 
-<!-- ![Use Trex](https://cdn.discordapp.com/attachments/727169454667989016/728363543614980116/ajio.gif) -->
-
 ## About
 
 Trex is a package management tool for deno similar to npm but keeping close to the deno philosophy.
@@ -45,19 +43,11 @@ Trex is a package management tool for deno similar to npm but keeping close to t
 
 ## Installation
 
-Install from the [nest.land](https://nest.land/) module registry (explicit version is required):
-
 ```console
-deno install -A --unstable -n trex https://x.nest.land/Trex@<version>/cli.ts
+deno install -A --unstable -n trex https://denopkg.com/crewdevio/Trex@imports/cli.ts
 ```
 
 > **note**: Works with deno >= 1.2.0.
-
-Or from deno.land:
-
-```console
-deno install -A --unstable -n trex https://deno.land/x/trex/cli.ts
-```
 
 **we shorten the install command so it's not that long**
 
@@ -75,7 +65,7 @@ You can give those permissions explicitly.
 Install new version with the `-f` flag:
 
 ```console
-deno install -f -A --unstable -n trex https://deno.land/x/trex/cli.ts
+deno install -f -A --unstable -n trex https://denopkg.com/crewdevio/Trex@imports/cli.ts
 ```
 
 Or use the `update` command:
@@ -159,15 +149,26 @@ imports/
   |- dinoenv.ts
   |- deps.json
 ```
+
 the deps.json file is used as an import map for internal functionalities.
 
 `deps.json`
+
 ```js
 {
   "meta": {
-    "fmt": "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy_files/fmt.ts",
-    "oak": "https://deno.land/x/oak/mod.ts",
-    "dinoenv": "https://deno.land/x/dinoenv/mod.ts"
+    "fmt": {
+      "url": "https://denopkg/crewdevio/Trex@proxy/proxy/files/fmt.ts",
+      "hash": "bf6f443a9fdb69b2a75df70de59458244db6067173a20f30af36cfcd3923389a"
+    },
+    "oak": {
+      "url": "https://deno.land/x/oak/mod.ts",
+      "hash": "bf6f443a9fdb69b2a75df70de59458244db6067173a20f30af36cfcd3923389a"
+    },
+    "dinoenv": {
+      "url": "https://deno.land/x/dinoenv/mod.ts",
+      "hash": "bf6f443a9fdb69b2a75df70de59458244db6067173a20f30af36cfcd3923389a"
+    }
   }
 }
 ```
@@ -198,7 +199,6 @@ imports/
   |- react.ts
   |- deps.json
 ```
-```
 
 ### Deleting packages
 
@@ -206,21 +206,29 @@ imports/
 trex delete React
 ```
 
-Remove a specific version from the cache and the `import_map.json` file:
+Remove a specific version from the imports dir and the `deps.json` file:
 
 ```console
 trex delete fs@0.52.0
 ```
 
-`import_map.json`:
+`deps.json`:
 
 ```json
 {
-  "imports": {
-    "fs/": "https://deno.land/std/fs/",
-    "http/": "https://deno.land/std/http/",
-    "fmt/": "https://deno.land/std/fmt/",
-    "oak": "https://deno.land/x/oak/mod.ts"
+  "meta": {
+    "fmt": {
+      "url": "https://denopkg/crewdevio/Trex@proxy/proxy/files/fmt.ts",
+      "hash": "bf6f443a9fdb69b2a75df70de59458244db6067173a20f30af36cfcd3923389a"
+    },
+    "oak": {
+      "url": "https://deno.land/x/oak/mod.ts",
+      "hash": "bf6f443a9fdb69b2a75df70de59458244db6067173a20f30af36cfcd3923389a"
+    },
+    "http": {
+      "url": "https://deno.land/std/http/mod.ts",
+      "hash": "bf6f443a9fdb69b2a75df70de59458244db6067173a20f30af36cfcd3923389a"
+    }
   }
 }
 ```
@@ -239,8 +247,11 @@ trex install --map fs@0.54.0
 
 ```json
 {
-  "imports": {
-    "fs/": "https://deno.land/std@0.54.0/fs/"
+  "meta": {
+    "fs": {
+      "url": "https://deno.land/std@0.54.0/fs/mod.ts",
+      "hash": "bf6f443a9fdb69b2a75df70de59458244db6067173a20f30af36cfcd3923389a"
+    }
   }
 }
 ```
@@ -385,14 +396,23 @@ Add the master version of oak:
 trex i --map oak
 ```
 
-This adds `oak` to the `import_map.json` file:
+This adds `oak` to the `deps.json` file:
 
 ```json
 {
-  "imports": {
-    "http/": "https://deno.land/std/http/",
-    "fmt/": "https://deno.land/std/fmt/",
-    "oak": "https://deno.land/x/oak/mod.ts"
+  "meta": {
+    "fmt": {
+      "url": "https://denopkg/crewdevio/Trex@proxy/proxy/files/fmt.ts",
+      "hash": "bf6f443a9fdb69b2a75df70de59458244db6067173a20f30af36cfcd3923389a"
+    },
+    "oak": {
+      "url": "https://deno.land/x/oak/mod.ts",
+      "hash": "bf6f443a9fdb69b2a75df70de59458244db6067173a20f30af36cfcd3923389a"
+    },
+    "http": {
+      "url": "https://deno.land/std/http/mod.ts",
+      "hash": "bf6f443a9fdb69b2a75df70de59458244db6067173a20f30af36cfcd3923389a"
+    }
   }
 }
 ```
