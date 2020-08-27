@@ -65,13 +65,23 @@ Install from the [nest.land](https://nest.land/) module registry (explicit versi
 deno install -A --unstable -n trex https://x.nest.land/Trex@<version>/cli.ts
 ```
 
-> **note**: Works with deno >= 1.0.0.
+> **note**: Works with deno >= 1.2.0.
 
 Or from deno.land:
 
 ```console
 deno install -A --unstable -n trex https://deno.land/x/trex/cli.ts
 ```
+
+### `Trex imports`
+
+This is a version that does not use import maps as a central hub, it can be used to handle dependencies for libraries and packages. you can see the documentation [here](https://github.com/crewdevio/Trex/tree/imports)
+
+```console
+deno install -A --unstable -n trex https://denopkg.com/crewdevio/Trex@imports/cli.ts
+```
+
+> **note**: if you try to install this version with the name trex it will replace the current version, if you want to have both versions you can use another name in the installation `-n [otherName]`
 
 **we shorten the install command so it's not that long**
 
@@ -204,23 +214,6 @@ trex --custom React=https://dev.jspm.io/react/index.js
 }
 ```
 
-### **Deprecated!** Installing global scripts (cmdline tools etc.)
-
-Trex allows installing executable scripts from its database, for example:
-
-- [velociraptor](https://github.com/umbopepato/velociraptor)
-- [Commands](https://deno.land/x/commands)
-
-[List of installable tools](https://crewdevio.github.io/Trex-tools/)
-
-Use the `getTool` subcommand:
-
-```console
-trex getTool Commands
-```
-
-> **note**: If you are a linux/MacOs user you'll have to specificate the PATH manually to use tools: **`export PATH="/home/username/.deno/bin:\$PATH"`**
-
 ### Deleting packages
 
 ```console
@@ -267,34 +260,6 @@ trex install --map fs@0.54.0
 ```
 
 > **note**: can be used with third party packages.
-
-### **Deprecated!** Verifying dependency versions
-
-```console
-trex --deps
-```
-
-For the following import map:
-
-```json
-// in import_map.json
-{
-  "imports": {
-    "oak": "https://deno.land/x/oak@v4.0.0/mod.ts",
-    "http/": "https://deno.land/std@0.51.0/http/"
-  }
-}
-```
-
-The `--deps` flag prints out:
-
-| name  | module |                   url                   | version  |  latest  | upToDate |
-| :---: | :----: | :-------------------------------------: | :------: | :------: | :------: |
-|  oak  |  oak   | "https://deno.land/x/oak@v4.0.0/mod.ts" | "v4.0.0" | "v5.0.0" |  false   |
-| http/ |  std   |  "https://deno.land/std@0.54.0/http/"   | "0.54.0" | "0.54.0" |   true   |
-
-This functionality is based on the
-[deno-check-updates](https://github.com/Fzwael/deno-check-updates) tool by [Fzwael](https://github.com/Fzwael).
 
 ### Checking a package's dependency tree
 
