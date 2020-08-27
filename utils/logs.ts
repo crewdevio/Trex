@@ -6,9 +6,11 @@
  *
  */
 
-import { cyan, red, green, yellow } from "https://deno.land/std/fmt/colors.ts";
 import exec from "../tools/install_tools.ts";
+import { colors } from "../imports/fmt.ts";
 import { VERSION } from "./info.ts";
+
+const { cyan, red, green, yellow } = colors;
 
 export function Version(version: string) {
   console.log(version, cyan("༼ つ ◕_◕ ༽つ"));
@@ -45,7 +47,9 @@ export async function updateTrex(): Promise<void> {
 export function offLine() {
   throw new Error(
     red(
-      "something went wrong when making the request, maybe you're offline, check your connection.")).message;
+      "something went wrong when making the request, maybe you're offline, check your connection."
+    )
+  ).message;
 }
 
 export function Somebybroken(message: string = "some process is broken.") {

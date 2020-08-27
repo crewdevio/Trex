@@ -7,16 +7,16 @@
  */
 
 import { nestPackageUrl, cacheNestpackage, pkgRepo } from "./handle_third_party_package.ts";
-import { yellow, red, green } from "https://deno.land/std/fmt/colors.ts";
 import { getImportMap, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
-import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { importMap, objectGen } from "../utils/types.ts";
 import { Somebybroken } from "../utils/logs.ts";
-import cache from "./handle_cache.ts";
+import { existsSync } from "../imports/fs.ts";
 import { denoApidb } from "../utils/db.ts";
+import { colors } from "../imports/fmt.ts";
+import cache from "./handle_cache.ts";
 
-
+const { yellow, red, green } = colors
 /**
  * verify that the imports key exists in the import map file.
  * @param {object} map - the import map json object.

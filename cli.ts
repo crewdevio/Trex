@@ -7,15 +7,16 @@
  */
 
 import { installPackages, exist_imports, customPackage } from "./handlers/handle_packages.ts";
-import { green, yellow, red, cyan } from "https://deno.land/std/fmt/colors.ts";
 import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
 import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { haveVersion } from "./handlers/handle_delete_package.ts";
-import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
-import { packageTreeInfo } from "./tools/logs.ts"
+import { packageTreeInfo } from "./tools/logs.ts";
+import { existsSync } from "./imports/fs.ts";
+import { colors } from "./imports/fmt.ts";
 
+const { red, green, yellow } = colors;
 async function mainCli() {
   const _arguments = Deno.args;
   // * install some packages

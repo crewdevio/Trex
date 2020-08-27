@@ -6,8 +6,9 @@
  *
  */
 
-import { red, green } from "https://deno.land/std/fmt/colors.ts";
+import { colors } from "../imports/fmt.ts";
 
+const { red, green } = colors;
 /**
  * generate a lock file.
  * @param {string[]} args - input file to generate the lock file
