@@ -6,12 +6,13 @@
  *
  */
 
+import { existsSync, readJsonSync, writeJsonSync } from "../imports/fs.ts";
 import { errorsMessage } from "../utils/types.ts";
-import { existsSync } from "../imports/fs.ts";
 import { colors } from "../imports/fmt.ts";
+import { deps } from "../utils/types.ts";
 
 /**
- * remove the package from the imports folder
+ * remove the package from the imports folder and deps.json file
  * @param _arguments string[ ]
  */
 export function deletePackage(_arguments: string[]) {
@@ -20,8 +21,16 @@ export function deletePackage(_arguments: string[]) {
     try {
       const { removeSync } = Deno;
 
+      if (!existsSync("./imports/deps.json")) {
+        throw new Error(colors.red(errorsMessage.depsNotFound)).message;
+      }
+
+      const depsFiles = readJsonSync("./imports/deps.json") as deps;
+
       for (let i = 1; i < _arguments.length; i++) {
         const pkgName = _arguments[i];
+        delete depsFiles?.meta[pkgName];
+        writeJsonSync("./imports/deps.json", { ...depsFiles }, { spaces: 2 });
         removeSync(`./imports/${pkgName}.ts`, { recursive: true });
       }
     } catch (_) {

@@ -26,6 +26,7 @@ async function mainCli() {
         await installPackages(_arguments);
       }
       catch (err) {
+        console.log(err);
         throw new Error(err).message;
       }
     }
