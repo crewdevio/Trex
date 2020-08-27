@@ -35,11 +35,9 @@ Trex is a package management tool for deno similar to npm but keeping close to t
 
 ## Additional topics
 
-- [Proxy](docs/proxy.md)
+- [why does this version exist?](https://dev.to/buttercubz/rethinking-the-way-we-handle-dependency-imports-in-deno-3j72)
 
-- [Integration with nest.land](docs/nest_land_setup.md)
-
-- [How can I have my package available to download with Trex?](docs/add_package.md)
+- [hash and fingerprint in deps.json file](docs/hash.md)
 
 ## Installation
 
@@ -74,7 +72,7 @@ Or use the `update` command:
 trex update
 ```
 
-Note: available for versions 0.2.0 or higher.
+> **Note**: available for versions 0.2.0 or higher.
 
 Verify the installation of Trex:
 

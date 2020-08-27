@@ -1,0 +1,3 @@
+## hash and integrity of dependencies
+
+To guarantee that when a `trex install` is done, the same dependencies are downloaded, we create a hash or fingerprint for the dependencies, it uses the `sha256` hash algorithm, it is generated based on the url of the package and its content, then if the url is changed or the content of the package changes it will not be possible to re-download that package as it was altered. We do not recommend using packages with non-versioned urls since they use the latest version by default and as the content can change the hash it will be invalid and you will have to install the package again for the hash to be generated
