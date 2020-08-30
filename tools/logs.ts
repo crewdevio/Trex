@@ -7,7 +7,7 @@
  */
 
 import { deps, errorsMessage } from "../utils/types.ts";
-import { readJsonSync } from "../imports/fs.ts";
+import { readJson } from "../imports/fs.ts";
 import { colors } from "../imports/fmt.ts";
 
 /**
@@ -18,7 +18,7 @@ import { colors } from "../imports/fmt.ts";
 
 export async function packageTreeInfo(_arguments: string[]) {
   try {
-    const map = readJsonSync("./imports/deps.json") as deps;
+    const map = await readJson("./imports/deps.json") as deps;
 
     if (!map?.meta) {
       throw new Error(colors.red(errorsMessage.keyNotFound)).message;

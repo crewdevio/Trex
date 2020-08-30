@@ -46,48 +46,47 @@ export const helpsInfo = [
     ),
 
   colors.green("USAGE:"),
-  `   trex ${colors.yellow('[OPTIONS]')} ${colors.yellow('[SUBCOMMAND]')}\n`,
+  `   [cli-name] ${colors.yellow('[OPTIONS]')} ${colors.yellow('[SUBCOMMAND]')}\n`,
 
   colors.green("OPTIONS:"),
-  `   ${colors.yellow('--help')}     print help information.\n`,
+  `   ${colors.yellow('--help, -h')}     print help info\n`,
 
-  `   ${colors.yellow('--custom')}   install custom package.\n`,
+  `   ${colors.yellow('--custom, -c')}   install custom package\n`,
 
-  `   ${colors.yellow('--version')}  print version information.\n`,
+  `   ${colors.yellow('--version, -v')}  print version\n`,
 
-  `   ${colors.yellow('--map')}      add package to import_map.json.\n`,
+  `   ${colors.yellow('--map, -m')}      install package from deno.land\n`,
 
-  `   ${colors.yellow('--lock')}     create a lock files.\n`,
+  `   ${colors.yellow('--lock, -l')}     create a lock files\n`,
 
-  `   ${colors.yellow('--nest')}     install package from nest.land.\n`,
+  `   ${colors.yellow('--nest, -n')}     install package from nest.land\n`,
 
-  `   ${colors.yellow('--pkg')}      install package from some repository.\n`,
+  `   ${colors.yellow('--pkg, -p')}      install package from some repository\n`,
 
   colors.green("SUBCOMMANDS:"),
   `   ${colors.yellow('[install or i]')}  install a package.\n`,
 
-  `   ${colors.yellow(`delete${colors.red('<@version>')}`)}  delete a package from import map and cache.\n`,
+  `   ${colors.yellow('delete')}          delete a package\n`,
 
-  `   ${colors.yellow('update')}    update Trex.\n`,
+  `   ${colors.yellow('upgrade [name]')}  update cli\n`,
 
-  `   ${colors.yellow('treeDeps')}  view dependency tree.\n`
+  `   ${colors.yellow('tree')}            view dependency tree\n`
 
 ];
 
 export const flags = {
-  map: "--map",
-  version: "--version",
-  custom: "--custom",
-  help: "--help",
-  lock: "--lock",
-  nest: "--nest",
-  pkg: "--pkg",
+  map: ["--map", "-m"],
+  version: ["--version", "-v"],
+  custom: ["--custom", "-c"],
+  help: ["--help", "-h"],
+  lock: ["--lock", "-l"],
+  nest: ["--nest", "-n"],
+  pkg: ["--pkg", "-p"],
 };
 
 export const keyWords = {
-  install: "install",
-  i: "i",
+  install: ["install", "i"],
   uninstall: "delete",
-  update: "update",
-  tree: "treeDeps"
+  upgrade: "upgrade",
+  tree: "tree"
 };
