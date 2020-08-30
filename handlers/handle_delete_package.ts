@@ -6,7 +6,7 @@
  *
  */
 
-import { existsSync, readJsonSync, writeJsonSync } from "../imports/fs.ts";
+import { exists, readJson, writeJson } from "../imports/fs.ts";
 import { errorsMessage } from "../utils/types.ts";
 import { colors } from "../imports/fmt.ts";
 import { deps } from "../utils/types.ts";
@@ -15,23 +15,23 @@ import { deps } from "../utils/types.ts";
  * remove the package from the imports folder and deps.json file
  * @param _arguments string[ ]
  */
-export function deletePackage(_arguments: string[]) {
+export async function deletePackage(_arguments: string[]) {
   // * test if exist imports folder
-  if (existsSync("./imports/")) {
+  if (await exists("./imports/")) {
     try {
-      const { removeSync } = Deno;
+      const { remove } = Deno;
 
-      if (!existsSync("./imports/deps.json")) {
+      if (!(await exists("./imports/deps.json"))) {
         throw new Error(colors.red(errorsMessage.depsNotFound)).message;
       }
 
-      const depsFiles = readJsonSync("./imports/deps.json") as deps;
+      const depsFiles = await readJson("./imports/deps.json") as deps;
 
       for (let i = 1; i < _arguments.length; i++) {
         const pkgName = _arguments[i];
         delete depsFiles?.meta[pkgName];
-        writeJsonSync("./imports/deps.json", { ...depsFiles }, { spaces: 2 });
-        removeSync(`./imports/${pkgName}.ts`, { recursive: true });
+        await writeJson("./imports/deps.json", { ...depsFiles }, { spaces: 2 });
+        await remove(`./imports/${pkgName}.ts`, { recursive: true });
       }
     } catch (_) {
       throw new Error(colors.red(errorsMessage.deleteError)).message;
