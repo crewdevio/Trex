@@ -1,4 +1,4 @@
-<h1 align="center">Trex 🦕</h1>
+<h1 align="center">Trex Imports 🦕</h1>
 
 <p align="center">
   <img src="http://clipart-library.com/image_gallery/3119.png" width="350">
@@ -31,7 +31,7 @@
 
 ## About
 
-Trex is a package management tool for deno similar to npm but keeping close to the deno philosophy.
+`Trex imports` is a package management tool for deno similar to npm but keeping close to the deno philosophy.
 
 ## Additional topics
 
@@ -42,14 +42,14 @@ Trex is a package management tool for deno similar to npm but keeping close to t
 ## Installation
 
 ```console
-deno install -A --unstable -n trex https://denopkg.com/crewdevio/Trex@imports/cli.ts
+deno install -A --unstable -n imports https://denopkg.com/crewdevio/Trex@imports/cli.ts
 ```
 
-> **note**: Works with deno >= 1.2.0.
+> **note**: Works with deno >= 1.2.0
 
 **we shorten the install command so it's not that long**
 
-The permissions that Trex uses are:
+The permissions that imports uses are:
 
 - --allow-net
 - --allow-read
@@ -58,34 +58,34 @@ The permissions that Trex uses are:
 
 You can give those permissions explicitly.
 
-## Updating Trex
+## Updating imports
 
 Install new version with the `-f` flag:
 
 ```console
-deno install -f -A --unstable -n trex https://denopkg.com/crewdevio/Trex@imports/cli.ts
+deno install -f -A --unstable -n imports https://denopkg.com/crewdevio/Trex@imports/cli.ts
 ```
 
-Or use the `update` command:
+Or use the `upgrade` command:
 
 ```console
-trex update
+imports upgrade [name]
 ```
 
 > **Note**: available for versions 0.2.0 or higher.
 
-Verify the installation of Trex:
+Verify the installation of imports:
 
 ```console
-trex --version
+imports --version
 ```
 
-and the console should print the Trex version.
+and the console should print the imports version.
 
-For help on the commands that Trex provides, use:
+For help on the commands that imports provides, use:
 
 ```console
-trex --help
+imports --help
 ```
 
 For a better implementation of this tool you can use the [Commands](https://deno.land/x/commands) utility.
@@ -97,10 +97,10 @@ For a better implementation of this tool you can use the [Commands](https://deno
 Install the `fs`, `http` and `fmt` modules from std:
 
 ```console
-trex install --map fs http fmt
+imports install --map fs http fmt
 ```
 
-> **note**: you can use `trex i --map fs http fmt`
+> **note**: you can use `imports i --map fs http fmt`
 
 `--map` installs packages from the standard library and those hosted at `deno.land/x`
 
@@ -109,7 +109,7 @@ trex install --map fs http fmt
 Install a package hosted on [nest.land](https://nest.land/gallery):
 
 ```console
-trex install --nest opine@0.13.0
+imports install --nest opine@0.13.0
 ```
 
 > **note**: if you want to install a package using nest.land you must specify a version explicitly as above
@@ -117,19 +117,19 @@ trex install --nest opine@0.13.0
 You can install packages from std hosted in nest.land by specifying the package and the version:
 
 ```console
-trex install --nest fs@0.61.0
+imports install --nest fs@0.61.0
 ```
 
 ### Installing from a repository
 
 ```console
-trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
+imports install --pkg [user]/[repo or repo@tag/branch]/[path/to/file] [packageName]
 ```
 
 Example:
 
 ```console
-trex install --pkg oakserver/oak/mod.ts oak
+imports install --pkg oakserver/oak/mod.ts oak
 ```
 
 The above downloads oak directly from its repository.
@@ -176,7 +176,7 @@ the deps.json file is used as an import map for internal functionalities.
 Download all the packages listed in the `deps.json` similar to `npm install`:
 
 ```console
-trex install
+imports install
 ```
 
 ### Adding custom packages
@@ -184,7 +184,7 @@ trex install
 Install a package from a custom URL source:
 
 ```console
-trex --custom react=https://dev.jspm.io/react/index.js
+imports --custom react=https://dev.jspm.io/react/index.js
 ```
 
 `imports`:
@@ -201,13 +201,13 @@ imports/
 ### Deleting packages
 
 ```console
-trex delete React
+imports delete React
 ```
 
 Remove a specific version from the imports dir and the `deps.json` file:
 
 ```console
-trex delete fs@0.52.0
+imports delete fs@0.52.0
 ```
 
 `deps.json`:
@@ -238,7 +238,7 @@ Removing from cache only works with standard packages and those installed from `
 Specify a package's version:
 
 ```console
-trex install --map fs@0.54.0
+imports install --map fs@0.54.0
 ```
 
 `import_map.json`
@@ -259,7 +259,7 @@ trex install --map fs@0.54.0
 ### Checking a package's dependency tree
 
 ```console
-trex treeDeps fs
+imports tree fs
 ```
 
 This prints out something like:
@@ -346,7 +346,7 @@ Deno's solution to avoid this is to use integrity checking and lock files.
 Create a lockfile:
 
 ```console
-trex --lock file.ts
+imports --lock file.ts
 ```
 
 The above generates a `lock.json` file.
@@ -360,7 +360,7 @@ See [deno document](https://deno.land/manual/linking_to_external_code/integrity_
 Install `http` and `fmt`:
 
 ```console
-trex install --map http fmt
+imports install --map http fmt
 ```
 
 Create a simple server:
@@ -391,7 +391,7 @@ Example using [oak](https://deno.land/x/oak)
 Add the master version of oak:
 
 ```console
-trex i --map oak
+imports i --map oak
 ```
 
 This adds `oak` to the `deps.json` file:
@@ -444,12 +444,12 @@ Contributions are welcome, see [CONTRIBUTING GUIDELINES](CONTRIBUTING.md).
 
 ## Licensing
 
-Trex is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
+Trex Imports is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
 
 </br>
  <p align="center">
     <img src="http://clipart-library.com/image_gallery/3119.png" width="150">
-    <h3 align="center">Trex is powered by</h3>
+    <h3 align="center">Trex imports is powered by</h3>
     <p align="center">
        <a href="https://nest.land/">
 	  <img src="https://cdn.discordapp.com/attachments/656976424778989602/735587312448176132/favicon_light.svg" width="85" height="85">

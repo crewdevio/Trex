@@ -18,7 +18,7 @@ import { exists } from "./imports/fs.ts";
 async function mainCli() {
   const _arguments = Deno.args;
   // * install some packages
-  if (_arguments[0] === keyWords.install || _arguments[0] === keyWords.i) {
+  if (keyWords.install.includes(_arguments[0])) {
 
     if (await exists("./imports/")) {
 
@@ -36,31 +36,31 @@ async function mainCli() {
     }
   }
   // * display trex version
-  else if (_arguments[0] === flags.version) {
+  else if (flags.version.includes(_arguments[0])) {
     Version(VERSION.VERSION);
   }
 
-  else if (_arguments[0] === flags.help) {
+  else if (flags.help.includes(_arguments[0])) {
     LogHelp(helpsInfo);
   }
   // * install a custom package
-  else if (_arguments[0] === flags.custom) {
+  else if (flags.custom.includes(_arguments[0])) {
     customPackage(..._arguments)
   }
   // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
-    deletePackage(_arguments);
+    await deletePackage(_arguments);
   }
   // * update to lastest version of trex
-  else if (_arguments[0] === keyWords.update) {
-    await updateTrex();
+  else if (_arguments[0] === keyWords.upgrade) {
+    await updateTrex(_arguments[1]);
   }
   // * shows the dependency tree of a package
   else if (_arguments[0] === keyWords.tree) {
     await packageTreeInfo(_arguments);
   }
   // * create lock file
-  else if (_arguments[0] === flags.lock) {
+  else if (flags.lock.includes(_arguments[0])) {
     await LockFile(..._arguments);
   }
   // * displays help information
