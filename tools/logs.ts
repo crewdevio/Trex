@@ -16,20 +16,34 @@ import { colors } from "../imports/fmt.ts";
  * @returns {boolean} return process state or throw a message with an error
  */
 
-export async function packageTreeInfo() {
+export async function packageTreeInfo(_arguments: string[]) {
   try {
     const map = readJsonSync("./imports/deps.json") as deps;
 
     if (!map?.meta) {
       throw new Error(colors.red(errorsMessage.keyNotFound)).message;
     }
+
+    const pkgName = _arguments[1];
+
+    const process = Deno.run({
+      cmd: ["deno", "info", "--unstable", map?.meta[pkgName].url],
+    });
+
+    if (!(await process.status()).success) {
+      throw new Error(errorsMessage.processError).name;
+    }
+
+    process.close();
   }
   catch (err) {
     throw new Error(
       colors.red(
         err instanceof Deno.errors.NotFound
           ? errorsMessage.depsNotFound
-          : errorsMessage.depsFormat
+          : typeof err === "string"
+            ? err
+            :(err as Error).message
       )
     ).message;
   }

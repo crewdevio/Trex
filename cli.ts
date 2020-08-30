@@ -13,14 +13,14 @@ import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import { createFolder } from "./handlers/handle_files.ts";
 import { packageTreeInfo } from "./tools/logs.ts"
-import { existsSync } from "./imports/fs.ts";
+import { exists } from "./imports/fs.ts";
 
 async function mainCli() {
   const _arguments = Deno.args;
   // * install some packages
   if (_arguments[0] === keyWords.install || _arguments[0] === keyWords.i) {
 
-    if (existsSync("./imports/")) {
+    if (await exists("./imports/")) {
 
       try {
         await installPackages(_arguments);
@@ -57,8 +57,7 @@ async function mainCli() {
   }
   // * shows the dependency tree of a package
   else if (_arguments[0] === keyWords.tree) {
-    await packageTreeInfo()
-
+    await packageTreeInfo(_arguments);
   }
   // * create lock file
   else if (_arguments[0] === flags.lock) {

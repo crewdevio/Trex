@@ -64,4 +64,5 @@ export const enum errorsMessage {
   depsFormat = "the deps.json file is not in a valid format",
   noPackage = "The deps.json file has no registered packages",
   installationError = "something went wrong in the installation",
+  processError = "a process not completed successfully"
 }
