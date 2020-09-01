@@ -8,7 +8,7 @@
 
 import { colors } from "../imports/fmt.ts";
 
-const { green, yellow, red } = colors;
+const { green, yellow } = colors;
 export const URI_STD = "https://deno.land/std";
 
 export const URI_X = "https://deno.land/x/";
@@ -39,7 +39,7 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.2.1" };
+export const VERSION = { VERSION: "v1.2.2" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
@@ -48,46 +48,45 @@ export const helpsInfo = [
   `   trex ${yellow('[OPTIONS]')} ${yellow('[SUBCOMMAND]')}\n`,
 
   green("OPTIONS:"),
-  `   ${yellow('--help')}     print help information.\n`,
+  `   ${yellow('--help, -h')}     print help info\n`,
 
-  `   ${yellow('--custom')}   install custom package.\n`,
+  `   ${yellow('--custom, -c')}   install custom package\n`,
 
-  `   ${yellow('--version')}  print version information.\n`,
+  `   ${yellow('--version, -v')}  print version\n`,
 
-  `   ${yellow('--map')}      add package to import_map.json.\n`,
+  `   ${yellow('--map, -m')}      install package from deno.land\n`,
 
-  `   ${yellow('--lock')}     create a lock files.\n`,
+  `   ${yellow('--lock')}         create a lock file\n`,
 
-  `   ${yellow('--nest')}     install package from nest.land.\n`,
+  `   ${yellow('--nest, -n')}     install package from nest.land\n`,
 
-  `   ${yellow('--pkg')}      install package from some repository.\n`,
+  `   ${yellow('--pkg, -p')}      install package from some repository\n`,
 
   green("SUBCOMMANDS:"),
-  `   ${yellow('[install or i]')}  install a package.\n`,
+  `   ${yellow('[install or i]')}  install a package\n`,
 
-  `   ${yellow(`delete${red('<@version>')}`)}  delete a package from import map and cache.\n`,
+  `   ${yellow('delete')}          delete a package\n`,
 
-  `   ${yellow('update')}    update Trex.\n`,
+  `   ${yellow('upgrade')}         update trex\n`,
 
-  `   ${yellow('treeDeps')}  view dependency tree.\n`
+  `   ${yellow('tree')}            view dependency tree\n`
 
 ];
 
 export const flags = {
-  map: "--map",
-  version: "--version",
-  custom: "--custom",
-  help: "--help",
+  map: ["--map", "-m"],
+  version: ["--version", "-v"],
+  custom: ["--custom", "-c"],
+  help: ["--help", "-h"],
   lock: "--lock",
-  nest: "--nest",
-  pkg: "--pkg",
+  nest: ["--nest", "-n"],
+  pkg: ["--pkg", "-p"],
 };
 
 export const keyWords = {
-  install: "install",
-  i: "i",
+  install: ["install", "i"],
   uninstall: "delete",
-  update: "update",
-  tree: "treeDeps",
+  upgrade: "upgrade",
+  tree: "tree",
   run: "run"
 };

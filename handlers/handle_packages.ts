@@ -115,7 +115,7 @@ export async function installPackages(args: string[]) {
 
   const beforeTime = Date.now();
 
-  if (args[1] === flags.map) {
+  if (flags.map.includes(args[1])) {
     for (let index = 2; index < args.length; index++) {
       const url = await detectVersion(args[index]);
       await cache(args[index].split("@")[0], url);
@@ -126,7 +126,7 @@ export async function installPackages(args: string[]) {
   }
 
   // * install packages hosted on nest.land.
-  else if (args[1] === flags.nest) {
+  else if (flags.nest.includes(args[1])) {
     for (let index = 2; index < args.length; index++) {
 
       const [name, version] = args[index].split("@");
@@ -138,7 +138,7 @@ export async function installPackages(args: string[]) {
   }
 
   // * install from repo using denopkg.com
-  else if (args[1] === flags.pkg) {
+  else if (flags.pkg.includes(args[1])) {
     const [name, url] = pkgRepo(args[2], args[3]);
     await cacheNestpackage(url);
 

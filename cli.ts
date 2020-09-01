@@ -20,7 +20,7 @@ const { red, green, yellow } = colors;
 async function mainCli() {
   const _arguments = Deno.args;
   // * install some packages
-  if (_arguments[0] === keyWords.install || _arguments[0] === keyWords.i) {
+  if (keyWords.install.includes(_arguments[0])) {
 
     if (existsSync("./import_map.json")) {
 
@@ -42,15 +42,15 @@ async function mainCli() {
     }
   }
   // * display trex version
-  else if (_arguments[0] === flags.version) {
+  else if (flags.version.includes(_arguments[0])) {
     Version(VERSION.VERSION);
   }
 
-  else if (_arguments[0] === flags.help) {
+  else if (flags.help.includes(_arguments[0])) {
     LogHelp(helpsInfo);
   }
   // * install a custom package
-  else if (_arguments[0] === flags.custom) {
+  else if (flags.custom.includes(_arguments[0])) {
     customPackage(..._arguments)
   }
   // * uninstall some package
@@ -97,7 +97,7 @@ async function mainCli() {
     }
   }
   // * update to lastest version of trex
-  else if (_arguments[0] === keyWords.update) {
+  else if (_arguments[0] === keyWords.upgrade) {
     await updateTrex();
   }
   // * shows the dependency tree of a package
