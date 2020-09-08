@@ -103,10 +103,10 @@ Install new version with the `-f` flag:
 deno install -f -A --unstable -n trex https://deno.land/x/trex/cli.ts
 ```
 
-Or use the `update` command:
+Or use the `upgrade` command:
 
 ```console
-trex update
+trex upgrade
 ```
 
 Note: available for versions 0.2.0 or higher.
@@ -264,7 +264,7 @@ trex install --map fs@0.54.0
 ### Checking a package's dependency tree
 
 ```console
-trex treeDeps fs
+trex tree fs
 ```
 
 This prints out something like:
