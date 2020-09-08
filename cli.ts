@@ -102,7 +102,7 @@ async function mainCli() {
   }
   // * shows the dependency tree of a package
   else if (_arguments[0] === keyWords.tree) {
-    packageTreeInfo(..._arguments)
+    await packageTreeInfo(..._arguments)
 
   }
   // * create lock file

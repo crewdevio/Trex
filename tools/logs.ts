@@ -60,7 +60,7 @@ export async function packageTreeInfo(...args: string[]) {
 
         if (moduleName === pkg) {
           const process = Deno.run({
-            cmd: ["deno", "info", map.imports[pkg]],
+            cmd: ["deno", "info", "--unstable", map.imports[pkg]],
           });
 
           if (!(await process.status()).success) {
