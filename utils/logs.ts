@@ -13,7 +13,11 @@ import { VERSION } from "./info.ts";
 const { cyan, red, green, yellow } = colors;
 
 export function Version(version: string) {
-  console.log(version, cyan("༼ つ ◕_◕ ༽つ"));
+  console.log(
+    `${colors.green("trex:")}\n ${colors.yellow(
+      version
+    )} \n${colors.green("Deno:")}\n ${colors.yellow("v" + Deno.version.deno)}`
+  );
 }
 
 export function LogHelp(helpsInfo: string[]) {
@@ -26,7 +30,9 @@ export async function updateTrex(): Promise<void> {
   // * get the version of the repo in github
   const response = await fetch(
     "https://raw.githubusercontent.com/crewdevio/Trex/master/utils/version.json"
-  ); // * get the plain text
+  ).catch(err => offLine()) as Response;
+
+  // * get the json file
   const repoVersion = (await response.json()) as { VERSION: string };
 
   if (repoVersion.VERSION !== VERSION.VERSION) {
