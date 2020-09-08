@@ -7,8 +7,8 @@
  */
 
 import { KillProcess } from "../tools/killProcess.ts";
+import { writeJson } from "../temp_deps/writeJson.ts";
 import { objectGen } from "../utils/types.ts";
-import { writeJson } from "../imports/fs.ts";
 import { colors } from "../imports/fmt.ts";
 
 const { green, cyan } = colors;
