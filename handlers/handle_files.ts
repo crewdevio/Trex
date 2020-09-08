@@ -6,11 +6,11 @@
  *
  */
 
-import { writeJson, exists, readJson } from "../imports/fs.ts";
+import { writeJson, readJson } from "../temp_deps/writeJson.ts";
 import { deps, errorsMessage } from "../utils/types.ts";
 import { createHash } from "../imports/hash.ts";
 import { colors } from "../imports/fmt.ts";
-
+import { exists } from "../imports/fs.ts";
 const { writeFile, mkdir, create } = Deno;
 
 /**

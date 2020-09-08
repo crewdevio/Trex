@@ -38,7 +38,7 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.2.1-imports" };
+export const VERSION = { VERSION: "v1.2.2-imports" };
 
 export const helpsInfo = [
   colors.green(
@@ -46,7 +46,7 @@ export const helpsInfo = [
     ),
 
   colors.green("USAGE:"),
-  `   [cli-name] ${colors.yellow('[OPTIONS]')} ${colors.yellow('[SUBCOMMAND]')}\n`,
+  `   trex-imports ${colors.yellow('[OPTIONS]')} ${colors.yellow('[SUBCOMMAND]')}\n`,
 
   colors.green("OPTIONS:"),
   `   ${colors.yellow('--help, -h')}     print help info\n`,
@@ -68,7 +68,7 @@ export const helpsInfo = [
 
   `   ${colors.yellow('delete')}          delete a package\n`,
 
-  `   ${colors.yellow('upgrade [name]')}  update cli\n`,
+  `   ${colors.yellow('upgrade')}         update cli\n`,
 
   `   ${colors.yellow('tree')}            view dependency tree\n`
 

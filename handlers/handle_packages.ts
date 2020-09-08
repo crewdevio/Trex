@@ -19,13 +19,13 @@ import {
 } from "./handle_files.ts";
 import { showPackageList } from "../tools/show_package_list.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
-import { exists, readJson } from "../imports/fs.ts";
 import { errorsMessage, deps } from "../utils/types.ts";
 import { Proxy, needProxy } from "../imports/proxy.ts";
+import { readJson } from "../temp_deps/writeJson.ts";
+import { exists } from "../imports/fs.ts";
 import { colors } from "../imports/fmt.ts";
 import { denoApidb } from "../utils/db.ts";
 import cache from "./handle_cache.ts";
-
 /**
  * create url for std/ or x/ packages depending on version or master branch.
  * @param {string} pkgName - package name.

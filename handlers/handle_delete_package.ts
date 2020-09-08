@@ -6,11 +6,11 @@
  *
  */
 
-import { exists, readJson, writeJson } from "../imports/fs.ts";
+import { readJson, writeJson } from "../temp_deps/writeJson.ts";
 import { errorsMessage } from "../utils/types.ts";
 import { colors } from "../imports/fmt.ts";
+import { exists } from "../imports/fs.ts";
 import { deps } from "../utils/types.ts";
-
 /**
  * remove the package from the imports folder and deps.json file
  * @param _arguments string[ ]

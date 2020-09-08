@@ -7,7 +7,7 @@
  */
 
 import { deps, errorsMessage } from "../utils/types.ts";
-import { readJson } from "../imports/fs.ts";
+import { readJson } from "../temp_deps/writeJson.ts";
 import { colors } from "../imports/fmt.ts";
 
 /**
