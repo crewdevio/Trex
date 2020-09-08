@@ -32,7 +32,7 @@ export async function showImportDeps(): Promise<boolean> {
 
 export async function packageTreeInfo(...args: string[]) {
   try {
-    const map: importMap = JSON.parse(getImportMap());
+    const map: importMap = JSON.parse(await getImportMap());
 
     for (const pkg in map?.imports) {
       if (STD.includes(args[1])) {

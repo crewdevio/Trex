@@ -11,7 +11,7 @@ import { getImportMap, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { importMap, objectGen } from "../utils/types.ts";
 import { Somebybroken } from "../utils/logs.ts";
-import { existsSync } from "../imports/fs.ts";
+import { exists } from "../imports/fs.ts";
 import { denoApidb } from "../utils/db.ts";
 import { colors } from "../imports/fmt.ts";
 import cache from "./handle_cache.ts";
@@ -148,7 +148,7 @@ export async function installPackages(args: string[]) {
   // * take the packages from the import map file and install them.
   else {
     try {
-      const importmap: importMap = JSON.parse(getImportMap());
+      const importmap: importMap = JSON.parse(await getImportMap());
 
       for (const pkg in importmap.imports) {
         const md = importmap.imports[pkg];
@@ -219,9 +219,9 @@ export async function customPackage(...args: string[]) {
   }
 
   // * if import_map exists update it
-  if (existsSync("./import_map.json")) {
+  if (await exists("./import_map.json")) {
     try {
-      const data = JSON.parse(getImportMap());
+      const data = JSON.parse(await getImportMap());
       const oldPackage = exist_imports(data);
 
       createPackage({ ...custom, ...oldPackage }, true);

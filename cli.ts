@@ -13,7 +13,7 @@ import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { haveVersion } from "./handlers/handle_delete_package.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
-import { existsSync } from "./imports/fs.ts";
+import { exists } from "./imports/fs.ts";
 import { colors } from "./imports/fmt.ts";
 
 const { red, green, yellow } = colors;
@@ -22,10 +22,10 @@ async function mainCli() {
   // * install some packages
   if (keyWords.install.includes(_arguments[0])) {
 
-    if (existsSync("./import_map.json")) {
+    if (await exists("./import_map.json")) {
 
       try {
-        const data = JSON.parse(getImportMap());
+        const data = JSON.parse(await getImportMap());
         const oldPackage = exist_imports(data);
         const newPackage = await installPackages(_arguments);
 
@@ -55,11 +55,11 @@ async function mainCli() {
   }
   // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
-    if (existsSync("./import_map.json")) {
+    if (await exists("./import_map.json")) {
 
       try {
         const pkg: string = _arguments[1].trim();
-        const Packages = JSON.parse(getImportMap());
+        const Packages = JSON.parse(await getImportMap());
 
         if (Packages?.imports) {
         delete Packages.imports[

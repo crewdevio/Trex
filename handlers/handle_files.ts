@@ -17,11 +17,11 @@ const { green, cyan } = colors;
  * @return {string} string.
  */
 
-export function getImportMap() {
+export async function getImportMap() {
   const decoder = new TextDecoder("utf-8");
 
   // * get data from import_map and return data
-  const Package = Deno.readFileSync("./import_map.json");
+  const Package = await Deno.readFile("./import_map.json");
 
   return decoder.decode(Package);
 }
@@ -51,7 +51,7 @@ function sortedPackage(map: any) {
 export async function createPackage(map: Object, log?: Boolean) {
 
   // * create import_map.json
-  await Deno.createSync("./import_map.json");
+  await Deno.create("./import_map.json");
 
   // * write import config inside import_map.json
   await writeJson(
