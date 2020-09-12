@@ -160,14 +160,16 @@ trex install --nest fs@0.61.0
 ### Installing from a repository
 
 ```console
-trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
+trex install --pkg [user]/[repo or repo@tag/branch]/[path/to/file] [packageName]
 ```
 
 Example:
 
 ```console
-trex install --pkg oakserver/oak/mod.ts oak
+trex install --pkg oakserver/oak@main/mod.ts oak
 ```
+
+> **note**: In the event that the repository uses a branch other than master as the main branch, this must be specified
 
 The above downloads oak directly from its repository.
 
