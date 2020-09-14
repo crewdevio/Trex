@@ -8,13 +8,13 @@
   "fmt": false,
   "repository": "https://github.com/crewdevio/Trex",
   "files": [
-    "./database.json",
     "./handlers/**/*",
+    "./imports/**/*",
     "./utils/**/*",
     "./tools/**/*",
+    "./docs/**/*",
     "./README.md",
     "./cli.ts",
-    "./deps.ts",
     "./LICENSE"
   ]
 }
