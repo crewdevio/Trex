@@ -8,7 +8,7 @@
 
 import { offLine, ErrorInstalling } from "../utils/logs.ts";
 import { needProxy, Proxy } from "../imports/proxy.ts";
-import { NestResponse } from "../utils/types.ts";
+import type { NestResponse } from "../utils/types.ts";
 import { STD } from "../utils/info.ts";
 
 /**

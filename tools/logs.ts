@@ -9,7 +9,7 @@
 import { getImportMap } from "../handlers/handle_files.ts";
 import { needProxy, Proxy } from "../imports/proxy.ts";
 import { Somebybroken } from "../utils/logs.ts";
-import { importMap } from "../utils/types.ts";
+import type { importMap } from "../utils/types.ts";
 import { STD } from "../utils/info.ts";
 
 /**
@@ -32,7 +32,7 @@ export async function showImportDeps(): Promise<boolean> {
 
 export async function packageTreeInfo(...args: string[]) {
   try {
-    const map: importMap = JSON.parse(getImportMap());
+    const map: importMap = JSON.parse(await getImportMap());
 
     for (const pkg in map?.imports) {
       if (STD.includes(args[1])) {
@@ -60,7 +60,7 @@ export async function packageTreeInfo(...args: string[]) {
 
         if (moduleName === pkg) {
           const process = Deno.run({
-            cmd: ["deno", "info", map.imports[pkg]],
+            cmd: ["deno", "info", "--unstable", map.imports[pkg]],
           });
 
           if (!(await process.status()).success) {

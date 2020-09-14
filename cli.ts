@@ -13,19 +13,19 @@ import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { haveVersion } from "./handlers/handle_delete_package.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
-import { existsSync } from "./imports/fs.ts";
+import { exists } from "./imports/fs.ts";
 import { colors } from "./imports/fmt.ts";
 
 const { red, green, yellow } = colors;
 async function mainCli() {
   const _arguments = Deno.args;
   // * install some packages
-  if (_arguments[0] === keyWords.install || _arguments[0] === keyWords.i) {
+  if (keyWords.install.includes(_arguments[0])) {
 
-    if (existsSync("./import_map.json")) {
+    if (await exists("./import_map.json")) {
 
       try {
-        const data = JSON.parse(getImportMap());
+        const data = JSON.parse(await getImportMap());
         const oldPackage = exist_imports(data);
         const newPackage = await installPackages(_arguments);
 
@@ -42,24 +42,24 @@ async function mainCli() {
     }
   }
   // * display trex version
-  else if (_arguments[0] === flags.version) {
+  else if (flags.version.includes(_arguments[0])) {
     Version(VERSION.VERSION);
   }
 
-  else if (_arguments[0] === flags.help) {
+  else if (flags.help.includes(_arguments[0])) {
     LogHelp(helpsInfo);
   }
   // * install a custom package
-  else if (_arguments[0] === flags.custom) {
+  else if (flags.custom.includes(_arguments[0])) {
     customPackage(..._arguments)
   }
   // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
-    if (existsSync("./import_map.json")) {
+    if (await exists("./import_map.json")) {
 
       try {
         const pkg: string = _arguments[1].trim();
-        const Packages = JSON.parse(getImportMap());
+        const Packages = JSON.parse(await getImportMap());
 
         if (Packages?.imports) {
         delete Packages.imports[
@@ -97,12 +97,12 @@ async function mainCli() {
     }
   }
   // * update to lastest version of trex
-  else if (_arguments[0] === keyWords.update) {
+  else if (_arguments[0] === keyWords.upgrade) {
     await updateTrex();
   }
   // * shows the dependency tree of a package
   else if (_arguments[0] === keyWords.tree) {
-    packageTreeInfo(..._arguments)
+    await packageTreeInfo(..._arguments)
 
   }
   // * create lock file
