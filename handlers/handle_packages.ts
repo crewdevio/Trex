@@ -9,7 +9,7 @@
 import { nestPackageUrl, cacheNestpackage, pkgRepo } from "./handle_third_party_package.ts";
 import { getImportMap, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
-import { importMap, objectGen } from "../utils/types.ts";
+import type { importMap, objectGen } from "../utils/types.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import { exists } from "../imports/fs.ts";
 import { denoApidb } from "../utils/db.ts";
