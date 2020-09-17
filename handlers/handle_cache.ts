@@ -17,7 +17,7 @@ import { STD } from "../utils/info.ts";
 const { green, red, yellow } = colors;
 
 // * create a simple delay
-const delay = (time: number) =>
+export const delay = (time: number) =>
   new Promise((res) => setTimeout(res, time * 1000));
 
 /**
@@ -108,7 +108,7 @@ async function cached(pkgName: string, pkgUrl: string) {
       console.log(
         yellow(`omitted, this version of ${red(pkgName)} is already installed`)
       );
-      await delay(2);
+      await delay(0.1);
     } else {
       console.log(green("\n Done. \n"));
     }
@@ -137,7 +137,7 @@ async function cached(pkgName: string, pkgUrl: string) {
       console.log(
         yellow(`omitted, this version of ${red(pkgName)} is already installed`)
       );
-      await delay(2);
+      await delay(0.1);
     } else {
       console.log(green("\n Done. \n"));
     }
@@ -155,11 +155,11 @@ async function cached(pkgName: string, pkgUrl: string) {
       ErrorInstalling();
     }
 
-    if (await (await isCachePackage(pkgUrl + "mod.ts")).exist) {
+    if (await (await isCachePackage(pkgUrl)).exist) {
       console.log(
         yellow(`omitted, this version of ${red(pkgName)} is already installed`)
       );
-      await delay(2);
+      await delay(0.1);
     } else {
       console.log(green("\n Done. \n"));
     }
