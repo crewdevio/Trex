@@ -29,13 +29,13 @@ export function LogHelp(helpsInfo: string[]) {
 export async function updateTrex(): Promise<void> {
   // * get the version of the repo in github
   const response = await fetch(
-    "https://raw.githubusercontent.com/crewdevio/Trex/master/utils/version.json"
+    "https://api.github.com/repos/crewdevio/Trex/releases/latest"
   ).catch(err => offLine()) as Response;
 
-  // * get the json file
-  const repoVersion = (await response.json()) as { VERSION: string };
+  // * get the latest release
+  const repoVersion = (await response.json()) as { tag_name: string };
 
-  if (repoVersion.VERSION !== VERSION.VERSION) {
+  if ((repoVersion.tag_name !== VERSION.VERSION)) {
     setTimeout(async () => {
       await exec({
         config: {
@@ -43,9 +43,10 @@ export async function updateTrex(): Promise<void> {
           url: "https://deno.land/x/trex/cli.ts",
         },
       });
-      console.log(repoVersion.VERSION);
+      console.log(repoVersion.tag_name);
     }, 1000);
-  } else {
+  }
+  else {
     console.log(cyan("trex is already up to date"));
   }
 }
