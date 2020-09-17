@@ -12,17 +12,6 @@ import { Somebybroken } from "../utils/logs.ts";
 import type { importMap } from "../utils/types.ts";
 import { STD } from "../utils/info.ts";
 
-/**
- * show in console all the deps in the import map
- * @returns {boolean} return process state
- */
-
-export async function showImportDeps(): Promise<boolean> {
-  console.log(
-    "with the new deno.land registration this feature is deprecated 😥"
-  );
-  return true;
-}
 
 /**
  * show in console the tree dependencies of a module
