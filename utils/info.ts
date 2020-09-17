@@ -88,5 +88,6 @@ export const keyWords = {
   uninstall: "delete",
   upgrade: "upgrade",
   tree: "tree",
-  run: "run"
+  run: "run",
+  purge: "purge"
 };
