@@ -43,3 +43,9 @@ export interface NestResponse {
   };
   createdAt: string;
 }
+
+export interface runJson {
+  scripts: {
+    [key: string]: string;
+  };
+}

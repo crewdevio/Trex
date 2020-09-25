@@ -48,19 +48,19 @@ export const helpsInfo = [
   `   trex ${yellow('[OPTIONS]')} ${yellow('[SUBCOMMAND]')}\n`,
 
   green("OPTIONS:"),
-  `   ${yellow('--help, -h')}     print help info\n`,
+  `   ${yellow('-h, --help')}      print help info\n`,
 
-  `   ${yellow('--custom, -c')}   install custom package\n`,
+  `   ${yellow('-c, --custom')}    install custom package\n`,
 
-  `   ${yellow('--version, -v')}  print version\n`,
+  `   ${yellow('-v, --version')}   print version\n`,
 
-  `   ${yellow('--map, -m')}      install package from deno.land\n`,
+  `   ${yellow('-m, --map')}       install package from deno.land\n`,
 
-  `   ${yellow('--lock')}         create a lock file\n`,
+  `   ${yellow('--lock')}          create a lock file\n`,
 
-  `   ${yellow('--nest, -n')}     install package from nest.land\n`,
+  `   ${yellow('-n, --nest')}      install package from nest.land\n`,
 
-  `   ${yellow('--pkg, -p')}      install package from some repository\n`,
+  `   ${yellow('-p, --pkg')}       install package from some repository\n`,
 
   green("SUBCOMMANDS:"),
   `   ${yellow('[install or i]')}  install a package\n`,
@@ -69,7 +69,9 @@ export const helpsInfo = [
 
   `   ${yellow('upgrade')}         update trex\n`,
 
-  `   ${yellow('tree')}            view dependency tree\n`
+  `   ${yellow('tree')}            view dependency tree\n`,
+
+  `   ${yellow('run')}             run a script short cut in a file run.json\n`
 
 ];
 
