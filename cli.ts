@@ -7,14 +7,15 @@
  */
 
 import { installPackages, exist_imports, customPackage } from "./handlers/handle_packages.ts";
-import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
-import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
-import { haveVersion } from "./handlers/handle_delete_package.ts";
+import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
+import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
+import { deletepackage } from "./handlers/delete_package.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
-import { exists } from "./imports/fs.ts";
 import { colors } from "./imports/fmt.ts";
+import { exists } from "./imports/fs.ts";
+import { Run } from "./commands/run.ts";
 
 const { red, green, yellow } = colors;
 async function mainCli() {
@@ -55,46 +56,7 @@ async function mainCli() {
   }
   // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
-    if (await exists("./import_map.json")) {
-
-      try {
-        const pkg: string = _arguments[1].trim();
-        const Packages = JSON.parse(await getImportMap());
-
-        if (Packages?.imports) {
-        delete Packages.imports[
-          STD.includes(haveVersion(pkg))
-          ? haveVersion(pkg) + "/"
-          : haveVersion(pkg)
-        ];
-
-        const newPackage = exist_imports(Packages);
-
-        await createPackage(newPackage);
-
-        console.log(yellow(pkg + ":"), green(" removed from import_map.json"));
-      }
-
-      else {
-        throw new Error(
-          red("'imports' key not found in import_map.json")
-            ).message;
-      }
-    }
-      catch (_) {
-        throw new Error(
-          red(
-            _ instanceof TypeError
-            ? "add the name of the package to remove"
-            : "the import_map.json file does not have a valid format.")
-          ).message;
-      }
-    }
-
-    else {
-      console.error(red("import_map.json"));
-      return;
-    }
+    await deletepackage(_arguments[1]);
   }
   // * update to lastest version of trex
   else if (_arguments[0] === keyWords.upgrade) {
@@ -111,23 +73,7 @@ async function mainCli() {
   }
 
   else if (_arguments[0] === keyWords.run){
-
-    const process = Deno.run({
-      cmd: [
-        "deno",
-        "run",
-        "--allow-read",
-        "--allow-run",
-        "--unstable",
-        "https://deno.land/x/commands/Commands.ts",
-        _arguments[1]
-      ]
-    });
-
-    if (!(await process.status()).success) {
-      process.close();
-      Somebybroken();
-    }
+    await Run(_arguments[1])
   }
 
   // * displays help information
