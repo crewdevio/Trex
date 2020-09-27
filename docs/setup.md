@@ -1,18 +1,22 @@
 ## Setup [visual studio code](https://code.visualstudio.com/)
 
-install the [deno](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno) extension first, then add in settings.json the following configuration.
+first install [deno](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno) extension, then add a folder .vscode /settings.json the following settings.
 
-![settings.json](https://i.ibb.co/YyCD6RY/config-Json-Deno.png)
+`settings.json`
 
-activate the enable option **Deno unstable features** in **settings >> extensions >> Deno**
-
-![unstable](https://i.ibb.co/p4hDp41/enable.jpg)
+```json
+{
+  "deno.enable": true,
+  "deno.import_map": "./import_map.json",
+  "deno.unstable": true
+}
+```
 
 if you get this error after installing a module.
 
 ![error](https://i.ibb.co/RvhKp5s/error.jpg)
 
-run your project to cache all dependencies.
+run your `trex install` to cache all dependencies.
 
 > **note**: when installing a module using ( trex install --map someModule )
 > or ( trex --custom someModule=someModule.com/someModule.ts ) this is automatically cached
@@ -42,7 +46,7 @@ Then add a plugins section to your [tsconfig.json.](https://www.typescriptlang.o
       {
         "name": "typescript-deno-plugin",
         "enable": true,
-        "importmap": "import_map.json"
+        "importmap": "./import_map.json"
       }
     ]
   }
