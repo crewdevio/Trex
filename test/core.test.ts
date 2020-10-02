@@ -8,7 +8,10 @@ const merlin = new Merlin();
 merlin.testEqual("install custom package", {
   async expect() {
     const data = await customPackage(
-      ...["--custom", "merlin=http://denopkg.com/crewdevio/merlin/mod.ts"]
+      ...[
+        "--custom",
+        "merlin=https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts",
+      ]
     );
 
     return data;
