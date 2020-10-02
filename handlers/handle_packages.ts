@@ -244,8 +244,8 @@ export async function customPackage(...args: string[]) {
     // * else create package
     createPackage(custom, true);
   }
-
+  const status = (await process.status()).success;
   // * close main install process
   process.close();
-  return (await process.status()).success;
+  return status;
 }
