@@ -104,7 +104,7 @@ async function cached(pkgName: string, pkgUrl: string) {
       ErrorInstalling();
     }
     // TODO(buttercubz) create a better way to handler this
-    if (await (await isCachePackage(pkgUrl + "mod.ts")).exist) {
+    if ((await isCachePackage(pkgUrl + "mod.ts")).exist) {
       console.log(
         yellow(`omitted, this version of ${red(pkgName)} is already installed`)
       );
@@ -133,7 +133,7 @@ async function cached(pkgName: string, pkgUrl: string) {
       ErrorInstalling();
     }
 
-    if (await (await isCachePackage(pkgUrl + "mod.ts")).exist) {
+    if ((await isCachePackage(pkgUrl + "mod.ts")).exist) {
       console.log(
         yellow(`omitted, this version of ${red(pkgName)} is already installed`)
       );
@@ -155,7 +155,7 @@ async function cached(pkgName: string, pkgUrl: string) {
       ErrorInstalling();
     }
 
-    if (await (await isCachePackage(pkgUrl)).exist) {
+    if ((await isCachePackage(pkgUrl)).exist) {
       console.log(
         yellow(`omitted, this version of ${red(pkgName)} is already installed`)
       );
