@@ -71,7 +71,7 @@ export const helpsInfo = [
 
   `   ${yellow('tree')}            view dependency tree\n`,
 
-  `   ${yellow('run')}             run a script short cut in a file run.json\n`
+  `   ${yellow('run')}             run a script alias in a file run.json\n`
 
 ];
 
