@@ -91,5 +91,6 @@ export const keyWords = {
   upgrade: "upgrade",
   tree: "tree",
   run: "run",
-  purge: "purge"
+  purge: "purge",
+  setup: "setup"
 };

@@ -13,6 +13,7 @@ import { LogHelp, Version, updateTrex } from "./utils/logs.ts";
 import { deletepackage } from "./handlers/delete_package.ts";
 import { LockFile } from "./handlers/handle_lock_file.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
+import { setupIDE } from "./tools/setupIDE.ts"
 import { colors } from "./imports/fmt.ts";
 import { exists } from "./imports/fs.ts";
 import { Run } from "./commands/run.ts";
@@ -74,6 +75,10 @@ async function mainCli() {
 
   else if (_arguments[0] === keyWords.run){
     await Run(_arguments[1])
+  }
+
+  else if (_arguments[0] === keyWords.setup){
+    setupIDE(_arguments[1])
   }
 
   // * displays help information
