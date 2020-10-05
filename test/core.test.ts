@@ -1,5 +1,4 @@
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
-import { LockFile } from "../handlers/handle_lock_file.ts";
 import { packageTreeInfo } from "../tools/logs.ts";
 import { Merlin } from "../imports/merlin.ts";
 
@@ -50,17 +49,6 @@ merlin.testEqual("install package from nest.land", {
   },
   Ops: false,
   Resources: false,
-});
-
-merlin.testEqual("Lock File", {
-  async expect() {
-    return await LockFile(...["--lock", "./test/core.test.ts"]);
-  },
-  toBe() {
-    return true;
-  },
-  Resources: false,
-  Ops: false,
 });
 
 merlin.isUndefined("Trex treeDeps test", {
