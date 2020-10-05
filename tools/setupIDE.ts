@@ -6,23 +6,19 @@
  *
  */
 
-import { writeJsonSync } from "../temp_deps/writeJson.ts";
-import { prompt } from "../utils/prompt.ts"
+import { writeJson } from "../temp_deps/writeJson.ts";
+import { prompt } from "../utils/prompt.ts";
 import { colors } from "../imports/fmt.ts";
 import { exists } from "../imports/fs.ts";
 
-
 const { mkdir, create } = Deno;
 const { cyan, green, yellow } = colors;
-const IDES = [
-    "vscode",
-    "atom"
-]
+const IDES = ["--vscode", "--atom"];
 
 const atomInstaller = {
-    "npm": ["npm", "install", "--save-dev", "typescript-deno-plugin", "typescript"],
-    "yarn": ["yarn", "add", "-D", "typescript-deno-plugin", "typescript"]
-}
+  npm: ["npm", "install", "--save-dev", "typescript-deno-plugin", "typescript"],
+  yarn: ["yarn", "add", "-D", "typescript-deno-plugin", "typescript"],
+};
 
 /**
  * Select the right template for your IDE
@@ -30,37 +26,38 @@ const atomInstaller = {
  * @returns Promise void
  */
 async function templateSetup(template: string) {
+  if (template === IDES[0]) {
+    await mkdir(".vscode");
+    await create("./.vscode/settings.json");
+    await writeJson(
+      "./.vscode/settings.json",
+      {
+        "deno.enable": true,
+        "deno.import_map": "./import_map.json",
+        "deno.unstable": true,
+      },
+      { spaces: 2 }
+    );
+  }
 
-    if (template === IDES[0]){
-
-        await mkdir(".vscode");
-        await create("./.vscode/settings.json");
-        writeJsonSync(
-            "./.vscode/settings.json",
+  else if (template === IDES[1]) {
+    await create("./tsconfig.json");
+    await writeJson(
+      "./tsconfig.json",
+      {
+        compilerOptions: {
+          plugins: [
             {
-                "deno.enable": true,
-                "deno.import_map": "./import_map.json",
-                "deno.unstable": true
+              name: "typescript-deno-plugin",
+              enable: true,
+              importmap: "import_map.json",
             },
-            { spaces: 2 });
-    }
-    else if (template === IDES[1]){
-        await create("./tsconfig.json");
-        writeJsonSync(
-            "./tsconfig.json",
-            {
-                "compilerOptions": {
-                    "plugins": [
-                      {
-                        "name": "typescript-deno-plugin",
-                        "enable": true,
-                        "importmap": "import_map.json"
-                      }
-                    ]
-                  }
-            },
-            { spaces: 2 });
-    }
+          ],
+        },
+      },
+      { spaces: 2 }
+    );
+  }
 }
 
 /**
@@ -69,69 +66,84 @@ async function templateSetup(template: string) {
  * @returns {void} Promise void
  */
 export async function setupIDE(editor: string): Promise<void> {
+  switch (editor) {
+    case IDES[0]:
+      if (await exists("./.vscode")) {
+        console.log(
+          green(
+            "There is already a .vscode folder. \n creating the new setup..."
+          )
+        );
+        await Deno.remove("./.vscode", { recursive: true });
+        await templateSetup(editor);
+        console.log(cyan("Done, your project is already setup to use Deno"));
+      }
 
-    switch (editor){
+      else {
+        console.log(green("Setting up the project for work with Deno"));
+        templateSetup(editor);
+        console.log(cyan("Done, your project is already setup to use Deno"));
+      }
+      break;
 
-        case IDES[0]:
-            if (await exists("./.vscode")) {
+    case IDES[1]:
+      let process: Deno.Process;
+      const packageManager = await prompt(
+        green("What package manager you use? NPM or Yarn?: ")
+      );
 
-                console.log(green("There is already a .vscode folder. \n creating the new setup..."));
-                await Deno.remove("./.vscode", {recursive: true });
-                await templateSetup(editor);
-                console.log(cyan("Done, your project is already setup to use Deno"));
-            }
-            else {
-              console.log(green("Setting up the project for work with Deno"))
-              templateSetup(editor)
-              console.log(cyan("Done, your project is already setup to use Deno"));
-            }
-            break;
+      if (packageManager === Object.keys(atomInstaller)[0].toLowerCase()) {
+        process = Deno.run({
+          cmd: [...atomInstaller["npm"]],
+        });
 
-        case IDES[1]:
-            let process: Deno.Process;
-            const packageManager = await prompt(green("What package manager you use? NPM or Yarn?: "));
+        if (!(await process.status()).success) {
+          process.close();
+          throw new Error("error running the installer").message;
+        }
 
-            if (packageManager ===  Object.keys(atomInstaller)[0].toLowerCase()){
+        else {
+          console.log(cyan("Done, your project is already setup to use Deno"));
+          process.close();
+        }
+        await templateSetup(editor);
+      }
 
-                process = Deno.run({
-                    cmd: [...atomInstaller["npm"]],
-                  });
+      else if (
+        packageManager === Object.keys(atomInstaller)[1].toLowerCase()
+      ) {
+        console.log(green("Downloading the dependencies for the setup..."));
+        process = Deno.run({
+          cmd: [...atomInstaller["yarn"]],
+        });
 
-                  if (!(await process.status()).success) {
-                    process.close();
-                    throw new Error("error running the installer").message;
-                  } else {
-                    console.log(cyan("Done, your project is already setup to use Deno"));
-                    process.close();
-                  }
-                await templateSetup(editor)
-            }
-            else if (packageManager === Object.keys(atomInstaller)[1].toLowerCase()) {
+        if (!(await process.status()).success) {
+          console.log(cyan("Done, your project is already setup to use Deno"));
+          process.close();
+          throw new Error("error running the installer").message;
+        }
 
-                console.log(green("Downloading the dependencies for the setup..."));
-                process = Deno.run({
-                    cmd: [...atomInstaller["yarn"]],
-                  });
+        else {
+          console.log(cyan("Done, your project is already setup to use Deno"));
+          process.close();
+        }
+        await templateSetup(editor);
+      }
 
-                  if (!(await process.status()).success) {
-                    console.log(cyan("Done, your project is already setup to use Deno"));
-                    process.close();
-                    throw new Error("error running the installer").message;
-                  } else {
-                    console.log(cyan("Done, your project is already setup to use Deno"));
-                    process.close();
-                  }
-                await templateSetup(editor);
+      else {
+        console.log(
+          yellow(
+            "Warning: You have to pick up a package manager to install the dependencies, try again."
+          )
+        );
+      }
 
-            }
-            else {
-                console.log(yellow("Warning: You have to pick up a package manager to install the dependecies, try again."));
-            }
+      break;
 
-            break;
-
-        default:
-            console.log(cyan(yellow("Warning: you have to set your IDE, vscode or atom")));
-            break;
-    }
+    default:
+      console.log(
+        cyan(yellow("Warning: you have to set your IDE, vscode or atom"))
+      );
+      break;
   }
+}

@@ -21,7 +21,6 @@ import {
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { deletepackage } from "./handlers/delete_package.ts";
-import { LockFile } from "./handlers/handle_lock_file.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
 import { setupIDE } from "./tools/setupIDE.ts"
 import { exists } from "./imports/fs.ts";
@@ -151,21 +150,6 @@ async function mainCli() {
 
     await packageTreeInfo(..._arguments);
   }
-  // * create lock file
-  else if (_arguments[0] === flags.lock) {
-
-    if (flags.help.includes(_arguments[1])) {
-      return HelpCommand({
-        command: {
-          alias: [keyWords.tree],
-          description: "create a lock file",
-        },
-        flags: [{ alias: flags.help, description: "show command help" }],
-      });
-    }
-
-    await LockFile(..._arguments);
-  }
 
   // * run script aliases
   else if (_arguments[0] === keyWords.run) {
@@ -183,6 +167,35 @@ async function mainCli() {
   }
 
   else if (_arguments[0] === keyWords.setup){
+
+    CommandNotFound({
+      commands: [keyWords.setup],
+      flags: ["--vscode", "--atom", ...flags.help]
+    })
+
+    if (flags.help.includes(_arguments[1])) {
+      return HelpCommand({
+        command: {
+          alias: [keyWords.setup],
+          description: "create a deno configuration for your IDE",
+        },
+        flags: [
+          {
+            alias: flags.help,
+            description: "show command help"
+          },
+          {
+            alias: ["--vscode"],
+            description: "create the necessary configuration for vscode"
+          },
+          {
+            alias: ["--atom"],
+            description: "create the necessary configuration for atom"
+          }
+        ],
+      });
+    }
+
     setupIDE(_arguments[1])
   }
 
@@ -198,6 +211,7 @@ async function mainCli() {
         keyWords.upgrade,
         ...flags.help,
         ...flags.version,
+        keyWords.setup
       ],
       flags: [],
     });

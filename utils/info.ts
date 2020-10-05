@@ -45,34 +45,39 @@ export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
 
   green("USAGE:"),
-  `   trex ${yellow('[OPTIONS]')} ${yellow('[SUBCOMMAND]')}\n`,
+  `   trex ${yellow("[OPTIONS]")} ${yellow("[SUBCOMMAND]")}\n`,
 
   green("OPTIONS:"),
-  `   ${yellow('-h, --help')}      print help info\n`,
+  `   ${yellow("-h, --help")}      print help info\n`,
 
-  `   ${yellow('-c, --custom')}    install custom package\n`,
+  `   ${yellow("-c, --custom")}    install custom package\n`,
 
-  `   ${yellow('-v, --version')}   print version\n`,
+  `   ${yellow("-v, --version")}   print version\n`,
 
-  `   ${yellow('-m, --map')}       install package from deno.land\n`,
+  `   ${yellow("-m, --map")}       install package from deno.land\n`,
 
-  `   ${yellow('--lock')}          create a lock file\n`,
+  `   ${yellow("-n, --nest")}      install package from nest.land\n`,
 
-  `   ${yellow('-n, --nest')}      install package from nest.land\n`,
-
-  `   ${yellow('-p, --pkg')}       install package from some repository\n`,
+  `   ${yellow("-p, --pkg")}       install package from some repository\n`,
 
   green("SUBCOMMANDS:"),
-  `   ${yellow('[install or i]')}  install a package\n`,
+  `   ${yellow("[install or i]")}  install a package\n`,
 
-  `   ${yellow('delete')}          delete a package\n`,
+  `   ${yellow("delete")}          delete a package\n`,
 
-  `   ${yellow('upgrade')}         update trex\n`,
+  `   ${yellow("upgrade")}         update trex\n`,
 
-  `   ${yellow('tree')}            view dependency tree\n`,
+  `   ${yellow("tree")}            view dependency tree\n`,
 
-  `   ${yellow('run')}             run a script alias in a file run.json\n`
+  `   ${yellow("run")}             run a script alias in a file run.json\n`,
 
+  `   ${yellow("setup")}           create a deno configuration for your IDE\n`,
+
+  green(
+    "you can see the different options available for each command using:\n"
+  ),
+
+  `   ${green("trex")}  ${yellow("[command]")} ${yellow("--help or -h")}\n`,
 ];
 
 export const flags = {
@@ -80,7 +85,6 @@ export const flags = {
   version: ["--version", "-v"],
   custom: ["--custom", "-c"],
   help: ["--help", "-h"],
-  lock: "--lock",
   nest: ["--nest", "-n"],
   pkg: ["--pkg", "-p"],
 };
@@ -92,5 +96,5 @@ export const keyWords = {
   tree: "tree",
   run: "run",
   purge: "purge",
-  setup: "setup"
+  setup: "setup",
 };

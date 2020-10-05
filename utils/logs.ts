@@ -126,9 +126,11 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
     console.log(
       red("Command not found:\n"),
 
-      green(`\ntrex ${yellow(command)}: unknown command\n`),
+      green(`\n${red("trex")} ${yellow(command)}: unknown command\n`),
 
-      green(`\nuse trex ${yellow("--help")} to see available commands\n`)
+      green(
+        `\nuse ${red("trex")} ${yellow("--help")} to see available commands\n`
+      )
     );
 
     throw "";
