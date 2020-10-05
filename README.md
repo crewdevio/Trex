@@ -380,7 +380,7 @@ Deno's solution to avoid this is to use integrity checking and lock files.
 Create a lockfile:
 
 ```console
-trex --lock file.ts
+deno cache --lock=lock.json --lock-write file.ts
 ```
 
 The above generates a `lock.json` file.
@@ -388,7 +388,7 @@ The above generates a `lock.json` file.
 If you use `import_map.json` in input file, you can specify it:
 
 ```console
-trex --lock --importmap file.ts
+deno cache --lock=lock.json --lock-write --importmap=import_map.json --unstable file.ts
 ```
 
 See [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking) for more info.
