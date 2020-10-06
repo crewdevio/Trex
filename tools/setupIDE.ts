@@ -6,93 +6,132 @@
  *
  */
 
+import { IDES, atomInstaller, IDESsettings } from "../utils/info.ts";
 import { writeJson } from "../temp_deps/writeJson.ts";
 import { prompt } from "../utils/prompt.ts";
 import { colors } from "../imports/fmt.ts";
 import { exists } from "../imports/fs.ts";
 
+
 const { mkdir, create } = Deno;
 const { cyan, green, yellow } = colors;
-const IDES = ["--vscode", "--atom"];
-
-const atomInstaller = {
-  npm: ["npm", "install", "--save-dev", "typescript-deno-plugin", "typescript"],
-  yarn: ["yarn", "add", "-D", "typescript-deno-plugin", "typescript"],
-};
 
 /**
  * Select the right template for your IDE
  * @param {string}template The choosen valid editor from the arrays of IDES (check file "setupIDE")
  * @returns Promise void
  */
+
 async function templateSetup(template: string) {
   if (template === IDES[0]) {
     await mkdir(".vscode");
     await create("./.vscode/settings.json");
-    await writeJson(
-      "./.vscode/settings.json",
-      {
-        "deno.enable": true,
-        "deno.import_map": "./import_map.json",
-        "deno.unstable": true,
-      },
-      { spaces: 2 }
-    );
   }
 
   else if (template === IDES[1]) {
     await create("./tsconfig.json");
-    await writeJson(
-      "./tsconfig.json",
-      {
-        compilerOptions: {
-          plugins: [
-            {
-              name: "typescript-deno-plugin",
-              enable: true,
-              importmap: "import_map.json",
-            },
-          ],
-        },
-      },
-      { spaces: 2 }
-    );
+
   }
 }
 
+/**
+ * ead the data from a json setting a return it
+ * @param editor arg what is pass from de Deno args
+ * @returns data from the setting config
+ */
+async function getSettingsFile(editor: string): Promise<string>{
+  let settingPath: any;
+  if (editor === IDES[0]){
+    settingPath = "./.vscode/settings.json"
+  }
+  else if (editor === IDES[1]) {
+    settingPath = "./tsconfig.json"
+  }
+  const decoder = new TextDecoder("utf-8");
+
+  // * get data from settings.json and return data
+  const Setting = await Deno.readFile(settingPath);
+
+  return decoder.decode(Setting);
+}
+
+/**
+ * Write the Deno setup in the json
+ * @param {Object} map the new json config for the setup
+ * @param editor arg what is pass from the Deno args
+ */
+async function createSetup(map: Object, editor: string) {
+  let path: any;
+
+  if (editor === IDES[0]){
+    path = "./.vscode/settings.json"
+  }
+  else if (editor === IDES[1]) {
+    path = "./tsconfig.json"
+  }
+
+  try {
+    await writeJson(
+      path,
+      { ...map },
+      { spaces: 2 }
+    );
+  }
+
+  catch (_) {
+    throw new Error(_).message;
+  }
+}
 /**
  * Prepare your IDE to work with Deno
  * @param {string} editor The Deno argument pass in the console
  * @returns {void} Promise void
  */
 export async function setupIDE(editor: string): Promise<void> {
+  let denoSetup;
   switch (editor) {
     case IDES[0]:
+
       if (await exists("./.vscode")) {
-        console.log(
-          green(
-            "There is already a .vscode folder. \n creating the new setup..."
-          )
+
+        const overWrite = await prompt(
+          green("There is already a .vscode folder. Want to add de deno setup?: ")
         );
-        await Deno.remove("./.vscode", { recursive: true });
-        await templateSetup(editor);
-        console.log(cyan("Done, your project is already setup to use Deno"));
+
+        if (overWrite === "yes".toLocaleLowerCase() || overWrite === "y".toLocaleLowerCase()){
+          let oldData = JSON.parse(await getSettingsFile(editor));
+          denoSetup = IDESsettings[0]
+          await Deno.remove("./.vscode", { recursive: true });
+          await templateSetup(editor);
+          createSetup({...oldData, ...denoSetup}, editor)
+          console.log(cyan("Done, your project is already setup to use Deno"));
+
+        }
+
+        else {
+          console.log(green("You will be using your actual settings."))
+        }
       }
 
       else {
         console.log(green("Setting up the project for work with Deno"));
+        denoSetup = IDESsettings[0]
         templateSetup(editor);
+        createSetup({...denoSetup}, editor)
         console.log(cyan("Done, your project is already setup to use Deno"));
       }
       break;
 
     case IDES[1]:
+      denoSetup = IDESsettings[1];
       let process: Deno.Process;
+      console.log(green("We need to download some dependecies to work with deno."))
       const packageManager = await prompt(
         green("What package manager you use? NPM or Yarn?: ")
-      );
+        );
 
       if (packageManager === Object.keys(atomInstaller)[0].toLowerCase()) {
+        console.log("Downloading dependencies...")
         process = Deno.run({
           cmd: [...atomInstaller["npm"]],
         });
@@ -103,22 +142,35 @@ export async function setupIDE(editor: string): Promise<void> {
         }
 
         else {
-          console.log(cyan("Done, your project is already setup to use Deno"));
+          console.log(cyan("Done, All dependencies were downloaded"));
           process.close();
         }
-        await templateSetup(editor);
+        if (await exists("./tsconfig.json")){
+          let overWrite = await prompt("There's already a tsconfig.json, do you want overwrite with the new setup?");
+          const oldData = JSON.parse(await getSettingsFile(editor));
+          if (overWrite === "y".toLowerCase() || overWrite === "yes".toLowerCase()){
+            Deno.removeSync("./tsconfig.json");
+            await templateSetup(editor);
+            await createSetup({...oldData, ...denoSetup}, editor);
+            console.log(cyan("Your project is already to work with Deno"))
+          }
+        }
+        else {
+          await templateSetup(editor);
+          createSetup({...denoSetup}, editor);
+          console.log(cyan("Your project is ready to work with Deno"))
+        }
       }
 
       else if (
         packageManager === Object.keys(atomInstaller)[1].toLowerCase()
-      ) {
-        console.log(green("Downloading the dependencies for the setup..."));
-        process = Deno.run({
-          cmd: [...atomInstaller["yarn"]],
-        });
+        ) {
+          console.log(green("Downloading the dependencies for the setup..."));
+          process = Deno.run({
+            cmd: [...atomInstaller["yarn"]],
+          });
 
         if (!(await process.status()).success) {
-          console.log(cyan("Done, your project is already setup to use Deno"));
           process.close();
           throw new Error("error running the installer").message;
         }
@@ -127,7 +179,21 @@ export async function setupIDE(editor: string): Promise<void> {
           console.log(cyan("Done, your project is already setup to use Deno"));
           process.close();
         }
-        await templateSetup(editor);
+        if (await exists("./tsconfig.json")){
+          let overWrite = await prompt("There's already a tsconfig.json, do you want overwrite with the new setup?");
+          const oldData = JSON.parse(await getSettingsFile(editor));
+          if (overWrite === "y".toLowerCase() || overWrite === "yes".toLowerCase()){
+            Deno.removeSync("./tsconfig.json");
+            await templateSetup(editor);
+            await createSetup({...oldData, ...denoSetup}, editor);
+            console.log(cyan("Your project is already to work with Deno"))
+          }
+        }
+        else {
+          await templateSetup(editor);
+          createSetup({...denoSetup}, editor);
+          console.log(cyan("Your project is ready to work with Deno"))
+        }
       }
 
       else {
