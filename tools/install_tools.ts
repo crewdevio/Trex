@@ -6,7 +6,7 @@
  *
  */
 
-import { Params } from "../utils/types.ts";
+import type { Params } from "../utils/types.ts";
 import { Somebybroken } from "../utils/logs.ts";
 
 function installTools(args: string[]) {

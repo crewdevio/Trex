@@ -5,8 +5,8 @@
       "hash": "5b4388adfdc1f5ad8a727f95a91c3f255cb36f430b6b4503f8f3ddacc162db53"
     },
     "fs": {
-      "url": "https://deno.land/std@0.66.0/fs/mod.ts",
-      "hash": "70a75760f9a48fbdd5627241afcf6b30d4574c87674c87fc0a0ffe979a18ac35"
+      "url": "https://deno.land/std@0.73.0/fs/mod.ts",
+      "hash": "052c1b70d5e05f32c2fb8a4415fd013e663dbc15f616243b4cfacfc1d9cce1b1"
     },
     "merlin": {
       "url": "https://deno.land/x/merlin/mod.ts",
@@ -17,8 +17,8 @@
       "hash": "47807367fb4835ad38f999f618ea2d45f03e290f4459691a5478e735a83089ba"
     },
     "hash": {
-      "url": "https://deno.land/std@0.66.0/hash/mod.ts",
-      "hash": "eec74a4669e938d47158c47b36d82da5746c933f8cfd204b9e8324a42ee8f7cb"
+      "url": "https://deno.land/std@0.73.0/hash/mod.ts",
+      "hash": "8db1663a886b37cfcf6d0d488edbd5fc6ac3edc1d0f8633f92444bc7ca3b50b8"
     }
   }
 }

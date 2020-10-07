@@ -6,12 +6,12 @@
  *
  */
 
-import { writeJsonSync, existsSync, readJson, writeJson } from "../imports/fs.ts";
+import { writeJson, readJson } from "../temp_deps/writeJson.ts";
 import { deps, errorsMessage } from "../utils/types.ts";
 import { createHash } from "../imports/hash.ts";
 import { colors } from "../imports/fmt.ts";
-
-const { writeFileSync, mkdir, create } = Deno;
+import { exists } from "../imports/fs.ts";
+const { writeFile, mkdir, create } = Deno;
 
 /**
  * create the imports folder next to the deps.json file
@@ -27,10 +27,10 @@ export async function createFolder() {
  * @param name string
  * @param url string
  */
-export function WriteImport(name: string, url: string) {
+export async function WriteImport(name: string, url: string) {
   const encoder = new TextEncoder();
   const data = encoder.encode(`export * from "${url}";`);
-  writeFileSync(`./imports/${name}.ts`, data);
+  await writeFile(`./imports/${name}.ts`, data);
 }
 
 /**
@@ -79,7 +79,7 @@ export async function validateHash(url: string, hash: string) {
  */
 export async function WriteDeps(name: string, url: string) {
   try {
-    if (existsSync("./imports/deps.json")) {
+    if (await exists("./imports/deps.json")) {
       const map = (await readJson("./imports/deps.json")) as deps;
 
       if (!map?.meta) {
@@ -92,12 +92,12 @@ export async function WriteDeps(name: string, url: string) {
       ];
       const deps = { ...old, ...New };
 
-      writeJsonSync("./imports/deps.json", { meta: deps }, { spaces: 2 });
+      await writeJson("./imports/deps.json", { meta: deps }, { spaces: 2 });
     }
 
     else {
       const deps = { [name]: { url, hash: await generateHash(url) } };
-      writeJsonSync("./imports/deps.json", { meta: deps }, { spaces: 2 });
+      await writeJson("./imports/deps.json", { meta: deps }, { spaces: 2 });
     }
   }
 

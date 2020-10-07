@@ -38,56 +38,64 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.2.1-imports" };
+export const VERSION = { VERSION: "v1.3.0-imports" };
 
 export const helpsInfo = [
   colors.green(
     "advanced package management for deno, handling dependencies at any scale\n"
-    ),
+  ),
 
   colors.green("USAGE:"),
-  `   trex ${colors.yellow('[OPTIONS]')} ${colors.yellow('[SUBCOMMAND]')}\n`,
+  `  imports ${colors.yellow("[OPTIONS]")} ${colors.yellow("[SUBCOMMAND]")}\n`,
 
   colors.green("OPTIONS:"),
-  `   ${colors.yellow('--help')}     print help information.\n`,
+  `   ${colors.yellow("-h, --help")}     print help info\n`,
 
-  `   ${colors.yellow('--custom')}   install custom package.\n`,
+  `   ${colors.yellow("-c, --custom")}   install custom package\n`,
 
-  `   ${colors.yellow('--version')}  print version information.\n`,
+  `   ${colors.yellow("-v, --version")}  print version\n`,
 
-  `   ${colors.yellow('--map')}      add package to import_map.json.\n`,
+  `   ${colors.yellow("-m, --map")}      install package from deno.land\n`,
 
-  `   ${colors.yellow('--lock')}     create a lock files.\n`,
+  `   ${colors.yellow("-n, --nest")}     install package from nest.land\n`,
 
-  `   ${colors.yellow('--nest')}     install package from nest.land.\n`,
-
-  `   ${colors.yellow('--pkg')}      install package from some repository.\n`,
+  `   ${colors.yellow("-p, --pkg")}      install package from some repository\n`,
 
   colors.green("SUBCOMMANDS:"),
-  `   ${colors.yellow('[install or i]')}  install a package.\n`,
+  `   ${colors.yellow("[install or i]")}  install a package.\n`,
 
-  `   ${colors.yellow(`delete${colors.red('<@version>')}`)}  delete a package from import map and cache.\n`,
+  `   ${colors.yellow("delete")}          delete a package\n`,
 
-  `   ${colors.yellow('update')}    update Trex.\n`,
+  `   ${colors.yellow("upgrade")}         update imports\n`,
 
-  `   ${colors.yellow('treeDeps')}  view dependency tree.\n`
+  `   ${colors.yellow("tree")}            view dependency tree\n`,
 
+  `   ${colors.yellow("run")}             run a script alias in a file run.json\n`,
+
+  colors.green(
+    "you can see the different options available for each command using:\n"
+  ),
+
+  `   ${colors.green("imports")}  ${colors.yellow("[command]")} ${colors.yellow(
+    "--help or -h"
+  )}\n`,
 ];
 
 export const flags = {
-  map: "--map",
-  version: "--version",
-  custom: "--custom",
-  help: "--help",
-  lock: "--lock",
-  nest: "--nest",
-  pkg: "--pkg",
+  map: ["--map", "-m"],
+  version: ["--version", "-v"],
+  custom: ["--custom", "-c"],
+  help: ["--help", "-h"],
+  lock: ["--lock", "-l"],
+  nest: ["--nest", "-n"],
+  pkg: ["--pkg", "-p"],
 };
 
 export const keyWords = {
-  install: "install",
-  i: "i",
+  install: ["install", "i"],
   uninstall: "delete",
-  update: "update",
-  tree: "treeDeps"
+  upgrade: "upgrade",
+  tree: "tree",
+  run: "run",
+  purge: "purge",
 };

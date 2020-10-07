@@ -6,7 +6,7 @@
  *
  */
 
-import { pkgResponse } from "./types.ts";
+import type { pkgResponse } from "./types.ts";
 import { offLine } from "./logs.ts";
 
 export async function denoApidb(query: string) {

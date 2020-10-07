@@ -19,13 +19,13 @@ import {
 } from "./handle_files.ts";
 import { showPackageList } from "../tools/show_package_list.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
-import { existsSync, readJsonSync } from "../imports/fs.ts";
 import { errorsMessage, deps } from "../utils/types.ts";
 import { Proxy, needProxy } from "../imports/proxy.ts";
+import { readJson } from "../temp_deps/writeJson.ts";
+import { exists } from "../imports/fs.ts";
 import { colors } from "../imports/fmt.ts";
 import { denoApidb } from "../utils/db.ts";
 import cache from "./handle_cache.ts";
-
 /**
  * create url for std/ or x/ packages depending on version or master branch.
  * @param {string} pkgName - package name.
@@ -81,7 +81,7 @@ export async function installPackages(args: string[]) {
 
   const beforeTime = Date.now();
 
-  if (args[1] === flags.map) {
+  if (flags.map.includes(args[1])) {
     for (let index = 2; index < args.length; index++) {
       const name = args[index];
       await cache(name.split("@")[0], await detectVersion(name));
@@ -90,41 +90,41 @@ export async function installPackages(args: string[]) {
         ? Proxy(getNamePkg(name))
         : await await detectVersion(name);
 
-      WriteImport(getNamePkg(name), url);
+      await WriteImport(getNamePkg(name), url);
       await WriteDeps(getNamePkg(name), url);
     }
   }
 
   // * install packages hosted on nest.land.
-  else if (args[1] === flags.nest) {
+  else if (flags.nest.includes(args[1])) {
     for (let index = 2; index < args.length; index++) {
       const [name, version] = args[index].split("@");
       const url = await nestPackageUrl(name, version);
 
       await cachePackage(url);
-      WriteImport(name.toLowerCase(), url);
+      await WriteImport(name.toLowerCase(), url);
       await WriteDeps(name.toLowerCase(), url);
     }
   }
 
   // * install from repo using denopkg.com
-  else if (args[1] === flags.pkg) {
+  else if (flags.pkg.includes(args[1])) {
     const [name, url] = pkgRepo(args[2], args[3]);
 
     await cachePackage(url);
-    WriteImport(name.toLowerCase(), url);
+    await WriteImport(name.toLowerCase(), url);
     await WriteDeps(name.toLowerCase(), url);
   }
 
   // * take the packages from the deps.json file and install them.
   else {
     try {
-      if (!existsSync("./imports/deps.json")) {
+      if (!(await exists("./imports/deps.json"))) {
         throw new Error(colors.red(errorsMessage.depsNotFound)).message;
       }
 
       else {
-        const deps = readJsonSync("./imports/deps.json") as deps;
+        const deps = await readJson("./imports/deps.json") as deps;
         const allPkg = Object.keys(deps.meta).length;
 
         if (!allPkg) {
@@ -137,7 +137,7 @@ export async function installPackages(args: string[]) {
             // * verify fingerprints are correct
             if (await validateHash(pkg[1].url, pkg[1].hash)) {
               await cachePackage(pkg[1].url);
-              WriteImport(pkg[0], pkg[1].url);
+              await WriteImport(pkg[0], pkg[1].url);
             }
 
             else {
@@ -157,7 +157,7 @@ export async function installPackages(args: string[]) {
       ).message;
     }
   }
-  const deps = readJsonSync("./imports/deps.json") as deps;
+  const deps = await readJson("./imports/deps.json") as deps;
 
   // * show installation time
   const afterTime = Date.now();
@@ -179,7 +179,7 @@ export async function installPackages(args: string[]) {
 export async function customPackage(...args: string[]) {
 
   const beforeTime = Date.now();
-  if (!existsSync("./imports")) {
+  if (!(await exists("./imports"))) {
     await createFolder();
   }
 
@@ -187,7 +187,7 @@ export async function customPackage(...args: string[]) {
     const [name, url] = args[1].split("=");
 
     await cachePackage(url);
-    WriteImport(name, url);
+    await WriteImport(name, url);
     await WriteDeps(name, url);
   }
 
@@ -197,7 +197,7 @@ export async function customPackage(...args: string[]) {
         errorsMessage.installationError
         )).message;
   }
-  const deps = readJsonSync("./imports/deps.json") as deps;
+  const deps = await readJson("./imports/deps.json") as deps;
 
   const afterTime = Date.now();
   console.clear();
