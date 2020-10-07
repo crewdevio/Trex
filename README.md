@@ -31,13 +31,13 @@
 
 ## About
 
-`Trex imports` is a package management tool for deno similar to npm but keeping close to the deno philosophy.
+`trex imports` is a package management tool for deno similar to npm but keeping close to the deno philosophy.
 
 ## Additional topics
 
 - [why does this version exist?](https://dev.to/buttercubz/rethinking-the-way-we-handle-dependency-imports-in-deno-3j72)
 
-- [hash and fingerprint in deps.json file](docs/hash.md)
+- [hash and fingerprint in deps.json file](./docs/hash.md)
 
 ## Installation
 
@@ -69,7 +69,7 @@ deno install -f -A --unstable -n imports https://denopkg.com/crewdevio/Trex@impo
 Or use the `upgrade` command:
 
 ```console
-imports upgrade [name]
+imports upgrade
 ```
 
 > **Note**: available for versions 0.2.0 or higher.
@@ -346,7 +346,7 @@ Deno's solution to avoid this is to use integrity checking and lock files.
 Create a lockfile:
 
 ```console
-imports --lock file.ts
+deno cache --lock=lock.json --lock-write file.ts
 ```
 
 The above generates a `lock.json` file.
