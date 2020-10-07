@@ -263,6 +263,33 @@ trex install --map fs@0.54.0
 
 > **note**: can be used with third party packages.
 
+### Run Scripts (experimental)
+
+now you can create command aliases similar to [npm run](https://docs.npmjs.com/cli-commands/run-script.html), you just have to create a run.json file with the following structure:
+
+```json
+// example
+{
+  "scripts": {
+    "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts"
+  }
+}
+```
+
+> **note**: to run command aliases you must use the command `trex run <aliases>`
+
+for now you can create command aliases that interact with deno or other programs that are visible to environment variables, but you cannot call a command alias within another
+
+```json
+// example
+{
+  "scripts": {
+    "run": "trex run welcome", // not working for now
+    "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts"
+  }
+}
+```
+
 ### Checking a package's dependency tree
 
 ```console
@@ -353,7 +380,7 @@ Deno's solution to avoid this is to use integrity checking and lock files.
 Create a lockfile:
 
 ```console
-trex --lock file.ts
+deno cache --lock=lock.json --lock-write file.ts
 ```
 
 The above generates a `lock.json` file.
@@ -361,7 +388,7 @@ The above generates a `lock.json` file.
 If you use `import_map.json` in input file, you can specify it:
 
 ```console
-trex --lock --importmap file.ts
+deno cache --lock=lock.json --lock-write --importmap=import_map.json --unstable file.ts
 ```
 
 See [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking) for more info.

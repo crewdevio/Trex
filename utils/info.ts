@@ -39,38 +39,45 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.2.2" };
+export const VERSION = { VERSION: "v1.3.0" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
 
   green("USAGE:"),
-  `   trex ${yellow('[OPTIONS]')} ${yellow('[SUBCOMMAND]')}\n`,
+  `   trex ${yellow("[OPTIONS]")} ${yellow("[SUBCOMMAND]")}\n`,
 
   green("OPTIONS:"),
-  `   ${yellow('--help, -h')}     print help info\n`,
+  `   ${yellow("-h, --help")}      print help info\n`,
 
-  `   ${yellow('--custom, -c')}   install custom package\n`,
+  `   ${yellow("-c, --custom")}    install custom package\n`,
 
-  `   ${yellow('--version, -v')}  print version\n`,
+  `   ${yellow("-v, --version")}   print version\n`,
 
-  `   ${yellow('--map, -m')}      install package from deno.land\n`,
+  `   ${yellow("-m, --map")}       install package from deno.land\n`,
 
-  `   ${yellow('--lock')}         create a lock file\n`,
+  `   ${yellow("-n, --nest")}      install package from nest.land\n`,
 
-  `   ${yellow('--nest, -n')}     install package from nest.land\n`,
-
-  `   ${yellow('--pkg, -p')}      install package from some repository\n`,
+  `   ${yellow("-p, --pkg")}       install package from some repository\n`,
 
   green("SUBCOMMANDS:"),
-  `   ${yellow('[install or i]')}  install a package\n`,
+  `   ${yellow("[install or i]")}  install a package\n`,
 
-  `   ${yellow('delete')}          delete a package\n`,
+  `   ${yellow("delete")}          delete a package\n`,
 
-  `   ${yellow('upgrade')}         update trex\n`,
+  `   ${yellow("upgrade")}         update trex\n`,
 
-  `   ${yellow('tree')}            view dependency tree\n`
+  `   ${yellow("tree")}            view dependency tree\n`,
 
+  `   ${yellow("run")}             run a script alias in a file run.json\n`,
+
+  `   ${yellow("setup")}           create a deno configuration for your IDE\n`,
+
+  green(
+    "you can see the different options available for each command using:\n"
+  ),
+
+  `   ${green("trex")}  ${yellow("[command]")} ${yellow("--help or -h")}\n`,
 ];
 
 export const flags = {
@@ -78,7 +85,6 @@ export const flags = {
   version: ["--version", "-v"],
   custom: ["--custom", "-c"],
   help: ["--help", "-h"],
-  lock: "--lock",
   nest: ["--nest", "-n"],
   pkg: ["--pkg", "-p"],
 };
@@ -88,5 +94,33 @@ export const keyWords = {
   uninstall: "delete",
   upgrade: "upgrade",
   tree: "tree",
-  run: "run"
+  run: "run",
+  purge: "purge",
+  setup: "setup",
+};
+
+export const IDESsettings = [
+{
+  "deno.enable": true,
+  "deno.import_map": "./import_map.json",
+  "deno.unstable": true,
+},
+{
+  compilerOptions: {
+    plugins: [
+      {
+        name: "typescript-deno-plugin",
+        enable: true,
+        importmap: "import_map.json",
+      },
+    ],
+  },
+}
+]
+
+export const IDES = ["--vscode", "--atom"];
+
+export const atomInstaller = {
+  npm: ["npm", "install", "--save-dev", "typescript-deno-plugin", "typescript"],
+  yarn: ["yarn", "add", "-D", "typescript-deno-plugin", "typescript"],
 };

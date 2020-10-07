@@ -1,6 +1,7 @@
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
-import { LockFile } from "../handlers/handle_lock_file.ts";
 import { packageTreeInfo } from "../tools/logs.ts";
+import { setupIDE } from "../tools/setupIDE.ts";
+import { HelpCommand } from "../utils/logs.ts";
 import { Merlin } from "../imports/merlin.ts";
 
 const merlin = new Merlin();
@@ -8,7 +9,10 @@ const merlin = new Merlin();
 merlin.testEqual("install custom package", {
   async expect() {
     const data = await customPackage(
-      ...["--custom", "merlin=http://denopkg.com/crewdevio/merlin/mod.ts"]
+      ...[
+        "--custom",
+        "merlin=https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts",
+      ]
     );
 
     return data;
@@ -49,17 +53,6 @@ merlin.testEqual("install package from nest.land", {
   Resources: false,
 });
 
-merlin.testEqual("Lock File", {
-  async expect() {
-    return await LockFile(...["--lock", "./test/core.test.ts"]);
-  },
-  toBe() {
-    return true;
-  },
-  Resources: false,
-  Ops: false,
-});
-
 merlin.isUndefined("Trex treeDeps test", {
   async value() {
     return await packageTreeInfo(...["--unstable", "treeDeps", "react"]);
@@ -67,3 +60,33 @@ merlin.isUndefined("Trex treeDeps test", {
   Ops: false,
   Resources: false,
 });
+
+merlin.isUndefined("Setup IDE", {
+  async value(){
+    return await setupIDE("--vscode");
+  },
+  Ops: false,
+  Resources: false
+})
+
+merlin.isUndefined("Command helper test", {
+  async value() {
+    return HelpCommand({
+      command: {
+        alias: ["install", "i"],
+        description: "install a package",
+      },
+      flags: [
+        { alias: ["--map", "-m"], description: "install package from deno.land" },
+        { alias: ["--nest", "-n"], description: "install package from nest.land" },
+        {
+          alias: ["--pkg", "-p"],
+          description: "install package from some repository",
+        },
+        { alias: ["--help, -h"], description: "show command help" },
+      ],
+    });
+  },
+  Ops: false,
+  Resources: false
+})

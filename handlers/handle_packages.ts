@@ -6,7 +6,10 @@
  *
  */
 
-import { nestPackageUrl, cacheNestpackage, pkgRepo } from "./handle_third_party_package.ts";
+import {
+  nestPackageUrl,
+  cacheNestpackage,
+  pkgRepo } from "./handle_third_party_package.ts";
 import { getImportMap, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
@@ -70,18 +73,18 @@ async function getNamePkg(pkg: string): Promise<string> {
 
   // * name for packages with a specific version
   if (pkg.includes("@")) {
-    const Facts = pkg.split("@");
+    const [pkgName, _] = pkg.split("@");
 
-    if (STD.includes(Facts[0]) && (await denoApidb(Facts[0])).length) {
-      name = Facts[0] + "/";
+    if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
+      name = pkgName + "/";
     }
 
-    else if (STD.includes(Facts[0])) {
-      name = Facts[0] + "/";
+    else if (STD.includes(pkgName)) {
+      name = pkgName + "/";
     }
 
-    else if ((await denoApidb(Facts[0])).length) {
-      name = Facts[0];
+    else if ((await denoApidb(pkgName)).length) {
+      name = pkgName;
     }
   }
 
@@ -193,15 +196,18 @@ export async function installPackages(args: string[]) {
  */
 
 export async function customPackage(...args: string[]) {
-  const data = args[1].includes("=")
-    ? args[1].split("=")
-    : ["Error", "Add a valid package"];
+
+  if (!args[1].includes("=")) {
+    throw new Error(red("Add a valid package")).message;
+  }
+
+  const [pkgName, url] = args[1].split("=");
 
   const custom: objectGen = {};
 
-  custom[data[0].toLowerCase()] = data[1];
+  custom[pkgName.toLowerCase()] = url;
   // * cache custom module
-  const cache = Deno.run({
+  const process = Deno.run({
     cmd: [
       "deno",
       "install",
@@ -209,12 +215,12 @@ export async function customPackage(...args: string[]) {
       "-n",
       "trex_Cache_Map",
       "--unstable",
-      data[1],
+      url,
     ],
   });
 
-  if (!(await cache.status()).success) {
-    cache.close();
+  if (!(await process.status()).success) {
+    process.close();
     Somebybroken("this package is invalid or the url is invalid");
   }
 
@@ -238,5 +244,8 @@ export async function customPackage(...args: string[]) {
     // * else create package
     createPackage(custom, true);
   }
-  return (await cache.status()).success;
+  const status = (await process.status()).success;
+  // * close main install process
+  process.close();
+  return status;
 }

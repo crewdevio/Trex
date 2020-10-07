@@ -6,24 +6,57 @@
  *
  */
 
-import { installPackages, exist_imports, customPackage } from "./handlers/handle_packages.ts";
-import { LogHelp, Version, updateTrex, Somebybroken } from "./utils/logs.ts";
-import { STD, VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
+import {
+  installPackages,
+  exist_imports,
+  customPackage,
+} from "./handlers/handle_packages.ts";
+import {
+  LogHelp,
+  Version,
+  updateTrex,
+  HelpCommand,
+  CommandNotFound,
+} from "./utils/logs.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
-import { haveVersion } from "./handlers/handle_delete_package.ts";
-import { LockFile } from "./handlers/handle_lock_file.ts";
+import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
+import { deletepackage } from "./handlers/delete_package.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
+import { setupIDE } from "./tools/setupIDE.ts"
 import { exists } from "./imports/fs.ts";
-import { colors } from "./imports/fmt.ts";
+import { Run } from "./commands/run.ts";
 
-const { red, green, yellow } = colors;
 async function mainCli() {
   const _arguments = Deno.args;
   // * install some packages
   if (keyWords.install.includes(_arguments[0])) {
+    // * prevent error in trex install
+    if (_arguments[1]) {
+      CommandNotFound({
+        commands: keyWords.install,
+        flags: [...flags.map, ...flags.nest, ...flags.pkg, ...flags.help],
+      });
+    }
+
+    if (flags.help.includes(_arguments[1])) {
+      return HelpCommand({
+        command: {
+          alias: keyWords.install,
+          description: "install a package",
+        },
+        flags: [
+          { alias: flags.map, description: "install package from deno.land" },
+          { alias: flags.nest, description: "install package from nest.land" },
+          {
+            alias: flags.pkg,
+            description: "install package from some repository",
+          },
+          { alias: flags.help, description: "show command help" },
+        ],
+      });
+    }
 
     if (await exists("./import_map.json")) {
-
       try {
         const data = JSON.parse(await getImportMap());
         const oldPackage = exist_imports(data);
@@ -35,9 +68,7 @@ async function mainCli() {
       catch (_) {
         throw new Error(_).message;
       }
-    }
-
-    else {
+    } else {
       await createPackage(await installPackages(_arguments), true);
     }
   }
@@ -45,94 +76,145 @@ async function mainCli() {
   else if (flags.version.includes(_arguments[0])) {
     Version(VERSION.VERSION);
   }
-
+  // * show help info
   else if (flags.help.includes(_arguments[0])) {
     LogHelp(helpsInfo);
   }
   // * install a custom package
   else if (flags.custom.includes(_arguments[0])) {
-    customPackage(..._arguments)
+
+    if (flags.help.includes(_arguments[1])) {
+      return HelpCommand({
+        command: {
+          alias: flags.custom,
+          description: "install custom package",
+        },
+        flags: [{ alias: flags.help, description: "show command help" }],
+      });
+    }
+
+
+    customPackage(..._arguments);
   }
   // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
-    if (await exists("./import_map.json")) {
-
-      try {
-        const pkg: string = _arguments[1].trim();
-        const Packages = JSON.parse(await getImportMap());
-
-        if (Packages?.imports) {
-        delete Packages.imports[
-          STD.includes(haveVersion(pkg))
-          ? haveVersion(pkg) + "/"
-          : haveVersion(pkg)
-        ];
-
-        const newPackage = exist_imports(Packages);
-
-        await createPackage(newPackage);
-
-        console.log(yellow(pkg + ":"), green(" removed from import_map.json"));
-      }
-
-      else {
-        throw new Error(
-          red("'imports' key not found in import_map.json")
-            ).message;
-      }
-    }
-      catch (_) {
-        throw new Error(
-          red(
-            _ instanceof TypeError
-            ? "add the name of the package to remove"
-            : "the import_map.json file does not have a valid format.")
-          ).message;
-      }
+    if (flags.help.includes(_arguments[1])) {
+      return HelpCommand({
+        command: {
+          alias: [keyWords.uninstall],
+          description: "delete a package",
+        },
+        flags: [
+          {
+            alias: flags.help,
+            description: "show command help",
+          },
+        ],
+      });
     }
 
-    else {
-      console.error(red("import_map.json"));
-      return;
-    }
+    await deletepackage(_arguments[1]);
   }
   // * update to lastest version of trex
   else if (_arguments[0] === keyWords.upgrade) {
+    if (_arguments[1]) {
+      CommandNotFound({
+        commands: [keyWords.upgrade],
+        flags: [...flags.help],
+      });
+    }
+
+    if (flags.help.includes(_arguments[1])) {
+      return HelpCommand({
+        command: {
+          alias: [keyWords.upgrade],
+          description: "update trex",
+        },
+        flags: [{ alias: flags.help, description: "show command help" }],
+      });
+    }
+
     await updateTrex();
   }
   // * shows the dependency tree of a package
   else if (_arguments[0] === keyWords.tree) {
-    await packageTreeInfo(..._arguments)
-
-  }
-  // * create lock file
-  else if (_arguments[0] === flags.lock) {
-    await LockFile(..._arguments);
-  }
-
-  else if (_arguments[0] === keyWords.run){
-
-    const process = Deno.run({
-      cmd: [
-        "deno",
-        "run",
-        "--allow-read",
-        "--allow-run",
-        "--unstable",
-        "https://deno.land/x/commands/Commands.ts",
-        _arguments[1]
-      ]
-    });
-
-    if (!(await process.status()).success) {
-      process.close();
-      Somebybroken();
+    if (flags.help.includes(_arguments[1])) {
+      return HelpCommand({
+        command: {
+          alias: [keyWords.tree],
+          description: "view dependency tree",
+        },
+        flags: [{ alias: flags.help, description: "show command help" }],
+      });
     }
+
+    await packageTreeInfo(..._arguments);
+  }
+
+  // * run script aliases
+  else if (_arguments[0] === keyWords.run) {
+    if (flags.help.includes(_arguments[1])) {
+      return HelpCommand({
+        command: {
+          alias: [keyWords.run],
+          description: "run a script alias in a file run.json",
+        },
+        flags: [{ alias: flags.help, description: "show command help" }],
+      });
+    }
+
+    await Run(_arguments[1]);
+  }
+
+  else if (_arguments[0] === keyWords.setup){
+
+    CommandNotFound({
+      commands: [keyWords.setup],
+      flags: ["--vscode", "--atom", ...flags.help]
+    })
+
+    if (flags.help.includes(_arguments[1])) {
+      return HelpCommand({
+        command: {
+          alias: [keyWords.setup],
+          description: "create a deno configuration for your IDE",
+        },
+        flags: [
+          {
+            alias: flags.help,
+            description: "show command help"
+          },
+          {
+            alias: ["--vscode"],
+            description: "create the necessary configuration for vscode"
+          },
+          {
+            alias: ["--atom"],
+            description: "create the necessary configuration for atom"
+          }
+        ],
+      });
+    }
+
+    setupIDE(_arguments[1])
   }
 
   // * displays help information
   else {
-    LogHelp(helpsInfo);
+    CommandNotFound({
+      commands: [
+        keyWords.purge,
+        keyWords.run,
+        keyWords.tree,
+        ...keyWords.install,
+        keyWords.uninstall,
+        keyWords.upgrade,
+        ...flags.help,
+        ...flags.version,
+        keyWords.setup
+      ],
+      flags: [],
+    });
   }
 }
 

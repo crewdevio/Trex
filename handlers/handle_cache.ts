@@ -8,11 +8,70 @@
 
 import { needProxy, Proxy } from "../imports/proxy.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
+import { createHash } from "../imports/hash.ts";
 import { colors } from "../imports/fmt.ts";
 import { denoApidb } from "../utils/db.ts";
+import { exists } from "../imports/fs.ts";
 import { STD } from "../utils/info.ts";
 
-const { green, red } = colors;
+const { green, red, yellow } = colors;
+
+// * create a simple delay
+export const delay = (time: number) =>
+  new Promise((res) => setTimeout(res, time * 1000));
+
+/**
+ * get cache deps path
+ * @param {string} protocol
+ * @param hostname
+ * @param {string} hash
+ * @returns string
+ */
+
+function getCachePath(protocol: string, hostname: string, hash: string) {
+  const user = Deno.env.get("USERNAME")! || Deno.env.get("HOME")!;
+  protocol = protocol.includes(":") ? protocol.replace(":", "") : protocol;
+
+  if (Deno.build.os === "windows") {
+    return `C:\\Users\\${user}\\AppData\\Local\\deno\\deps\\${protocol}\\${hostname}\\${hash}`;
+  }
+  // * for any linux distro
+  else if (Deno.build.os === "linux") {
+    return `${user}/.cache/deno/deps/${protocol}/${hostname}/${hash}`;
+  }
+  // * for macOs deno cache deps path
+  else {
+    return `${user}/Library/Caches/deno/deps/${protocol}/${hostname}/${hash}`;
+  }
+}
+
+/**
+ * detect if a package is installed
+ * @param {string} packageUrl
+ */
+
+export async function isCachePackage(packageUrl: string) {
+  if (!(packageUrl.includes("http://") || packageUrl.includes("https://"))) {
+    throw new Error(
+      red(
+        "this is not a valid package url, only http or https urls are allowed"
+      )
+    ).message;
+  }
+  // * get file path
+  else {
+    const { hostname, protocol, pathname, search } = new URL(packageUrl);
+    const toHash = createHash("sha256")
+      .update(`${pathname}${search ? "?" + search : ""}`)
+      .toString();
+    const filePath = getCachePath(protocol, hostname, toHash);
+
+    return {
+      exist: await (exists(filePath) || exists(filePath + ".metadata.json")),
+      path: filePath,
+    };
+  }
+}
 
 /**
  * caches packages.
@@ -44,9 +103,18 @@ async function cached(pkgName: string, pkgUrl: string) {
       process.close();
       ErrorInstalling();
     }
+    // TODO(buttercubz) create a better way to handler this
+    if ((await isCachePackage(pkgUrl + "mod.ts")).exist) {
+      console.log(
+        yellow(`omitted, this version of ${red(pkgName)} is already installed`)
+      );
+      await delay(0.1);
+    } else {
+      console.log(green("\n Done. \n"));
+    }
   }
 
-  // * install standar party package by defaul use mod.ts
+  // * install standard package by default use mod.ts
   else if (STD.includes(pkgName)) {
     process = Deno.run({
       cmd: [
@@ -65,7 +133,14 @@ async function cached(pkgName: string, pkgUrl: string) {
       ErrorInstalling();
     }
 
-    console.log(green("\n Done. \n"));
+    if ((await isCachePackage(pkgUrl + "mod.ts")).exist) {
+      console.log(
+        yellow(`omitted, this version of ${red(pkgName)} is already installed`)
+      );
+      await delay(0.1);
+    } else {
+      console.log(green("\n Done. \n"));
+    }
   }
 
   // * install third party package
@@ -80,7 +155,14 @@ async function cached(pkgName: string, pkgUrl: string) {
       ErrorInstalling();
     }
 
-    console.log(green("\n Done. \n"));
+    if ((await isCachePackage(pkgUrl)).exist) {
+      console.log(
+        yellow(`omitted, this version of ${red(pkgName)} is already installed`)
+      );
+      await delay(0.1);
+    } else {
+      console.log(green("\n Done. \n"));
+    }
   }
 
   // * log error if package is not found

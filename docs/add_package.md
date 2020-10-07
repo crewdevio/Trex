@@ -2,7 +2,7 @@
 
 You can make your package available to download from trex by hosting them at:
 
-- [deno.land/x](https://nest.land/)
+- [deno.land/x](https://deno.land/x)
 - [nest.land](https://nest.land/)
 - [your own repository](#)
 
@@ -29,7 +29,7 @@ this will download package from nest.land
 ### From your own repository:
 
 ```console
-trex install --pkg [user]/[repo or repo@tag]/[path/to/file] [packageName]
+trex install --pkg [user]/[repo or repo@branch/tag]/[path/to/file] [packageName]
 ```
 
 example:

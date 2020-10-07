@@ -43,3 +43,26 @@ export interface NestResponse {
   };
   createdAt: string;
 }
+
+export interface runJson {
+  scripts: {
+    [key: string]: string;
+  };
+}
+
+export interface HelpCommandParams {
+  command: {
+    alias: string[];
+    description: string;
+  };
+  flags: Array<{
+    description: string;
+    alias: string[];
+  }>;
+}
+
+export interface CommandNotFoundParams {
+  commands: string[];
+
+  flags: string[];
+}
