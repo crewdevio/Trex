@@ -174,7 +174,7 @@ export async function installPackages(args: string[]) {
     }
 
     catch (_) {
-      console.error(red("import_map.json file not found"));
+      throw new Error(red("import_map.json file not found")).message;
     }
   }
 
@@ -234,9 +234,9 @@ export async function customPackage(...args: string[]) {
     }
 
     catch (_) {
-      console.error(
+      throw new Error(
         red("the import_map.json file does not have a valid format.")
-      );
+      ).message;
     }
   }
 

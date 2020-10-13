@@ -19,6 +19,10 @@
     "hash": {
       "url": "https://deno.land/std@0.73.0/hash/mod.ts",
       "hash": "8db1663a886b37cfcf6d0d488edbd5fc6ac3edc1d0f8633f92444bc7ca3b50b8"
+    },
+    "path": {
+      "url": "https://deno.land/std@0.74.0/path/mod.ts",
+      "hash": "22cec6054af4a57f2e5fa88b8be9b9f1e5c395039ef7de939a0c281c9ca4cd09"
     }
   }
 }

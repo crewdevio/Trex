@@ -10,13 +10,21 @@ import { readJson } from "../temp_deps/writeJson.ts";
 import type { runJson } from "../utils/types.ts";
 import { colors } from "../imports/fmt.ts";
 import { exists } from "../imports/fs.ts";
+import { join } from "../imports/path.ts";
 
 const { red, yellow } = colors;
+const { env, run } = Deno;
 
+/**
+ * execute subprocess script
+ * @param command
+ */
 export async function Run(command: string) {
   if (!(await exists("./run.json"))) {
     throw new Error(red(`: ${yellow("run.json not found")}`)).message;
-  } else {
+  }
+
+  else {
     const runJsonFile = (await readJson("./run.json")) as runJson;
 
     if (!runJsonFile?.scripts) {
@@ -34,17 +42,62 @@ export async function Run(command: string) {
     if (!toRun.length) {
       throw new Error(red(`: ${yellow("command not found")}`)).message;
     }
-
+    // normalize command
     const runnerCommand = toRun[0].split(" ").filter((arg) => !!arg);
 
-    const process = Deno.run({
+    // get path to deno scripts
+    const scriptPath = join(
+      Deno.env.get("DENO_TOOLS")! || Deno.env.get("toolsdeno")!,
+      runnerCommand[0]
+    );
+
+    // prevent deno scrips not found error
+    if (await exists(scriptPath) || await exists(scriptPath + ".cmd")) {
+
+      if (Deno.build.os === "linux" || Deno.build.os === "darwin") {
+        runnerCommand[0] = scriptPath;
+      }
+
+      else if (Deno.build.os === "windows") {
+        runnerCommand[0] = `${runnerCommand[0]}.cmd`;
+      }
+    }
+
+    const [currentCMD, execCommand] = [
+      ["beta", "run", command].join(" "),
+      [...runnerCommand]
+        .map((cmd) => cmd.trim())
+        .join(" ")
+        .replaceAll(".cmd", ""),
+    ];
+
+    const last = execCommand.split("/");
+
+    // remove path to compare on unix base os
+    const toCompare =
+      Deno.build.os === "linux" || Deno.build.os == "darwin"
+        ? last[last.length - 1]
+        : execCommand;
+
+    // prevent circular call
+    if (currentCMD === toCompare) {
+      throw new EvalError(
+        `${yellow("Circular call found in: ")}${red(toRun[0])}`
+      ).message;
+    }
+
+    const process = run({
       cmd: [...runnerCommand],
+      env: env.toObject(),
+      cwd: Deno.cwd(),
     });
 
     if (!(await process.status()).success) {
       process.close();
-      throw new Error("error running command " + toRun[0]).message;
-    } else {
+      throw new Error("error running command " + red(toRun[0])).message;
+    }
+
+    else {
       process.close();
     }
   }
