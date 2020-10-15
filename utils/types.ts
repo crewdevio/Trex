@@ -55,16 +55,16 @@ export type pkgResponse = {
   star_count: number;
 };
 
-export const enum errorsMessage {
-  keyNotFound = "deps.json file does not have meta key",
-  lockFile = "Error: creating lock.json file",
-  importsFolder = "the imports folder does not exist",
-  depsNotFound = "deps.json file not found",
-  deleteError = "the package cannot be removed from the imports folder",
-  depsFormat = "the deps.json file is not in a valid format",
-  noPackage = "The deps.json file has no registered packages",
-  installationError = "something went wrong in the installation",
-  processError = "a process not completed successfully",
+export const errorsMessage = {
+  keyNotFound: "deps.json file does not have meta key",
+  lockFile: "Error: creating lock.json file",
+  importsFolder :"the imports folder does not exist",
+  depsNotFound: "deps.json file not found",
+  deleteError: "the package cannot be removed from the imports folder",
+  depsFormat: "the deps.json file is not in a valid format",
+  noPackage: "The deps.json file has no registered packages",
+  installationError: "something went wrong in the installation",
+  processError: "a process not completed successfully",
 }
 
 export interface HelpCommandParams {
