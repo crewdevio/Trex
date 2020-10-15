@@ -126,7 +126,7 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
     console.log(
       red("Command not found:\n"),
 
-      green(`\n${red("trex")} ${yellow(command)}: unknown command\n`),
+      green(`\n${red("trex")} ${yellow(command ?? "empty command")}: unknown command\n`),
 
       green(
         `\nuse ${red("trex")} ${yellow("--help")} to see available commands\n`
@@ -141,13 +141,13 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
       red("Command flag not found:\n"),
 
       green(
-        `\n${red("trex")} ${yellow(command)}  ${yellow(
+        `\n${red("trex")} ${yellow(command ?? "empty command")}  ${yellow(
           flag
         )}: unknown command flag\n`
       ),
 
       green(
-        `\nuse ${red("trex")} ${yellow(command)} ${yellow(
+        `\nuse ${red("trex")} ${yellow(command ?? "empty command")} ${yellow(
           "--help"
         )} to see available command flags\n`
       )
