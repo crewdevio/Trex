@@ -256,6 +256,47 @@ imports install --map fs@0.54.0
 
 > **note**: can be used with third party packages.
 
+### Run Scripts (experimental)
+
+now you can create command aliases similar to [npm run](https://docs.npmjs.com/cli-commands/run-script.html), you just have to create a run.json file with the following structure:
+
+```json
+// example
+{
+  "scripts": {
+    "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts"
+  }
+}
+```
+
+> **note**: to run command aliases you must use the command `imports run <aliases>`
+
+now you can call a command within another or call a deno script like denopack or eggs within a command alias
+
+```json
+// example
+{
+  "scripts": {
+    "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
+    "bundler": "denopack -i mod.ts -o bundle.mod.js",
+    "publish": "eggs publish",
+    "start": "imports run welcome"
+  }
+}
+```
+
+> **note**: you can use the --watch flag to monitor the changes and rerun the script, example: deno run --watch --unstable https://deno.land/std@0.71.0/examples/welcome.ts
+
+you can pass arguments in the command alias and these will be resisted by the file to execute
+
+```console
+imports run start --port=3000 --env
+```
+
+```typescript
+console.log(Deno.args); // ["--port=3000", "--env"]
+```
+
 ### Checking a package's dependency tree
 
 ```console
