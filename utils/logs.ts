@@ -35,6 +35,10 @@ export function LogHelp(helpsInfo: string[]) {
   }
 }
 
+export function newLogHelp(helpsInfo: string[]) {
+  console.log(helpsInfo.join(" "));
+}
+
 /**
  * update trex
  */

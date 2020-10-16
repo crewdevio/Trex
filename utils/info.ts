@@ -39,7 +39,44 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.3.0" };
+export const VERSION = { VERSION: "v1.3.2" };
+
+export const strInfo = `
+${green("advanced package management for deno, based on import_map.json\n")}
+
+  ${green("USAGE:")},
+     trex ${yellow("[OPTIONS]")} ${yellow("[SUBCOMMAND]")}
+
+  ${green("OPTIONS:")}
+     ${yellow("-h, --help")}      print help info
+
+     ${yellow("-c, --custom")}    install custom package
+
+     ${yellow("-v, --version")}   print version
+
+     ${yellow("-m, --map")}       install package from deno.land
+
+     ${yellow("-n, --nest")}      install package from nest.land
+
+     ${yellow("-p, --pkg")}       install package from some repository
+
+  ${green("SUBCOMMANDS:")}
+     ${yellow("[install or i]")}  install a package
+
+     ${yellow("delete")}          delete a package
+
+     ${yellow("upgrade")}         update trex
+
+     ${yellow("tree")}            view dependency tree
+
+     ${yellow("run")}             run a script alias in a file run.json
+
+     ${yellow("setup")}           create a deno configuration for your IDE
+
+  ${green("you can see the different options available for each command using:")}
+
+  ${green("trex")}  ${yellow("[command]")} ${yellow("--help or -h")}
+`
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
