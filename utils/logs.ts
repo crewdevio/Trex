@@ -30,13 +30,7 @@ export function Version(version: string) {
  * @param helpsInfo
  */
 export function LogHelp(helpsInfo: string[]) {
-  for (const info of helpsInfo) {
-    console.log(info);
-  }
-}
-
-export function newLogHelp(helpsInfo: string[]) {
-  console.log(helpsInfo.join(" "));
+  console.log(helpsInfo.join(""));
 }
 
 /**
