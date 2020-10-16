@@ -13,7 +13,10 @@ import { exists } from "../imports/fs.ts";
 import { join } from "../imports/path.ts";
 
 const { red, yellow } = colors;
-const { env, run } = Deno;
+const { env, run, args } = Deno;
+
+// run args command
+const [,, ...runArgs] = args;
 
 /**
  * execute subprocess script
@@ -89,7 +92,7 @@ export async function Run(command: string) {
       }
 
       const process = run({
-        cmd: [...runnerCommand],
+        cmd: [...runnerCommand, ...runArgs],
         env: env.toObject(),
         cwd: Deno.cwd(),
       });

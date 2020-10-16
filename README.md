@@ -294,6 +294,16 @@ now you can call a command within another or call a deno script like `denopack` 
 
 > **note**: you can use the --watch flag to monitor the changes and rerun the script, example: `deno run --watch --unstable https://deno.land/std@0.71.0/examples/welcome.ts`
 
+you can pass arguments in the command alias and these will be resisted by the file to execute
+
+```console
+imports run start --port=3000 --env
+```
+
+```typescript
+console.log(Deno.args); // ["--port=3000", "--env"]
+```
+
 ### Checking a package's dependency tree
 
 ```console
