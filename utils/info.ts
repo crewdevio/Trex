@@ -73,6 +73,8 @@ export const helpsInfo = [
 
   `   ${yellow("setup")}           create a deno configuration for your IDE\n`,
 
+  `   ${yellow("purge")}           remove a package or url from cache\n`,
+
   green(
     "\nyou can see the different options available for each command using:\n"
   ),
@@ -100,23 +102,23 @@ export const keyWords = {
 };
 
 export const IDESsettings = [
-{
-  "deno.enable": true,
-  "deno.import_map": "./import_map.json",
-  "deno.unstable": true,
-},
-{
-  compilerOptions: {
-    plugins: [
-      {
-        name: "typescript-deno-plugin",
-        enable: true,
-        importmap: "import_map.json",
-      },
-    ],
+  {
+    "deno.enable": true,
+    "deno.import_map": "./import_map.json",
+    "deno.unstable": true,
   },
-}
-]
+  {
+    compilerOptions: {
+      plugins: [
+        {
+          name: "typescript-deno-plugin",
+          enable: true,
+          importmap: "import_map.json",
+        },
+      ],
+    },
+  }
+];
 
 export const IDES = ["--vscode", "--atom"];
 

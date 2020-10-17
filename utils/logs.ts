@@ -118,7 +118,7 @@ export function HelpCommand({ command, flags }: HelpCommandParams) {
 export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
   const { args } = Deno;
 
-  const [command, flag, ..._] = args;
+  const [command, flag] = args;
 
   if (!commands.includes(command)) {
     console.log(
