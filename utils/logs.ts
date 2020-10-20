@@ -30,9 +30,7 @@ export function Version(version: string) {
  * @param helpsInfo
  */
 export function LogHelp(helpsInfo: string[]) {
-  for (const info of helpsInfo) {
-    console.log(info);
-  }
+  console.log(helpsInfo.join(""));
 }
 
 /**
@@ -115,18 +113,20 @@ export function HelpCommand({ command, flags }: HelpCommandParams) {
       )}`.replaceAll(",", " ")
     )
   );
+
+  Deno.exit(0);
 }
 
 export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
   const { args } = Deno;
 
-  const [command  = '', flag = '', ..._] = args;
+  const [command  = '', flag = ''] = args;
 
   if (!commands.includes(command)) {
     console.log(
       red("Command not found:\n"),
 
-      green(`\n${red("trex")} ${yellow(command)}: unknown command\n`),
+      green(`\n${red("trex")} ${yellow(command ?? "empty command")}: unknown command\n`),
 
       green(
         `\nuse ${red("trex")} ${yellow("--help")} to see available commands\n`
@@ -141,13 +141,13 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
       red("Command flag not found:\n"),
 
       green(
-        `\n${red("trex")} ${yellow(command)}  ${yellow(
+        `\n${red("trex")} ${yellow(command ?? "empty command")}  ${yellow(
           flag
         )}: unknown command flag\n`
       ),
 
       green(
-        `\nuse ${red("trex")} ${yellow(command)} ${yellow(
+        `\nuse ${red("trex")} ${yellow(command ?? "empty command")} ${yellow(
           "--help"
         )} to see available command flags\n`
       )
