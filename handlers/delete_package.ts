@@ -15,6 +15,10 @@ import { STD } from "../utils/info.ts";
 
 const { green, yellow, red } = colors;
 
+/**
+ * remove package from import_map.json
+ * @param {string} toDelete
+ */
 export async function deletepackage(toDelete: string) {
   if (await exists("./import_map.json")) {
     try {

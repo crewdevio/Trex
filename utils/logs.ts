@@ -113,6 +113,8 @@ export function HelpCommand({ command, flags }: HelpCommandParams) {
       )}`.replaceAll(",", " ")
     )
   );
+
+  Deno.exit(0);
 }
 
 export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
