@@ -304,6 +304,24 @@ imports run start --port=3000 --env
 console.log(Deno.args); // ["--port=3000", "--env"]
 ```
 
+### Purge a package or URL
+
+if you want delete a package or url package from cache memory in deno, you can use the purge command to remove from cache memory.
+
+example:
+
+```console
+trex purge oak
+```
+
+this finds the oak package in the `import_map.json` file and removes it from the cache.
+
+```console
+trex purge https://deno.land/x/oak@v6.3.1/mod.ts
+```
+
+also can be used with urls
+
 ### Checking a package's dependency tree
 
 ```console
