@@ -203,18 +203,20 @@ async function mainCli() {
 
   // * purge command
   else if (_arguments[0] === keyWords.purge) {
-    HelpCommand({
-      command: {
-        alias: [keyWords.purge],
-        description: "remove a package or url from cache"
-      },
-      flags: [
-        {
-          alias: flags.help,
-          description: "show command help"
-        }
-      ]
-    });
+    if (flags.help.includes(_arguments[1])) {
+      HelpCommand({
+        command: {
+          alias: [keyWords.purge],
+          description: "remove a package or url from cache"
+        },
+        flags: [
+          {
+            alias: flags.help,
+            description: "show command help"
+          }
+        ]
+      });
+    }
 
     await purge();
   }
