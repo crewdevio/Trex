@@ -1,12 +1,12 @@
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
+import { HelpCommand } from "../utils/logs.ts";
 import { packageTreeInfo } from "../tools/logs.ts";
 import { setupIDE } from "../tools/setupIDE.ts";
-import { HelpCommand } from "../utils/logs.ts";
 import { Merlin } from "../imports/merlin.ts";
 
 const merlin = new Merlin();
 
-merlin.testEqual("install custom package", {
+merlin.assertEqual("install custom package", {
   async expect() {
     const data = await customPackage(
       ...[
@@ -24,7 +24,7 @@ merlin.testEqual("install custom package", {
   Resources: false,
 });
 
-merlin.testEqual("install package from deno.land", {
+merlin.assertEqual("install package from deno.land", {
   async expect() {
     const pkg = await installPackages(["i", "--map", "oak"]);
 
@@ -37,7 +37,7 @@ merlin.testEqual("install package from deno.land", {
   Resources: false,
 });
 
-merlin.testEqual("install package from nest.land", {
+merlin.assertEqual("install package from nest.land", {
   async expect() {
     const pkg = await installPackages(["i", "--nest", "dinoenv@1.0.0"]);
 
@@ -53,40 +53,49 @@ merlin.testEqual("install package from nest.land", {
   Resources: false,
 });
 
-merlin.isUndefined("Trex treeDeps test", {
+merlin.isUndefined("trex treeDeps test", {
   async value() {
-    return await packageTreeInfo(...["--unstable", "treeDeps", "react"]);
+    return (await packageTreeInfo(
+      ...["--unstable", "treeDeps", "react"]
+    )) as undefined;
   },
   Ops: false,
   Resources: false,
 });
 
 merlin.isUndefined("Setup IDE", {
-  async value(){
-    return await setupIDE("--vscode");
+  async value() {
+    return (await setupIDE("--vscode")) as undefined;
   },
   Ops: false,
-  Resources: false
-})
+  Resources: false,
+  ignore: true,
+});
 
 merlin.isUndefined("Command helper test", {
-  async value() {
+  value() {
     return HelpCommand({
       command: {
         alias: ["install", "i"],
         description: "install a package",
       },
       flags: [
-        { alias: ["--map", "-m"], description: "install package from deno.land" },
-        { alias: ["--nest", "-n"], description: "install package from nest.land" },
+        {
+          alias: ["--map", "-m"],
+          description: "install package from deno.land",
+        },
+        {
+          alias: ["--nest", "-n"],
+          description: "install package from nest.land",
+        },
         {
           alias: ["--pkg", "-p"],
           description: "install package from some repository",
         },
         { alias: ["--help, -h"], description: "show command help" },
       ],
-    });
+    }) as undefined;
   },
   Ops: false,
-  Resources: false
-})
+  Resources: false,
+});
