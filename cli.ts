@@ -21,6 +21,7 @@ import {
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { deletepackage } from "./handlers/delete_package.ts";
+import { purge } from "./handlers/purge_package.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
 import { setupIDE } from "./tools/setupIDE.ts"
 import { exists } from "./imports/fs.ts";
@@ -166,6 +167,7 @@ async function mainCli() {
     await Run(_arguments[1]);
   }
 
+  // * setup command
   else if (_arguments[0] === keyWords.setup){
 
     CommandNotFound({
@@ -197,6 +199,26 @@ async function mainCli() {
     }
 
     setupIDE(_arguments[1])
+  }
+
+  // * purge command
+  else if (_arguments[0] === keyWords.purge) {
+    if (flags.help.includes(_arguments[1])) {
+      HelpCommand({
+        command: {
+          alias: [keyWords.purge],
+          description: "remove a package or url from cache"
+        },
+        flags: [
+          {
+            alias: flags.help,
+            description: "show command help"
+          }
+        ]
+      });
+    }
+
+    await purge();
   }
 
   // * displays help information

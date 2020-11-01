@@ -278,17 +278,47 @@ now you can create command aliases similar to [npm run](https://docs.npmjs.com/c
 
 > **note**: to run command aliases you must use the command `trex run <aliases>`
 
-for now you can create command aliases that interact with deno or other programs that are visible to environment variables, but you cannot call a command alias within another
+now you can call a command within another or call a deno script like `denopack` or `eggs` within a command alias
 
 ```json
 // example
 {
   "scripts": {
-    "run": "trex run welcome", // not working for now
-    "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts"
+    "start": "trex run welcome",
+    "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
+    "bundler": "denopack -i mod.ts -o bundle.mod.js",
+    "publish": "eggs publish"
   }
 }
 ```
+
+> **note**: you can use the --watch flag to monitor the changes and rerun the script, example: `deno run --watch --unstable https://deno.land/std@0.71.0/examples/welcome.ts`
+
+you can pass arguments in the command alias and these will be resisted by the file to execute
+
+```console
+imports run start --port=3000 --env
+```
+
+```typescript
+console.log(Deno.args); // ["--port=3000", "--env"]
+```
+
+### Purge a package or URL
+
+if you want delete a package or url package from cache memory in deno, you can use the purge command to remove from cache memory.
+
+example:
+
+```console
+trex purge oak
+```
+this finds the oak package in the `import_map.json` file and removes it from the cache.
+
+```console
+trex purge https://deno.land/x/oak@v6.3.1/mod.ts
+```
+also can be used with urls
 
 ### Checking a package's dependency tree
 
@@ -388,7 +418,7 @@ The above generates a `lock.json` file.
 If you use `import_map.json` in input file, you can specify it:
 
 ```console
-deno cache --lock=lock.json --lock-write --importmap=import_map.json --unstable file.ts
+deno cache --lock=lock.json --lock-write --import-map=import_map.json --unstable file.ts
 ```
 
 See [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking) for more info.
@@ -421,10 +451,10 @@ for await (const req of server) {
 Run the server:
 
 ```console
-deno run --allow-net --importmap=import_map.json --unstable server.ts
+deno run --allow-net --import-map=import_map.json --unstable server.ts
 ```
 
-> **note**: it is important to use **--importmap=import_map.json --unstable**
+> **note**: it is important to use **--import-map=import_map.json --unstable**
 
 ### Adding third party packages
 
@@ -468,7 +498,7 @@ await app.listen({ port: 8000 });
 Run the server:
 
 ```console
-deno run --allow-net --importmap=import_map.json --unstable app.ts
+deno run --allow-net --import-map=import_map.json --unstable app.ts
 ```
 
 ## Contributing

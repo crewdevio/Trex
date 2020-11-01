@@ -39,15 +39,15 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.3.0" };
+export const VERSION = { VERSION: "v1.3.2" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
 
-  green("USAGE:"),
+  green("\nUSAGE:\n"),
   `   trex ${yellow("[OPTIONS]")} ${yellow("[SUBCOMMAND]")}\n`,
 
-  green("OPTIONS:"),
+  green("\nOPTIONS:\n"),
   `   ${yellow("-h, --help")}      print help info\n`,
 
   `   ${yellow("-c, --custom")}    install custom package\n`,
@@ -60,7 +60,7 @@ export const helpsInfo = [
 
   `   ${yellow("-p, --pkg")}       install package from some repository\n`,
 
-  green("SUBCOMMANDS:"),
+  green("\nSUBCOMMANDS:\n"),
   `   ${yellow("[install or i]")}  install a package\n`,
 
   `   ${yellow("delete")}          delete a package\n`,
@@ -73,8 +73,10 @@ export const helpsInfo = [
 
   `   ${yellow("setup")}           create a deno configuration for your IDE\n`,
 
+  `   ${yellow("purge")}           remove a package or url from cache\n`,
+
   green(
-    "you can see the different options available for each command using:\n"
+    "\nyou can see the different options available for each command using:\n"
   ),
 
   `   ${green("trex")}  ${yellow("[command]")} ${yellow("--help or -h")}\n`,
@@ -100,23 +102,23 @@ export const keyWords = {
 };
 
 export const IDESsettings = [
-{
-  "deno.enable": true,
-  "deno.import_map": "./import_map.json",
-  "deno.unstable": true,
-},
-{
-  compilerOptions: {
-    plugins: [
-      {
-        name: "typescript-deno-plugin",
-        enable: true,
-        importmap: "import_map.json",
-      },
-    ],
+  {
+    "deno.enable": true,
+    "deno.import_map": "./import_map.json",
+    "deno.unstable": true,
   },
-}
-]
+  {
+    compilerOptions: {
+      plugins: [
+        {
+          name: "typescript-deno-plugin",
+          enable: true,
+          importmap: "import_map.json",
+        },
+      ],
+    },
+  }
+];
 
 export const IDES = ["--vscode", "--atom"];
 

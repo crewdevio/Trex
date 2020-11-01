@@ -86,17 +86,11 @@ async function cached(pkgName: string, pkgUrl: string) {
 
   console.log(green("cache package... \n"));
 
+  const CMD = ["deno", "install", "-f", "-n", ID, "--unstable"];
+
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({
-      cmd: [
-        "deno",
-        "install",
-        "-f",
-        "-n",
-        ID,
-        "--unstable",
-        needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts",
-      ],
+      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts"],
     });
 
     if (!(await process.status()).success) {
@@ -117,15 +111,7 @@ async function cached(pkgName: string, pkgUrl: string) {
   // * install standard package by default use mod.ts
   else if (STD.includes(pkgName)) {
     process = Deno.run({
-      cmd: [
-        "deno",
-        "install",
-        "-f",
-        "-n",
-        ID,
-        "--unstable",
-        needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts",
-      ],
+      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts"],
     });
 
     if (!(await process.status()).success) {
@@ -146,7 +132,7 @@ async function cached(pkgName: string, pkgUrl: string) {
   // * install third party package
   else if ((await denoApidb(pkgName)).length) {
     process = Deno.run({
-      cmd: ["deno", "install", "-f", "-n", ID, "--unstable", pkgUrl],
+      cmd: [...CMD, pkgUrl],
     });
 
     // * if cannot download package, throw error message
