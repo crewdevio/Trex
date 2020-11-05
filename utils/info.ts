@@ -38,17 +38,17 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.3.0-imports" };
+export const VERSION = { VERSION: "v1.3.3-imports" };
 
 export const helpsInfo = [
   colors.green(
     "advanced package management for deno, handling dependencies at any scale\n"
   ),
 
-  colors.green("USAGE:"),
+  colors.green("\nUSAGE:\n"),
   `  imports ${colors.yellow("[OPTIONS]")} ${colors.yellow("[SUBCOMMAND]")}\n`,
 
-  colors.green("OPTIONS:"),
+  colors.green("\nOPTIONS:\n"),
   `   ${colors.yellow("-h, --help")}     print help info\n`,
 
   `   ${colors.yellow("-c, --custom")}   install custom package\n`,
@@ -61,7 +61,7 @@ export const helpsInfo = [
 
   `   ${colors.yellow("-p, --pkg")}      install package from some repository\n`,
 
-  colors.green("SUBCOMMANDS:"),
+  colors.green("\nSUBCOMMANDS:\n"),
   `   ${colors.yellow("[install or i]")}  install a package.\n`,
 
   `   ${colors.yellow("delete")}          delete a package\n`,
@@ -73,7 +73,7 @@ export const helpsInfo = [
   `   ${colors.yellow("run")}             run a script alias in a file run.json\n`,
 
   colors.green(
-    "you can see the different options available for each command using:\n"
+    "\nyou can see the different options available for each command using:\n"
   ),
 
   `   ${colors.green("imports")}  ${colors.yellow("[command]")} ${colors.yellow(

@@ -44,7 +44,7 @@ async function cached(pkgName: string, pkgUrl: string) {
     }
   }
 
-  // * install standar party package by defaul use mod.ts
+  // * install standar party package by defauld use mod.ts
   else if (STD.includes(pkgName)) {
     process = Deno.run({
       cmd: [

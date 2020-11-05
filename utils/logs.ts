@@ -17,9 +17,7 @@ export function Version(version: string) {
 }
 
 export function LogHelp(helpsInfo: string[]) {
-  for (const info of helpsInfo) {
-    console.log(info);
-  }
+  console.log(helpsInfo.join(""));
 }
 
 export async function updateTrex(): Promise<void> {

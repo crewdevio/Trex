@@ -23,7 +23,5 @@ export async function denoApidb(query: string) {
     ) as Array<pkgResponse>;
   }
 
-  else {
     return [];
-  }
 }

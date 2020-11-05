@@ -69,7 +69,7 @@ export async function Run(command: string) {
       }
 
       const [currentCMD, execCommand] = [
-        ["beta", "run", command].join(" "),
+        ["imports", "run", command].join(" "),
         [...runnerCommand]
           .map((cmd) => cmd.trim())
           .join(" ")
