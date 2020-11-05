@@ -26,7 +26,7 @@ const { yellow, red, green } = colors
  * @returns {object} return object
  */
 
-export function exist_imports(map: importMap) {
+export function existImports(map: importMap): objectGen {
   if (map?.imports) {
     // * if exist in import_map the key import return all modules
     return map.imports;
@@ -73,7 +73,7 @@ async function getNamePkg(pkg: string): Promise<string> {
 
   // * name for packages with a specific version
   if (pkg.includes("@")) {
-    const [pkgName, _] = pkg.split("@");
+    const [pkgName,,] = pkg.split("@");
 
     if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
       name = pkgName + "/";
@@ -112,7 +112,7 @@ async function getNamePkg(pkg: string): Promise<string> {
  * @returns {Promise} returns a promise of a { [ key: string ]: string }
  */
 
-export async function installPackages(args: string[]) {
+export async function installPackages(args: string[]): Promise<objectGen> {
   // * package to push in import_map.json
   const map: objectGen = {};
 
@@ -195,9 +195,11 @@ export async function installPackages(args: string[]) {
  * @returns {boolean} return installation state
  */
 
-export async function customPackage(...args: string[]) {
+export async function customPackage(...args: string[]): Promise<boolean> {
 
-  if (!args[1].includes("=")) {
+  const entry = args[1] ?? "";
+
+  if (!entry.includes("=")) {
     throw new Error(red("Add a valid package")).message;
   }
 
@@ -214,6 +216,7 @@ export async function customPackage(...args: string[]) {
       "-f",
       "-n",
       "trex_Cache_Map",
+      "-r",
       "--unstable",
       url,
     ],
@@ -228,7 +231,7 @@ export async function customPackage(...args: string[]) {
   if (await exists("./import_map.json")) {
     try {
       const data = JSON.parse(await getImportMap());
-      const oldPackage = exist_imports(data);
+      const oldPackage = existImports(data);
 
       createPackage({ ...custom, ...oldPackage }, true);
     }

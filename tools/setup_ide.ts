@@ -18,13 +18,13 @@ const { cyan, green, yellow } = colors;
 
 /**
  * Select the right template for your IDE
- * @param {string}template The choosen valid editor from the arrays of IDES (check file "setupIDE")
+ * @param {string}template The choose valid editor from the arrays of IDES (check file "setupIDE")
  * @returns Promise void
  */
 
 async function templateSetup(template: string) {
   if (template === IDES[0]) {
-    await mkdir(".vscode");
+    await mkdir(".vscode", { recursive: true });
     await create("./.vscode/settings.json");
   }
 
@@ -125,7 +125,7 @@ export async function setupIDE(editor: string): Promise<void> {
     case IDES[1]:
       denoSetup = IDESsettings[1];
       let process: Deno.Process;
-      console.log(green("We need to download some dependecies to work with deno."))
+      console.log(green("We need to download some dependencies to work with deno."))
       const packageManager = await prompt(
         green("What package manager you use? NPM or Yarn?: ")
         );

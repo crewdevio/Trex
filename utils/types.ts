@@ -22,7 +22,6 @@ export interface Params {
 
 export interface NestResponse {
   name: string;
-
   package: {
     name: string;
     owner: string;
@@ -63,6 +62,5 @@ export interface HelpCommandParams {
 
 export interface CommandNotFoundParams {
   commands: string[];
-
   flags: string[];
 }

@@ -19,7 +19,7 @@ import { STD } from "../utils/info.ts";
  * @returns {boolean} return process state or throw a message with an error
  */
 
-export async function packageTreeInfo(...args: string[]) {
+export async function packageTreeInfo(...args: string[]): Promise<boolean | undefined> {
   try {
     const map: importMap = JSON.parse(await getImportMap());
 

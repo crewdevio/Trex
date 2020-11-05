@@ -14,6 +14,10 @@ type pkgResponse = {
   star_count: number;
 };
 
+/**
+ * get module list from deno api
+ * @param {string} query
+ */
 export async function denoApidb(query: string) {
   // * get all thirt party
   const response = (await fetch(
@@ -26,7 +30,7 @@ export async function denoApidb(query: string) {
     return database?.data?.results.filter(
       ({ name }: pkgResponse) => name === query
     ) as Array<pkgResponse>;
-  } else {
-    return [];
   }
+
+  return [];
 }

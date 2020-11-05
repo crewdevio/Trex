@@ -12,8 +12,8 @@
  * @return {string} package name.
  */
 
-export function haveVersion(pkgName: string) {
-  const [name, _] = pkgName.split("@");
+export function haveVersion(pkgName: string): string {
+  const [name,,] = pkgName.split("@");
   if (pkgName.includes("@")) {
     return name;
   } else {

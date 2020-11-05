@@ -49,7 +49,7 @@ export async function updateTrex(): Promise<void> {
     setTimeout(async () => {
       await exec({
         config: {
-          permissions: ["-A", "--unstable", "-n", "trex"],
+          permissions: ["-A", "-r","--unstable", "-n", "trex"],
           url: "https://deno.land/x/trex/cli.ts",
         },
       });
