@@ -1,7 +1,7 @@
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
 import { HelpCommand } from "../utils/logs.ts";
 import { packageTreeInfo } from "../tools/logs.ts";
-import { setupIDE } from "../tools/setupIDE.ts";
+import { setupIDE } from "../tools/setup_ide.ts";
 import { Merlin } from "../imports/merlin.ts";
 
 const merlin = new Merlin();
