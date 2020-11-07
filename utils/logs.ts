@@ -40,7 +40,7 @@ export async function updateTrex(): Promise<void> {
   // * get the version of the repo in github
   const response = (await fetch(
     "https://api.github.com/repos/crewdevio/Trex/releases/latest"
-  ).catch((err) => offLine())) as Response;
+  ).catch((_) => offLine())) as Response;
 
   // * get the latest release
   const repoVersion = (await response.json()) as { tag_name: string };

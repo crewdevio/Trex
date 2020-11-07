@@ -174,7 +174,8 @@ export async function installPackages(args: string[]): Promise<objectGen> {
     }
 
     catch (_) {
-      throw new Error(red("import_map.json file not found")).message;
+      // show message
+      console.log(red("import_map.json file not found"));
     }
   }
 

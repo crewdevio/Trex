@@ -9,6 +9,7 @@
 import { KillProcess } from "../tools/kill_process.ts";
 import { writeJson } from "../temp_deps/writeJson.ts";
 import type { objectGen } from "../utils/types.ts";
+import { newVersion } from "../tools/logs.ts";
 import { colors } from "../imports/fmt.ts";
 
 const { green, cyan } = colors;
@@ -68,6 +69,9 @@ export async function createPackage(map: Object, log?: Boolean) {
     }
     console.groupEnd();
     console.log(green("Happy Coding"));
+    // kill opened process
     KillProcess(Deno.resources());
+    // show notification if exist a new version avaliable
+    await newVersion();
   }
 }
