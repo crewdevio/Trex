@@ -58,7 +58,7 @@ export async function Run(command: string) {
         : join(env.get("HOME")!, ".deno", "bin", runnerCommand[0]);
 
       // prevent deno scrips not found error
-      if ((await exists(scriptPath)) || (await exists(scriptPath + ".cmd"))) {
+      if ((await exists(scriptPath)) || (await exists(`${scriptPath}.cmd`))) {
         if (Deno.build.os === "linux" || Deno.build.os === "darwin") {
           runnerCommand[0] = scriptPath;
         }
@@ -99,12 +99,10 @@ export async function Run(command: string) {
 
       if (!(await process.status()).success) {
         process.close();
-        throw new Error("error running command " + red(toRun[0])).message;
+        throw new Error(`error running command ${red(toRun[0])}`).message;
       }
 
-      else {
-        process.close();
-      }
+      process.close();
     }
 
     catch (err) {
