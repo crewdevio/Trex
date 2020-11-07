@@ -44,7 +44,11 @@ export async function packageTreeInfo(...args: string[]): Promise<boolean | unde
             process.close();
             Somebybroken("package information could not be obtained");
           }
-          return (await process.status()).success;
+
+          const status = (await process.status()).success;
+
+          process.close();
+          return status;
         }
       }
 
@@ -60,7 +64,10 @@ export async function packageTreeInfo(...args: string[]): Promise<boolean | unde
             process.close();
             Somebybroken("package information could not be obtained");
           }
-          return (await process.status()).success;
+          const status = (await process.status()).success;
+
+          process.close();
+          return status;
         }
       }
     }

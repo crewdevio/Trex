@@ -63,6 +63,8 @@ export async function cacheNestpackage(url: string): Promise<void> {
     process.close();
     ErrorInstalling();
   }
+
+  process.close();
 }
 
 /**
