@@ -238,6 +238,7 @@ export async function customPackage(...args: string[]): Promise<boolean> {
     }
 
     catch (_) {
+      process.close();
       throw new Error(
         red("the import_map.json file does not have a valid format.")
       ).message;

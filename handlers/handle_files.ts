@@ -52,7 +52,8 @@ function sortedPackage(map: any): objectGen {
 export async function createPackage(map: Object, log?: Boolean) {
 
   // * create import_map.json
-  await Deno.create("./import_map.json");
+  const create = await Deno.create("./import_map.json");
+  create.close();
 
   // * write import config inside import_map.json
   await writeJson(
