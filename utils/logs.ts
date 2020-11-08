@@ -49,14 +49,16 @@ export async function updateTrex(): Promise<void> {
     setTimeout(async () => {
       await exec({
         config: {
-          permissions: ["-A", "-r","--unstable", "-n", "trex"],
-          url: "https://deno.land/x/trex/cli.ts",
+          permissions: ["-A", "-r", "--unstable", "-n", "trex"],
+          url: `https://deno.land/x/trex@${repoVersion.tag_name}/cli.ts`,
         },
       });
-      console.log(repoVersion.tag_name);
+
+      console.log(cyan(`trex ${green(repoVersion.tag_name)} is now installed.`));
     }, 1000);
+
   } else {
-    console.log(cyan("trex is already up to date"));
+    console.log(cyan(`you have the last version trex ${repoVersion.tag_name}`));
   }
 }
 

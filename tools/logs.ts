@@ -103,6 +103,7 @@ export async function newVersion(): Promise<void> {
                    │                                     │
                    │                                     │
                    │          ${upgradeMessage}          │
+                   │                                     │
                    ╰─────────────────────────────────────╯`));
     }
 }

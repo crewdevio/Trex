@@ -9,7 +9,8 @@
 import {
   nestPackageUrl,
   cacheNestpackage,
-  pkgRepo } from "./handle_third_party_package.ts";
+  pkgRepo,
+} from "./handle_third_party_package.ts";
 import { getImportMap, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
@@ -19,7 +20,7 @@ import { denoApidb } from "../utils/db.ts";
 import { colors } from "../imports/fmt.ts";
 import cache from "./handle_cache.ts";
 
-const { yellow, red, green } = colors
+const { yellow, red, green } = colors;
 /**
  * verify that the imports key exists in the import map file.
  * @param {object} map - the import map json object.
@@ -32,9 +33,8 @@ export function existImports(map: importMap): objectGen {
     return map.imports;
   }
 
-  throw new Error(
-    red("the import map.json file does not have the imports key")
-  ).message;
+  throw new Error(red("the import map.json file does not have the imports key"))
+    .message;
 }
 
 /**
@@ -54,9 +54,7 @@ async function detectVersion(pkgName: string): Promise<string> {
   }
 
   throw new Error(
-    `\n${red("=>")} ${yellow(
-      pkgName
-    )} is not a third party module\n${green(
+    `\n${red("=>")} ${yellow(pkgName)} is not a third party module\n${green(
       "install using custom install"
     )}\n`
   ).message;
@@ -73,7 +71,7 @@ async function getNamePkg(pkg: string): Promise<string> {
 
   // * name for packages with a specific version
   if (pkg.includes("@")) {
-    const [pkgName,,] = pkg.split("@");
+    const [pkgName, ,] = pkg.split("@");
 
     if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
       name = pkgName + "/";
@@ -118,25 +116,27 @@ export async function installPackages(args: string[]): Promise<objectGen> {
 
   const beforeTime = Date.now();
 
-  if (flags.map.includes(args[1])) {
-    for (let index = 2; index < args.length; index++) {
-      const url = await detectVersion(args[index]);
-      await cache(args[index].split("@")[0], url);
-      map[
-        (await getNamePkg(args[index])).toLowerCase()
-      ] = url;
-    }
-  }
+  if (flags.map.includes(args[1]) || flags.nest.includes(args[1])) {
 
-  // * install packages hosted on nest.land.
-  else if (flags.nest.includes(args[1])) {
     for (let index = 2; index < args.length; index++) {
 
-      const [name, version] = args[index].split("@");
-      const url = await nestPackageUrl(name, version);
+      // * install packages hosted on deno.land
+      if (flags.map.includes(args[1])) {
 
-      await cacheNestpackage(url);
-      map[name.toLowerCase()] = url;
+        const url = await detectVersion(args[index]);
+        await cache(args[index].split("@")[0], url);
+        map[(await getNamePkg(args[index])).toLowerCase()] = url;
+      }
+
+      // * install packages hosted on nest.land.
+      else if (flags.nest.includes(args[1])) {
+
+        const [name, version] = args[index].split("@");
+        const url = await nestPackageUrl(name, version);
+
+        await cacheNestpackage(url);
+        map[name.toLowerCase()] = url;
+      }
     }
   }
 
@@ -160,9 +160,7 @@ export async function installPackages(args: string[]): Promise<objectGen> {
           const mod = pkg.split("/").join("");
           await cache(mod, await detectVersion(mod));
 
-          map[
-            (await getNamePkg(mod)).toLowerCase()
-          ] = await detectVersion(mod);
+          map[(await getNamePkg(mod)).toLowerCase()] = await detectVersion(mod);
         }
 
         else {
@@ -197,6 +195,15 @@ export async function installPackages(args: string[]): Promise<objectGen> {
  */
 
 export async function customPackage(...args: string[]): Promise<boolean> {
+  const CMD = [
+    "deno",
+    "install",
+    "-f",
+    "-n",
+    "trex_Cache_Map",
+    "-r",
+    "--unstable",
+  ];
 
   const entry = args[1] ?? "";
 
@@ -211,16 +218,7 @@ export async function customPackage(...args: string[]): Promise<boolean> {
   custom[pkgName.toLowerCase()] = url;
   // * cache custom module
   const process = Deno.run({
-    cmd: [
-      "deno",
-      "install",
-      "-f",
-      "-n",
-      "trex_Cache_Map",
-      "-r",
-      "--unstable",
-      url,
-    ],
+    cmd: [...CMD, url],
   });
 
   if (!(await process.status()).success) {
