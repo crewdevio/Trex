@@ -7,6 +7,7 @@
  */
 
 import type { CommandNotFoundParams, HelpCommandParams } from "./types.ts";
+import { didYouMean } from "../tools/did_you_mean.ts";
 import exec from "../tools/install_tools.ts";
 import { colors } from "../imports/fmt.ts";
 import { VERSION } from "./info.ts";
@@ -120,7 +121,7 @@ export function HelpCommand({ command, flags }: HelpCommandParams) {
 export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
   const { args } = Deno;
 
-  const [command  = '', flag = ''] = args;
+  const [command = '', flag = ''] = args;
 
   if (!commands.includes(command)) {
     console.log(
@@ -133,7 +134,9 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
       )
     );
 
-    throw "";
+    console.log(didYouMean(command, commands));
+
+    Deno.exit(0);;
   }
 
   if (!flags.includes(flag)) {
@@ -153,6 +156,8 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
       )
     );
 
-    throw "";
+    console.log(didYouMean(flag, flags, command));
+
+    Deno.exit(0);
   }
 }
