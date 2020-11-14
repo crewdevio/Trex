@@ -159,14 +159,20 @@ trex install --nest fs@0.61.0
 
 ### Installing from a repository
 
+now you can install from [`github`](https://github.com/), [`gitlab`](https://gitlab.com/) and [`bitbucket`](https://bitbucket.org/).
+
 ```console
-trex install --pkg [user]/[repo or repo@tag/branch]/[path/to/file] [packageName]
+trex install --pkg @[gitService]/[user]/[repo or repo@tag/branch]/[path/to/file] [packageName]
 ```
 
-Example:
+Examples:
 
 ```console
-trex install --pkg oakserver/oak@main/mod.ts oak
+trex install --pkg @github/oakserver/oak@main/mod.ts oak
+```
+
+```console
+trex install --pkg @gitlab/Po0pperS/denodb/mod.ts denodb
 ```
 
 > **note**: In the event that the repository uses a branch other than master as the main branch, this must be specified
@@ -313,11 +319,13 @@ example:
 ```console
 trex purge oak
 ```
+
 this finds the oak package in the `import_map.json` file and removes it from the cache.
 
 ```console
 trex purge https://deno.land/x/oak@v6.3.1/mod.ts
 ```
+
 also can be used with urls
 
 ### Checking a package's dependency tree
