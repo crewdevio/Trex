@@ -159,20 +159,14 @@ trex install --nest fs@0.61.0
 
 ### Installing from a repository
 
-now you can install from [`github`](https://github.com/), [`gitlab`](https://gitlab.com/) and [`bitbucket`](https://bitbucket.org/).
-
 ```console
-trex install --pkg @[gitService]/[user]/[repo or repo@tag/branch]/[path/to/file] [packageName]
+trex install --pkg [user]/[repo or repo@tag/branch]/[path/to/file] [packageName]
 ```
 
-Examples:
+Example:
 
 ```console
-trex install --pkg @github/oakserver/oak@main/mod.ts oak
-```
-
-```console
-trex install --pkg @gitlab/Po0pperS/denodb/mod.ts denodb
+trex install --pkg oakserver/oak@main/mod.ts oak
 ```
 
 > **note**: In the event that the repository uses a branch other than master as the main branch, this must be specified
@@ -309,6 +303,45 @@ imports run start --port=3000 --env
 ```typescript
 console.log(Deno.args); // ["--port=3000", "--env"]
 ```
+
+#### **Reboot script alias protocol (rsap)**
+
+with trex you can create script aliases that are reloaded every time a file is changed, this can be done using deno's `--watch` flag. If you would like to have this same functionality but with any command alias you want, you can use trex reboot script protocol which reruns the command alias every time changes are detected in the files and folders you specify
+
+`example:`
+
+```json
+{
+  "scripts": {
+    "start": "trex run welcome",
+    "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
+    "bundler": "denopack -i mod.ts -o bundle.mod.js",
+    "publish": "eggs publish"
+  },
+  "files": ["./app.ts"]
+}
+```
+
+You only have to add the `files` option in the `run.json` file and it will only observe the files and folders that you specify, if you leave the array empty it will observe all the files.
+
+for the script alias to use `rsap` you just need to add the `--watch` or `-w` flag to the end of the command alias.
+
+`example:`
+
+```json
+{
+  "scripts": {
+    "dev": "go build"
+  },
+  "files": ["./main.go"]
+}
+```
+
+```console
+trex run dev --watch ...args
+```
+
+and of course it can be used with any cli tool, compiler or interpreter
 
 ### Purge a package or URL
 

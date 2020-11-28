@@ -160,7 +160,13 @@ async function mainCli() {
           alias: [keyWords.run],
           description: "run a script alias in a file run.json",
         },
-        flags: [{ alias: flags.help, description: "show command help" }],
+        flags: [
+          { alias: flags.help, description: "show command help" },
+          {
+            alias: ["--watch", "-w"],
+            description: "use reboot script alias protocol (rscp)"
+          }
+        ],
       });
     }
 

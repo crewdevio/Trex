@@ -47,6 +47,7 @@ export interface runJson {
   scripts: {
     [key: string]: string;
   };
+  files?: string[];
 }
 
 export interface HelpCommandParams {
