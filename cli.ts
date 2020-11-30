@@ -164,8 +164,9 @@ async function mainCli() {
           { alias: flags.help, description: "show command help" },
           {
             alias: ["--watch", "-w"],
-            description: "use reboot script alias protocol (rscp)"
-          }
+            description: "use reboot script alias protocol (rsap)"
+          },
+          { alias: ["-wv"], description: "verbose output in --watch mode (rsap)"}
         ],
       });
     }

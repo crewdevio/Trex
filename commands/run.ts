@@ -19,7 +19,10 @@ const { env, run, args } = Deno;
 let [, , ...runArgs] = args;
 const [, ...Args] = runArgs;
 // ignore '--watch' and '-w' in injected args
-runArgs = runArgs[0] === "--watch" || runArgs[0] === "-w" ? [...Args] : [...runArgs];
+runArgs =
+  runArgs[0] === "--watch" || runArgs[0] === "-w" || runArgs[0] === "-wv"
+    ? [...Args]
+    : [...runArgs];
 
 /**
  * execute subprocess script
@@ -132,7 +135,10 @@ export async function Run(command: string) {
     }
 
     const filesToWatch = (await readJson("./run.json")) as runJson;
-    const watchFlags = Deno.args[2] === "--watch" || Deno.args[2] === "-w";
+    const watchFlags =
+      Deno.args[2] === "--watch" ||
+      Deno.args[2] === "-w" ||
+      Deno.args[2] === "-wv";
 
     // run using trp (trex reboot protocol)
     if (filesToWatch?.files && watchFlags) {
@@ -141,35 +147,43 @@ export async function Run(command: string) {
       let throttle = 700;
       let timeout: number | null = null;
 
-      function logMessages() {
+      function logMessages(verbose?: Deno.FsEvent) {
         console.clear();
         console.log(green("[Reboot protocol]"));
         console.log(green("[*] watching files:"));
         console.info(
           red(
-            `[*] ${
-              filesToWatch.files
+            `[#] exit using ctrl+c \n ${
+              filesToWatch.files?.length
                 ? filesToWatch.files
-                    .map((files) => {
-                      console.log(" |- ", yellow(join(files)));
+                    .map((file) => {
+                      console.log(" |- ", yellow(join(file)));
                       return "";
                     })
                     .join("")
-                : "- watching all files [ .* ]"
+                : (console.log(
+                    ` |- ${yellow("all files [ .* ]")}`
+                  ) as undefined) ?? ""
             } `
           )
         );
-        console.log("\n");
+        if (Deno.args[2] === "-wv" && verbose) {
+          console.log(
+            green(` ╭─ Verbose output ${yellow("-wv")}:\n`),
+            green(`│- Event Kind: ${yellow(verbose?.kind)}\n`),
+            green(`╰─ Path: ${yellow(verbose?.paths.join(""))}\n`)
+          );
+        }
       }
 
       logMessages();
       await Thread();
-      for await (const event of Deno.watchFs(files)) {
+      for await (const event of Deno.watchFs(files, { recursive: true })) {
         if (event.kind !== "access") {
           if (timeout) clearTimeout(timeout);
           console.log(yellow("reloading..."));
-          logMessages();
-          timeout = setTimeout(Thread, throttle);
+          logMessages(event);
+            timeout = setTimeout(Thread, throttle);
         }
       }
     }
