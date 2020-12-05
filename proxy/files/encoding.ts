@@ -17,4 +17,4 @@ import * as yaml from "https://deno.land/std/encoding/yaml.ts";
 import * as csv from "https://deno.land/std/encoding/csv.ts";
 import * as hex from "https://deno.land/std/encoding/hex.ts";
 
-export { base32, base64, base64url, binary, csv, hex, toml, yalm, utf8, ascii86 };
+export { base32, base64, base64url, binary, csv, hex, toml, yaml, utf8, ascii86 };
