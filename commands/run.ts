@@ -6,6 +6,7 @@
  *
  */
 
+import { parseToYaml } from "../tools/parseToyaml.ts";
 import { readJson } from "../temp_deps/writeJson.ts";
 import type { runJson } from "../utils/types.ts";
 import { colors } from "../imports/fmt.ts";
@@ -29,18 +30,28 @@ runArgs =
  * @param command
  */
 export async function Run(command: string) {
-  if (!(await exists("./run.json"))) {
-    throw new Error(red(`: ${yellow("run.json not found")}`)).message;
+  let prefix = (await exists("./run.json")) ? "json" : "yaml";
+
+  if (!(await exists("./run.json")) && !(await exists("./run.yaml"))) {
+    throw new Error(red(`: ${yellow("run.json or run.yaml not found")}`)).message;
   }
+
+  if (await exists("./run.json") && await exists("./run.yaml")) {
+    throw new Error(red(`: ${yellow("use a single format run.json or run.yaml file")}`)).message;
+  }
+
 
   else {
     async function Thread() {
+
       try {
-        const runJsonFile = (await readJson("./run.json")) as runJson;
+        const runJsonFile = prefix === "json"
+                            ? (await readJson("./run.json")) as runJson
+                            : (await parseToYaml());
 
         if (!runJsonFile?.scripts) {
           throw new Error(
-            red(`: ${yellow("the 'scripts' key not found in run.json file")}`)
+            red(`: ${yellow(`the 'scripts' key not found in run.${prefix} file`)}`)
           ).message;
         }
 
@@ -124,7 +135,7 @@ export async function Run(command: string) {
           err instanceof SyntaxError
             ? colors.red(
                 `the ${colors.yellow(
-                  "'run.json'"
+                  `'run.${prefix}'`
                 )} file not have a valid syntax`
               )
             : err instanceof Deno.errors.NotFound
@@ -134,7 +145,10 @@ export async function Run(command: string) {
       }
     }
 
-    const filesToWatch = (await readJson("./run.json")) as runJson;
+    const filesToWatch = prefix === "json"
+                         ? (await readJson("./run.json")) as runJson
+                         : (await parseToYaml());
+
     const watchFlags =
       Deno.args[2] === "--watch" ||
       Deno.args[2] === "-w" ||
@@ -154,7 +168,7 @@ export async function Run(command: string) {
         console.info(
           red(
             `[#] exit using ctrl+c \n ${
-              filesToWatch.files?.length
+              filesToWatch?.files?.length
                 ? filesToWatch.files
                     .map((file) => {
                       console.log(" |- ", yellow(join(file)));

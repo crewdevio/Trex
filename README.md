@@ -341,7 +341,17 @@ for the script alias to use `rsap` you just need to add the `--watch` or `-w` fl
 trex run dev --watch ...args
 ```
 
-and of course it can be used with any cli tool, compiler or interpreter
+and of course it can be used with any cli tool, compiler or interpreter.
+
+> **note**: you can create the run file in yaml format
+
+```yaml
+- scripts:
+    dev: go build
+
+- files:
+    - ./main.go
+```
 
 ### Purge a package or URL
 

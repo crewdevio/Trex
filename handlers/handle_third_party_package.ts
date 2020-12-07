@@ -75,12 +75,11 @@ export async function cacheNestpackage(url: string): Promise<void> {
  */
 
 export function pkgRepo(repoInfo: string, pkgName?: string): string[] {
-  const [hosted, user, repo, ...path] = repoInfo.split("/");
-  const method = hosted.replace("@", "");
-  const [name] = repo.split("@");
+  const [user, repo, ...path] = repoInfo.split("/");
+
   return [
-    pkgName ? pkgName : name,
-    `https://proxyhub.now.sh/${method}/${user}/${repo}/${path.join("/")}${
+    pkgName ? pkgName : repo,
+    `https://denopkg.com/${user}/${repo}/${path.join("/")}${
       path.length ? "" : "mod.ts"
     }`,
   ];

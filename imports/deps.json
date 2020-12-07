@@ -23,6 +23,10 @@
     "path": {
       "url": "https://deno.land/std@0.79.0/path/mod.ts",
       "hash": "9cdc630b7618803616d52a0b470f006115a1a8938a0c7098ad844e7b7e722884"
+    },
+    "encoding": {
+      "url": "https://denopkg.com/crewdevio/Trex@proxy/proxy/files/encoding.ts",
+      "hash": "8ccad815b2e41965b03d668d54b02d5ac7d81bd1611b5e67f0f0046f55e7eb82"
     }
   }
 }
