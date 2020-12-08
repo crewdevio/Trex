@@ -8,7 +8,7 @@
 
 import {
   installPackages,
-  exist_imports,
+  existImports,
   customPackage,
 } from "./handlers/handle_packages.ts";
 import {
@@ -23,7 +23,7 @@ import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { deletepackage } from "./handlers/delete_package.ts";
 import { purge } from "./handlers/purge_package.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
-import { setupIDE } from "./tools/setupIDE.ts"
+import { setupIDE } from "./tools/setup_ide.ts"
 import { exists } from "./imports/fs.ts";
 import { Run } from "./commands/run.ts";
 
@@ -60,7 +60,7 @@ async function mainCli() {
     if (await exists("./import_map.json")) {
       try {
         const data = JSON.parse(await getImportMap());
-        const oldPackage = exist_imports(data);
+        const oldPackage = existImports(data);
         const newPackage = await installPackages(_arguments);
 
         await createPackage({ ...oldPackage, ...newPackage }, true);
@@ -160,7 +160,14 @@ async function mainCli() {
           alias: [keyWords.run],
           description: "run a script alias in a file run.json",
         },
-        flags: [{ alias: flags.help, description: "show command help" }],
+        flags: [
+          { alias: flags.help, description: "show command help" },
+          {
+            alias: ["--watch", "-w"],
+            description: "use reboot script alias protocol (rsap)"
+          },
+          { alias: ["-wv"], description: "verbose output in --watch mode (rsap)"}
+        ],
       });
     }
 

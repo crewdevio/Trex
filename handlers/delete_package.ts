@@ -8,7 +8,7 @@
 
 import { createPackage, getImportMap } from "./handle_files.ts";
 import { haveVersion } from "./handle_delete_package.ts";
-import { exist_imports } from "./handle_packages.ts";
+import { existImports } from "./handle_packages.ts";
 import { colors } from "../imports/fmt.ts";
 import { exists } from "../imports/fs.ts";
 import { STD } from "../utils/info.ts";
@@ -32,7 +32,7 @@ export async function deletepackage(toDelete: string) {
             : haveVersion(pkg)
         ];
 
-        const newPackage = exist_imports(Packages);
+        const newPackage = existImports(Packages);
 
         await createPackage(newPackage);
 

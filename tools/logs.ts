@@ -7,10 +7,14 @@
  */
 
 import { getImportMap } from "../handlers/handle_files.ts";
+import { Somebybroken, offLine } from "../utils/logs.ts";
 import { needProxy, Proxy } from "../imports/proxy.ts";
-import { Somebybroken } from "../utils/logs.ts";
 import type { importMap } from "../utils/types.ts";
-import { STD } from "../utils/info.ts";
+import { STD, VERSION } from "../utils/info.ts";
+import { colors } from "../imports/fmt.ts";
+import { green } from "https://deno.land/std@0.76.0/fmt/colors.ts";
+
+const { yellow, cyan, red, white } = colors;
 
 
 /**
@@ -19,7 +23,7 @@ import { STD } from "../utils/info.ts";
  * @returns {boolean} return process state or throw a message with an error
  */
 
-export async function packageTreeInfo(...args: string[]) {
+export async function packageTreeInfo(...args: string[]): Promise<boolean | undefined> {
   try {
     const map: importMap = JSON.parse(await getImportMap());
 
@@ -40,7 +44,11 @@ export async function packageTreeInfo(...args: string[]) {
             process.close();
             Somebybroken("package information could not be obtained");
           }
-          return (await process.status()).success;
+
+          const status = (await process.status()).success;
+
+          process.close();
+          return status;
         }
       }
 
@@ -56,7 +64,10 @@ export async function packageTreeInfo(...args: string[]) {
             process.close();
             Somebybroken("package information could not be obtained");
           }
-          return (await process.status()).success;
+          const status = (await process.status()).success;
+
+          process.close();
+          return status;
         }
       }
     }
@@ -64,4 +75,35 @@ export async function packageTreeInfo(...args: string[]) {
     throw new Error("the import_map.json file does not have a valid format")
       .message;
   }
+}
+
+/**
+ * send update notification
+ */
+export async function newVersion(): Promise<void> {
+
+  const response = (await fetch(
+    "https://api.github.com/repos/crewdevio/Trex/releases/latest"
+  ).catch((_) => offLine())) as Response;
+
+  const data = await response.json() as { tag_name: string };
+
+    if (data.tag_name !== VERSION.VERSION) {
+
+      const versionMessage = white(`Actual ${red(VERSION.VERSION)} -> new ${cyan(data.tag_name)}`);
+
+      const upgradeMessage = white(`use ${green('trex')} upgrade `);
+
+      console.log(yellow(`
+                   ╭─────────────────────────────────────╮
+                   │                                     │
+                   │   New version avaliable for trex    │
+                   │                                     │
+                   │     ${    versionMessage      }     │
+                   │                                     │
+                   │                                     │
+                   │          ${upgradeMessage}          │
+                   │                                     │
+                   ╰─────────────────────────────────────╯`));
+    }
 }

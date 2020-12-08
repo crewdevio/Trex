@@ -304,6 +304,55 @@ imports run start --port=3000 --env
 console.log(Deno.args); // ["--port=3000", "--env"]
 ```
 
+#### **Reboot script alias protocol (rsap)**
+
+with trex you can create script aliases that are reloaded every time a file is changed, this can be done using deno's `--watch` flag. If you would like to have this same functionality but with any command alias you want, you can use trex reboot script protocol which reruns the command alias every time changes are detected in the files and folders you specify
+
+`example:`
+
+```json
+{
+  "scripts": {
+    "start": "trex run welcome",
+    "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
+    "bundler": "denopack -i mod.ts -o bundle.mod.js",
+    "publish": "eggs publish"
+  },
+  "files": ["./app.ts"]
+}
+```
+
+You only have to add the `files` option in the `run.json` file and it will only observe the files and folders that you specify, if you leave the array empty it will observe all the files.
+
+for the script alias to use `rsap` you just need to add the `--watch` or `-w` flag to the end of the command alias.
+
+`example:`
+
+```json
+{
+  "scripts": {
+    "dev": "go build"
+  },
+  "files": ["./main.go"]
+}
+```
+
+```console
+trex run dev --watch ...args
+```
+
+and of course it can be used with any cli tool, compiler or interpreter.
+
+> **note**: you can create the run file in yaml format
+
+```yaml
+- scripts:
+    dev: go build
+
+- files:
+    - ./main.go
+```
+
 ### Purge a package or URL
 
 if you want delete a package or url package from cache memory in deno, you can use the purge command to remove from cache memory.
@@ -313,11 +362,13 @@ example:
 ```console
 trex purge oak
 ```
+
 this finds the oak package in the `import_map.json` file and removes it from the cache.
 
 ```console
 trex purge https://deno.land/x/oak@v6.3.1/mod.ts
 ```
+
 also can be used with urls
 
 ### Checking a package's dependency tree

@@ -6,9 +6,10 @@
  *
  */
 
-import { KillProcess } from "../tools/killProcess.ts";
+import { KillProcess } from "../tools/kill_process.ts";
 import { writeJson } from "../temp_deps/writeJson.ts";
 import type { objectGen } from "../utils/types.ts";
+import { newVersion } from "../tools/logs.ts";
 import { colors } from "../imports/fmt.ts";
 
 const { green, cyan } = colors;
@@ -17,7 +18,7 @@ const { green, cyan } = colors;
  * @return {string} string.
  */
 
-export async function getImportMap() {
+export async function getImportMap(): Promise<string>{
   const decoder = new TextDecoder("utf-8");
 
   // * get data from import_map and return data
@@ -32,7 +33,7 @@ export async function getImportMap() {
  * @return {object} the ordered object.
  */
 
-function sortedPackage(map: any) {
+function sortedPackage(map: any): objectGen {
   return Object.keys(map)
     .sort()
     .reduce((result: objectGen, key) => {
@@ -51,7 +52,8 @@ function sortedPackage(map: any) {
 export async function createPackage(map: Object, log?: Boolean) {
 
   // * create import_map.json
-  await Deno.create("./import_map.json");
+  const create = await Deno.create("./import_map.json");
+  create.close();
 
   // * write import config inside import_map.json
   await writeJson(
@@ -68,6 +70,9 @@ export async function createPackage(map: Object, log?: Boolean) {
     }
     console.groupEnd();
     console.log(green("Happy Coding"));
+    // kill opened process
     KillProcess(Deno.resources());
+    // show notification if exist a new version avaliable
+    await newVersion();
   }
 }

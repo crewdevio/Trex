@@ -6,7 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ master, dev ]
   pull_request:
     branches: [ master ]
 
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-16.04
     strategy:
       matrix:
-        deno: [1.4.6]
+        deno: [1.5.4]
     name: Deno Trex cli test
     steps:
       - uses: actions/checkout@master

@@ -7,6 +7,7 @@
  */
 
 import type { CommandNotFoundParams, HelpCommandParams } from "./types.ts";
+import { didYouMean } from "../tools/did_you_mean.ts";
 import exec from "../tools/install_tools.ts";
 import { colors } from "../imports/fmt.ts";
 import { VERSION } from "./info.ts";
@@ -40,7 +41,7 @@ export async function updateTrex(): Promise<void> {
   // * get the version of the repo in github
   const response = (await fetch(
     "https://api.github.com/repos/crewdevio/Trex/releases/latest"
-  ).catch((err) => offLine())) as Response;
+  ).catch((_) => offLine())) as Response;
 
   // * get the latest release
   const repoVersion = (await response.json()) as { tag_name: string };
@@ -49,14 +50,16 @@ export async function updateTrex(): Promise<void> {
     setTimeout(async () => {
       await exec({
         config: {
-          permissions: ["-A", "--unstable", "-n", "trex"],
-          url: "https://deno.land/x/trex/cli.ts",
+          permissions: ["-A", "-r", "--unstable", "-n", "trex"],
+          url: `https://deno.land/x/trex@${repoVersion.tag_name}/cli.ts`,
         },
       });
-      console.log(repoVersion.tag_name);
+
+      console.log(cyan(`trex ${green(repoVersion.tag_name)} is now installed.`));
     }, 1000);
+
   } else {
-    console.log(cyan("trex is already up to date"));
+    console.log(cyan(`you have the last version trex ${repoVersion.tag_name}`));
   }
 }
 
@@ -118,7 +121,7 @@ export function HelpCommand({ command, flags }: HelpCommandParams) {
 export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
   const { args } = Deno;
 
-  const [command  = '', flag = ''] = args;
+  const [command = '', flag = ''] = args;
 
   if (!commands.includes(command)) {
     console.log(
@@ -131,7 +134,9 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
       )
     );
 
-    throw "";
+    console.log(didYouMean(command, commands));
+
+    Deno.exit(0);;
   }
 
   if (!flags.includes(flag)) {
@@ -151,6 +156,8 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
       )
     );
 
-    throw "";
+    console.log(didYouMean(flag, flags, command));
+
+    Deno.exit(0);
   }
 }

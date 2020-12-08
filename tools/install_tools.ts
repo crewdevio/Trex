@@ -37,5 +37,7 @@ export default async function exec(param: Params): Promise<boolean> {
     Somebybroken("something went wrong in the installation");
   }
 
+  app.close();
+
   return response;
 }

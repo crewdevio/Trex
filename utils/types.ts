@@ -22,7 +22,6 @@ export interface Params {
 
 export interface NestResponse {
   name: string;
-
   package: {
     name: string;
     owner: string;
@@ -48,6 +47,7 @@ export interface runJson {
   scripts: {
     [key: string]: string;
   };
+  files?: string[];
 }
 
 export interface HelpCommandParams {
@@ -63,6 +63,5 @@ export interface HelpCommandParams {
 
 export interface CommandNotFoundParams {
   commands: string[];
-
   flags: string[];
 }

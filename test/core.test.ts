@@ -1,7 +1,9 @@
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
-import { HelpCommand } from "../utils/logs.ts";
+import { deletepackage } from "../handlers/delete_package.ts";
+import { isCachePackage } from "../handlers/handle_cache.ts";
 import { packageTreeInfo } from "../tools/logs.ts";
-import { setupIDE } from "../tools/setupIDE.ts";
+import { setupIDE } from "../tools/setup_ide.ts";
+import { HelpCommand } from "../utils/logs.ts";
 import { Merlin } from "../imports/merlin.ts";
 
 const merlin = new Merlin();
@@ -49,8 +51,6 @@ merlin.assertEqual("install package from nest.land", {
         "https://arweave.net/Rru09TE8WVU_0eMY5lWAM6xsZxbVDScnqkrGvZPjEs4/mod.ts",
     };
   },
-  Ops: false,
-  Resources: false,
 });
 
 merlin.isUndefined("trex treeDeps test", {
@@ -59,16 +59,12 @@ merlin.isUndefined("trex treeDeps test", {
       ...["--unstable", "treeDeps", "react"]
     )) as undefined;
   },
-  Ops: false,
-  Resources: false,
 });
 
 merlin.isUndefined("Setup IDE", {
   async value() {
     return (await setupIDE("--vscode")) as undefined;
   },
-  Ops: false,
-  Resources: false,
   ignore: true,
 });
 
@@ -96,6 +92,36 @@ merlin.isUndefined("Command helper test", {
       ],
     }) as undefined;
   },
-  Ops: false,
-  Resources: false,
+});
+
+merlin.assertEqual("is cache package", {
+  async expect() {
+    const data = await isCachePackage(
+      "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
+    );
+
+    return data.exist;
+  },
+
+  toBe() {
+    return true;
+  },
+});
+
+merlin.isString("is cache package path", {
+  async value() {
+    const data = await isCachePackage(
+      "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
+    );
+
+    return data.path;
+  },
+});
+
+merlin.isUndefined("delete package", {
+  async value() {
+    const response = await deletepackage("merlin");
+
+    return response as undefined;
+  },
 });

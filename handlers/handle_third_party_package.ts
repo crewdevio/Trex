@@ -63,6 +63,8 @@ export async function cacheNestpackage(url: string): Promise<void> {
     process.close();
     ErrorInstalling();
   }
+
+  process.close();
 }
 
 /**
@@ -72,7 +74,7 @@ export async function cacheNestpackage(url: string): Promise<void> {
  * @return {string} url package.
  */
 
-export function pkgRepo(repoInfo: string, pkgName: string | undefined) {
+export function pkgRepo(repoInfo: string, pkgName?: string): string[] {
   const [user, repo, ...path] = repoInfo.split("/");
 
   return [

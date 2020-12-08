@@ -102,8 +102,9 @@ async function cached(pkgName: string, pkgUrl: string) {
       console.log(
         yellow(`omitted, this version of ${red(pkgName)} is already installed`)
       );
-      await delay(0.1);
+      await delay(0.4);
     } else {
+      process.close();
       console.log(green("\n Done. \n"));
     }
   }
@@ -123,8 +124,9 @@ async function cached(pkgName: string, pkgUrl: string) {
       console.log(
         yellow(`omitted, this version of ${red(pkgName)} is already installed`)
       );
-      await delay(0.1);
+      await delay(0.4);
     } else {
+      process.close();
       console.log(green("\n Done. \n"));
     }
   }
@@ -145,8 +147,9 @@ async function cached(pkgName: string, pkgUrl: string) {
       console.log(
         yellow(`omitted, this version of ${red(pkgName)} is already installed`)
       );
-      await delay(0.1);
+      await delay(0.4);
     } else {
+      process.close();
       console.log(green("\n Done. \n"));
     }
   }
@@ -155,6 +158,7 @@ async function cached(pkgName: string, pkgUrl: string) {
   else if (!STD.includes(pkgName) && !(await denoApidb(pkgName)).length) {
     throw new Error(red("package not found.")).message;
   }
+
 }
 
 export default cached;
