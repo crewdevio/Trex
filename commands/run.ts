@@ -32,11 +32,11 @@ runArgs =
 export async function Run(command: string) {
   let prefix = (await exists("./run.json")) ? "json" : "yaml";
 
-  if (!(await exists("./run.json")) && !(await exists("./run.yaml"))) {
+  if (!(await exists("./run.json")) && !(await exists("./run.yaml")) && !(await exists("./run.yml"))) {
     throw new Error(red(`: ${yellow("run.json or run.yaml not found")}`)).message;
   }
 
-  if (await exists("./run.json") && await exists("./run.yaml")) {
+  if (await exists("./run.json") && await exists("./run.yaml") && (await exists("./run.yml"))) {
     throw new Error(red(`: ${yellow("use a single format run.json or run.yaml file")}`)).message;
   }
 
@@ -56,6 +56,7 @@ export async function Run(command: string) {
         }
 
         const scripts = Object.keys(runJsonFile.scripts);
+        console.log(runJsonFile)
 
         const toRun = scripts
           .map((key) =>

@@ -7,6 +7,7 @@
  */
 
 import { yaml } from "../imports/encoding.ts";
+import { exists } from "../imports/fs.ts";
 import { runJson } from "../utils/types.ts";
 
 /**
@@ -15,10 +16,17 @@ import { runJson } from "../utils/types.ts";
 export async function parseToYaml() {
   try {
     let runFile = {};
+    let YAMLFile;
 
     const decoder = new TextDecoder("utf8");
 
-    const data = await Deno.readFile("./run.yaml");
+    if (await exists("./run.yaml")) {
+      YAMLFile = "./run.yaml"
+    } else {
+      YAMLFile = "./run.yml"
+    }
+
+    const data = await Deno.readFile(YAMLFile);
 
     (yaml.parse(decoder.decode(data)) as runJson[])?.forEach((object) => {
       runFile = { ...runFile, ...object };
