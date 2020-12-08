@@ -56,7 +56,6 @@ export async function Run(command: string) {
         }
 
         const scripts = Object.keys(runJsonFile.scripts);
-        console.log(runJsonFile)
 
         const toRun = scripts
           .map((key) =>
