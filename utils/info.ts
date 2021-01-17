@@ -75,6 +75,8 @@ export const helpsInfo = [
 
   `   ${yellow("purge")}           remove a package or url from cache\n`,
 
+  `   ${yellow("ls")}              shows the list of installed packages\n`,
+
   green(
     "\nyou can see the different options available for each command using:\n"
   ),
@@ -99,6 +101,7 @@ export const keyWords = {
   run: "run",
   purge: "purge",
   setup: "setup",
+  ls: "ls"
 };
 
 export const IDESsettings = [

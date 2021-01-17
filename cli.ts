@@ -17,12 +17,14 @@ import {
   updateTrex,
   HelpCommand,
   CommandNotFound,
+  LogPackages
 } from "./utils/logs.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { deletepackage } from "./handlers/delete_package.ts";
 import { purge } from "./handlers/purge_package.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
+import type { importMap } from "./utils/types.ts";
 import { setupIDE } from "./tools/setup_ide.ts"
 import { exists } from "./imports/fs.ts";
 import { Run } from "./commands/run.ts";
@@ -228,6 +230,29 @@ async function mainCli() {
     await purge();
   }
 
+  // * ls command
+  else if (_arguments[0] === keyWords.ls) {
+    if (flags.help.includes(_arguments[1])) {
+      HelpCommand({
+        command: {
+          alias: [keyWords.ls],
+          description: "shows the list of installed packages"
+        },
+        flags: [
+          {
+            alias: flags.help,
+            description: "show command help"
+          }
+        ]
+      });
+    }
+
+    else {
+      const map = JSON.parse(await getImportMap()) as importMap;
+      LogPackages(map.imports, false);
+    }
+  }
+
   // * displays help information
   else {
     CommandNotFound({
@@ -240,7 +265,8 @@ async function mainCli() {
         keyWords.upgrade,
         ...flags.help,
         ...flags.version,
-        keyWords.setup
+        keyWords.setup,
+        keyWords.ls
       ],
       flags: [],
     });

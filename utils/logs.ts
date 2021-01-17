@@ -161,3 +161,20 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
     Deno.exit(0);
   }
 }
+
+/**
+ * log packages list
+ * @param map
+ */
+export function LogPackages(map: Object, message = true) {
+  console.group("Package list: ");
+  for (const pkg in map) {
+    console.log("|- ", cyan(pkg));
+  }
+  console.groupEnd();
+
+  if (message) {
+    console.log(green("Happy Coding"))
+  };
+  console.log();
+}
