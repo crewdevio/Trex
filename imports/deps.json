@@ -5,8 +5,8 @@
       "hash": "5b4388adfdc1f5ad8a727f95a91c3f255cb36f430b6b4503f8f3ddacc162db53"
     },
     "fs": {
-      "url": "https://deno.land/std@0.79.0/fs/mod.ts",
-      "hash": "8d2e07dc10df6295413d0a59fe3abb64cc24fafb4093a8d185f8f5373a9ece37"
+      "url": "https://deno.land/std@0.83.0/fs/mod.ts",
+      "hash": "85a1cd0294c2d5e2c24179cdc55d02cab53309751860a4bd46333c0f155cd0e8"
     },
     "proxy": {
       "url": "https://raw.githubusercontent.com/crewdevio/Trex/proxy/proxy/proxy.ts",
@@ -17,12 +17,12 @@
       "hash": "349dc7e5183165b6eab70ef39e2d8d2c8db85d3685694b3f225e0b63f774dcf8"
     },
     "hash": {
-      "url": "https://deno.land/std@0.79.0/hash/mod.ts",
-      "hash": "560f90da7de1f9dce9a88ea5d70e8a1489d68cd526810a823677a4680f669a2f"
+      "url": "https://deno.land/std@0.83.0/hash/mod.ts",
+      "hash": "cf2c6b01635628a162d19ca4aeab62e57077c49e73d69b9417757ab84b6e0971"
     },
     "path": {
-      "url": "https://deno.land/std@0.79.0/path/mod.ts",
-      "hash": "9cdc630b7618803616d52a0b470f006115a1a8938a0c7098ad844e7b7e722884"
+      "url": "https://deno.land/std@0.83.0/path/mod.ts",
+      "hash": "3e6ec3fad1569ba1705463995f141af35ee28d5c65c3ef1c067fcddbbd70b1a6"
     },
     "encoding": {
       "url": "https://denopkg.com/crewdevio/Trex@proxy/proxy/files/encoding.ts",
