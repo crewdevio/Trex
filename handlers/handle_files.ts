@@ -9,10 +9,9 @@
 import { KillProcess } from "../tools/kill_process.ts";
 import { writeJson } from "../temp_deps/writeJson.ts";
 import type { objectGen } from "../utils/types.ts";
+import { LogPackages } from "../utils/logs.ts";
 import { newVersion } from "../tools/logs.ts";
-import { colors } from "../imports/fmt.ts";
 
-const { green, cyan } = colors;
 /**
  * takes the import map file and returns its information.
  * @return {string} string.
@@ -63,13 +62,7 @@ export async function createPackage(map: Object, log?: Boolean) {
   );
 
   if (log) {
-    // * log packages list
-    console.group("Package list: ");
-    for (const pkg in map) {
-      console.log("|- ", cyan(pkg));
-    }
-    console.groupEnd();
-    console.log(green("Happy Coding"));
+    LogPackages(map);
     // kill opened process
     KillProcess(Deno.resources());
     // show notification if exist a new version avaliable

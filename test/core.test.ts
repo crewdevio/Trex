@@ -1,9 +1,10 @@
 import { installPackages, customPackage } from "../handlers/handle_packages.ts";
 import { deletepackage } from "../handlers/delete_package.ts";
 import { isCachePackage } from "../handlers/handle_cache.ts";
+import { HelpCommand, LogPackages } from "../utils/logs.ts";
+import { getImportMap } from "../handlers/handle_files.ts";
 import { packageTreeInfo } from "../tools/logs.ts";
 import { setupIDE } from "../tools/setup_ide.ts";
-import { HelpCommand } from "../utils/logs.ts";
 import { Merlin } from "../imports/merlin.ts";
 
 const merlin = new Merlin();
@@ -123,5 +124,11 @@ merlin.isUndefined("delete package", {
     const response = await deletepackage("merlin");
 
     return response as undefined;
+  },
+});
+
+merlin.isUndefined("ls command", {
+  async value() {
+    return LogPackages(await getImportMap(), true) as undefined;
   },
 });
