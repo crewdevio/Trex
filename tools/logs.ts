@@ -12,10 +12,9 @@ import { needProxy, Proxy } from "../imports/proxy.ts";
 import type { importMap } from "../utils/types.ts";
 import { STD, VERSION } from "../utils/info.ts";
 import { colors } from "../imports/fmt.ts";
-import { green } from "https://deno.land/std@0.76.0/fmt/colors.ts";
+import { wait } from "../imports/wait.ts";
 
-const { yellow, cyan, red, white } = colors;
-
+const { yellow, cyan, red, white, green } = colors;
 
 /**
  * show in console the tree dependencies of a module
@@ -23,7 +22,9 @@ const { yellow, cyan, red, white } = colors;
  * @returns {boolean} return process state or throw a message with an error
  */
 
-export async function packageTreeInfo(...args: string[]): Promise<boolean | undefined> {
+export async function packageTreeInfo(
+  ...args: string[]
+): Promise<boolean | undefined> {
   try {
     const map: importMap = JSON.parse(await getImportMap());
 
@@ -81,20 +82,21 @@ export async function packageTreeInfo(...args: string[]): Promise<boolean | unde
  * send update notification
  */
 export async function newVersion(): Promise<void> {
-
   const response = (await fetch(
     "https://api.github.com/repos/crewdevio/Trex/releases/latest"
   ).catch((_) => offLine())) as Response;
 
-  const data = await response.json() as { tag_name: string };
+  const data = (await response.json()) as { tag_name: string };
 
-    if (data.tag_name !== VERSION.VERSION) {
+  if (data.tag_name !== VERSION.VERSION) {
+    const versionMessage = white(
+      `Actual ${red(VERSION.VERSION)} -> new ${cyan(data.tag_name)}`
+    );
 
-      const versionMessage = white(`Actual ${red(VERSION.VERSION)} -> new ${cyan(data.tag_name)}`);
+    const upgradeMessage = white(`use ${green("trex")} upgrade `);
 
-      const upgradeMessage = white(`use ${green('trex')} upgrade `);
-
-      console.log(yellow(`
+    console.log(
+      yellow(`
                    ╭─────────────────────────────────────╮
                    │                                     │
                    │   New version avaliable for trex    │
@@ -104,6 +106,48 @@ export async function newVersion(): Promise<void> {
                    │                                     │
                    │          ${upgradeMessage}          │
                    │                                     │
-                   ╰─────────────────────────────────────╯`));
-    }
+                   ╰─────────────────────────────────────╯`)
+    );
+  }
+}
+
+/**
+ * show a pretty loading instalation message
+ * @param {string} text
+ */
+export function LoadingSpinner(text: string) {
+  console.clear();
+  const spinner = wait({
+    spinner: {
+      frames: [
+        ".    ",
+        "..   ",
+        "...  ",
+        ".... ",
+        ".....",
+        " ....",
+        "  ...",
+        " ..",
+        "  .",
+        "   ",
+      ],
+      interval: 200,
+    },
+    text: "",
+  }).start();
+
+  const colors: string[] = [
+    "red",
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "white",
+  ];
+
+  spinner.color = colors[Math.floor(Math.random() * 6) + 1];
+  spinner.text = `${green("installing")} ${yellow(text)}`;
+
+  return spinner;
 }

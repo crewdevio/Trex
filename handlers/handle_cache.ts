@@ -8,13 +8,14 @@
 
 import { needProxy, Proxy } from "../imports/proxy.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
+import { LoadingSpinner } from "../tools/logs.ts";
 import { createHash } from "../imports/hash.ts";
 import { colors } from "../imports/fmt.ts";
 import { denoApidb } from "../utils/db.ts";
 import { exists } from "../imports/fs.ts";
 import { STD } from "../utils/info.ts";
 
-const { green, red, yellow } = colors;
+const { red } = colors;
 
 // * create a simple delay
 export const delay = (time: number) =>
@@ -81,31 +82,26 @@ export async function isCachePackage(packageUrl: string) {
  */
 
 async function cached(pkgName: string, pkgUrl: string) {
-  const ID = "trex_Cache_Map";
   let process: Deno.Process;
 
-  console.log(green("cache package... \n"));
-
-  const CMD = ["deno", "install", "-f", "-n", ID, "--unstable"];
+  const loading = LoadingSpinner(pkgName);
+  const CMD = ["deno", "cache", "-q", "--unstable"];
 
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({
       cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts"],
+      stdout: "null",
+      stdin: "null",
     });
 
     if (!(await process.status()).success) {
+      loading.stop();
       process.close();
       ErrorInstalling();
-    }
-    // TODO(buttercubz) create a better way to handler this
-    if ((await isCachePackage(pkgUrl + "mod.ts")).exist) {
-      console.log(
-        yellow(`omitted, this version of ${red(pkgName)} is already installed`)
-      );
-      await delay(0.4);
+      return;
     } else {
       process.close();
-      console.log(green("\n Done. \n"));
+      loading.stop();
     }
   }
 
@@ -118,16 +114,10 @@ async function cached(pkgName: string, pkgUrl: string) {
     if (!(await process.status()).success) {
       process.close();
       ErrorInstalling();
-    }
-
-    if ((await isCachePackage(pkgUrl + "mod.ts")).exist) {
-      console.log(
-        yellow(`omitted, this version of ${red(pkgName)} is already installed`)
-      );
-      await delay(0.4);
+      return;
     } else {
       process.close();
-      console.log(green("\n Done. \n"));
+      loading.stop();
     }
   }
 
@@ -141,16 +131,9 @@ async function cached(pkgName: string, pkgUrl: string) {
     if (!(await process.status()).success) {
       process.close();
       ErrorInstalling();
-    }
-
-    if ((await isCachePackage(pkgUrl)).exist) {
-      console.log(
-        yellow(`omitted, this version of ${red(pkgName)} is already installed`)
-      );
-      await delay(0.4);
     } else {
       process.close();
-      console.log(green("\n Done. \n"));
+      loading.stop();
     }
   }
 
@@ -159,6 +142,7 @@ async function cached(pkgName: string, pkgUrl: string) {
     throw new Error(red("package not found.")).message;
   }
 
+  loading.stop();
 }
 
 export default cached;

@@ -27,6 +27,10 @@
     "encoding": {
       "url": "https://denopkg.com/crewdevio/Trex@proxy/proxy/files/encoding.ts",
       "hash": "8ccad815b2e41965b03d668d54b02d5ac7d81bd1611b5e67f0f0046f55e7eb82"
+    },
+    "wait": {
+      "url": "https://deno.land/x/wait@0.1.10/mod.ts",
+      "hash": "7881f59da5fd3d7ef0e5cfdbcc8058b061da97271f954474aef877c5ded9531f"
     }
   }
 }
