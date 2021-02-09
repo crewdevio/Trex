@@ -25,9 +25,14 @@ import { deletepackage } from "./handlers/delete_package.ts";
 import { purge } from "./handlers/purge_package.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
 import type { importMap } from "./utils/types.ts";
+import { LoadingSpinner } from "./tools/logs.ts";
 import { setupIDE } from "./tools/setup_ide.ts"
+import { Spinner } from "./imports/wait.ts";
+import { colors } from "./imports/fmt.ts";
 import { exists } from "./imports/fs.ts";
 import { Run } from "./commands/run.ts";
+
+const { bold, green, yellow } = colors;
 
 async function mainCli() {
   const _arguments = Deno.args;
@@ -116,9 +121,16 @@ async function mainCli() {
       });
     }
 
+    let loading: Spinner;
     const [, ...pkgs] = _arguments;
     for (const pkg of pkgs) {
+      loading = LoadingSpinner(
+        green(
+          `Removing ${bold(yellow(pkg))} from import_map.json`
+          )
+        );
       await deletepackage(pkg);
+      loading.stop();
     }
   }
   // * update to lastest version of trex

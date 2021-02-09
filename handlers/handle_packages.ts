@@ -14,6 +14,7 @@ import {
 import { getImportMap, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
+import { LoadingSpinner } from "../tools/logs.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import { exists } from "../imports/fs.ts";
@@ -21,7 +22,7 @@ import { denoApidb } from "../utils/db.ts";
 import { colors } from "../imports/fmt.ts";
 import cache from "./handle_cache.ts";
 
-const { yellow, red, green } = colors;
+const { yellow, red, green, bold } = colors;
 /**
  * verify that the imports key exists in the import map file.
  * @param {object} map - the import map json object.
@@ -206,15 +207,7 @@ export async function installPackages(args: string[]): Promise<objectGen> {
  */
 
 export async function customPackage(...args: string[]): Promise<boolean> {
-  const CMD = [
-    "deno",
-    "install",
-    "-f",
-    "-n",
-    "trex_Cache_Map",
-    "-r",
-    "--unstable",
-  ];
+  const CMD = ["deno", "cache", "-q", "--unstable",];
 
   const entry = args[1] ?? "";
 
@@ -223,6 +216,10 @@ export async function customPackage(...args: string[]): Promise<boolean> {
   }
 
   const [pkgName, url] = args[1].split("=");
+  const { hostname } = new URL(url);
+  const loading = LoadingSpinner(
+    green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`)
+  );
 
   const custom: objectGen = {};
 
@@ -230,11 +227,15 @@ export async function customPackage(...args: string[]): Promise<boolean> {
   // * cache custom module
   const process = Deno.run({
     cmd: [...CMD, url],
+    stdin: "null",
+    stdout: "null"
   });
 
   if (!(await process.status()).success) {
+    loading.stop();
     process.close();
     Somebybroken("this package is invalid or the url is invalid");
+    return false;
   }
 
   // * if import_map exists update it
@@ -247,6 +248,7 @@ export async function customPackage(...args: string[]): Promise<boolean> {
     }
 
     catch (_) {
+      loading.stop();
       process.close();
       throw new Error(
         red("the import_map.json file does not have a valid format.")
@@ -260,6 +262,7 @@ export async function customPackage(...args: string[]): Promise<boolean> {
   }
 
   // * close main install process
+  loading.stop();
   process.close();
   return true;
 }

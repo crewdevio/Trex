@@ -15,7 +15,7 @@ import { denoApidb } from "../utils/db.ts";
 import { exists } from "../imports/fs.ts";
 import { STD } from "../utils/info.ts";
 
-const { red } = colors;
+const { red, yellow, green, bold } = colors;
 
 // * create a simple delay
 export const delay = (time: number) =>
@@ -84,7 +84,11 @@ export async function isCachePackage(packageUrl: string) {
 async function cached(pkgName: string, pkgUrl: string) {
   let process: Deno.Process;
 
-  const loading = LoadingSpinner(pkgName);
+  const { hostname } = new URL(pkgUrl);
+
+  const loading = LoadingSpinner(
+    green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`)
+  );
   const CMD = ["deno", "cache", "-q", "--unstable"];
 
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
