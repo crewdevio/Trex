@@ -10,7 +10,7 @@ import type { CommandNotFoundParams, HelpCommandParams } from "./types.ts";
 import { didYouMean } from "../tools/did_you_mean.ts";
 import exec from "../tools/install_tools.ts";
 import { colors } from "../imports/fmt.ts";
-import { VERSION } from "./info.ts";
+import { helpsInfo, VERSION } from "./info.ts";
 
 const { cyan, red, green, yellow } = colors;
 
@@ -123,6 +123,11 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
 
   const [command = '', flag = ''] = args;
 
+  if (!args.length) {
+    LogHelp(helpsInfo);
+    Deno.exit(0);
+  }
+
   if (!commands.includes(command)) {
     console.log(
       red("Command not found:\n"),
@@ -136,7 +141,7 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
 
     console.log(didYouMean(command, commands));
 
-    Deno.exit(0);;
+    Deno.exit(0);
   }
 
   if (!flags.includes(flag)) {

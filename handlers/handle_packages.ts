@@ -160,7 +160,7 @@ export async function installPackages(args: string[]): Promise<objectGen> {
           const mod = pkg.split("/").join("");
           await cache(mod, await detectVersion(mod));
 
-          map[(await getNamePkg(mod)).toLowerCase()] = await detectVersion(mod);
+          map[(await getNamePkg(mod)).toLowerCase()] = md;
         }
 
         else {
