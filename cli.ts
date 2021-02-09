@@ -116,7 +116,10 @@ async function mainCli() {
       });
     }
 
-    await deletepackage(_arguments[1]);
+    const [, ...pkgs] = _arguments;
+    for (const pkg of pkgs) {
+      await deletepackage(pkg);
+    }
   }
   // * update to lastest version of trex
   else if (_arguments[0] === keyWords.upgrade) {

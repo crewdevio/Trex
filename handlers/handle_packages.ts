@@ -14,6 +14,7 @@ import {
 import { getImportMap, createPackage } from "./handle_files.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
+import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import { exists } from "../imports/fs.ts";
 import { denoApidb } from "../utils/db.ts";
@@ -154,19 +155,30 @@ export async function installPackages(args: string[]): Promise<objectGen> {
       const importmap: importMap = JSON.parse(await getImportMap());
 
       for (const pkg in importmap.imports) {
-        const md = importmap.imports[pkg];
+        let url = importmap.imports[pkg];
+        url = STD.includes(pkg.replace("/", "")) ? `${url}/mod.ts` : url;
 
-        if (md.includes("deno.land")) {
-          const mod = pkg.split("/").join("");
-          await cache(mod, await detectVersion(mod));
+        if (await validateHash(url, importmap.hash[pkg])) {
+          if (url.includes("deno.land")) {
+            const mod = pkg.split("/").join("");
+            await cache(mod, await detectVersion(mod));
 
-          map[(await getNamePkg(mod)).toLowerCase()] = await detectVersion(mod);
+            map[(await getNamePkg(mod)).toLowerCase()] = await detectVersion(mod);
+          }
+
+          else {
+            await cacheNestpackage(importmap.imports[pkg]);
+            map[pkg.toLowerCase()] = importmap.imports[pkg];
+          }
         }
 
         else {
-          await cacheNestpackage(importmap.imports[pkg]);
+          console.log(
+            colors.white(
+              `\nthe generated hash does not match the package "${colors.green(pkg)}",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${colors.red('=>')} ${colors.cyan('https://github.com/crewdevio/Trex')}`
+              ));
 
-          map[pkg.toLowerCase()] = importmap.imports[pkg];
+          Deno.exit(0);
         }
       }
     }

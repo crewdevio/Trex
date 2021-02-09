@@ -9,6 +9,7 @@
 import { createPackage, getImportMap } from "./handle_files.ts";
 import { haveVersion } from "./handle_delete_package.ts";
 import { existImports } from "./handle_packages.ts";
+import type { importMap } from "../utils/types.ts";
 import { colors } from "../imports/fmt.ts";
 import { exists } from "../imports/fs.ts";
 import { STD } from "../utils/info.ts";
@@ -23,10 +24,16 @@ export async function deletepackage(toDelete: string) {
   if (await exists("./import_map.json")) {
     try {
       const pkg: string = toDelete.trim();
-      const Packages = JSON.parse(await getImportMap());
+      const Packages = JSON.parse(await getImportMap()) as importMap;
 
       if (Packages?.imports) {
         delete Packages.imports[
+          STD.includes(haveVersion(pkg))
+            ? haveVersion(pkg) + "/"
+            : haveVersion(pkg)
+        ];
+
+        delete Packages.hash[
           STD.includes(haveVersion(pkg))
             ? haveVersion(pkg) + "/"
             : haveVersion(pkg)
