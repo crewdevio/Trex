@@ -127,11 +127,10 @@ export function LoadingSpinner(text: string) {
         ".....",
         " ....",
         "  ...",
-        " ..",
-        "  .",
-        "   ",
+        "   ..",
+        "    .",
       ],
-      interval: 200,
+      interval: 50,
     },
     text: "",
   }).start();
@@ -147,7 +146,7 @@ export function LoadingSpinner(text: string) {
   ];
 
   spinner.color = colors[Math.floor(Math.random() * 6) + 1];
-  spinner.text = `${green("installing")} ${yellow(text)}`;
+  spinner.text = text;
 
   return spinner;
 }
