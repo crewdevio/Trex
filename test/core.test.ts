@@ -25,6 +25,7 @@ merlin.assertEqual("install custom package", {
   },
   Ops: false,
   Resources: false,
+  ignore: false
 });
 
 merlin.assertEqual("install package from deno.land", {
@@ -125,6 +126,9 @@ merlin.isUndefined("delete package", {
 
     return response as undefined;
   },
+  // ignore: true,
+  Ops: false,
+  Resources: false
 });
 
 merlin.isUndefined("ls command", {
