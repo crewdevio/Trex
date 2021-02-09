@@ -155,15 +155,14 @@ export async function installPackages(args: string[]): Promise<objectGen> {
       const importmap: importMap = JSON.parse(await getImportMap());
 
       for (const pkg in importmap.imports) {
-        let url = importmap.imports[pkg];
-        url = STD.includes(pkg.replace("/", "")) ? `${url}/mod.ts` : url;
+        const url = importmap.imports[pkg];
 
         if (await validateHash(url, importmap.hash[pkg])) {
           if (url.includes("deno.land")) {
             const mod = pkg.split("/").join("");
             await cache(mod, await detectVersion(mod));
 
-            map[(await getNamePkg(mod)).toLowerCase()] = await detectVersion(mod);
+            map[(await getNamePkg(mod)).toLowerCase()] = url;
           }
 
           else {
