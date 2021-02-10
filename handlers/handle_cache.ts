@@ -81,13 +81,14 @@ export async function isCachePackage(packageUrl: string) {
  * @return void
  */
 
-async function cached(pkgName: string, pkgUrl: string) {
+async function cached(pkgName: string, pkgUrl: string, show = true) {
   let process: Deno.Process;
 
   const { hostname } = new URL(pkgUrl);
 
   const loading = LoadingSpinner(
-    green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`)
+    green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`),
+    show
   );
   const CMD = ["deno", "cache", "-q", "--unstable"];
 
@@ -99,14 +100,14 @@ async function cached(pkgName: string, pkgUrl: string) {
     });
 
     if (!(await process.status()).success) {
-      loading.stop();
+      loading?.stop();
       process.close();
       ErrorInstalling();
       return;
     }
 
     process.close();
-    loading.stop();
+    loading?.stop();
   }
 
   // * install standard package by default use mod.ts
@@ -116,14 +117,14 @@ async function cached(pkgName: string, pkgUrl: string) {
     });
 
     if (!(await process.status()).success) {
-      loading.stop();
+      loading?.stop();
       process.close();
       ErrorInstalling();
       return;
     }
 
     process.close();
-    loading.stop();
+    loading?.stop();
   }
 
   // * install third party package
@@ -139,7 +140,7 @@ async function cached(pkgName: string, pkgUrl: string) {
     }
 
     process.close();
-    loading.stop();
+    loading?.stop();
   }
 
   // * log error if package is not found
@@ -147,7 +148,7 @@ async function cached(pkgName: string, pkgUrl: string) {
     throw new Error(red("package not found.")).message;
   }
 
-  loading.stop();
+  loading?.stop();
 }
 
 export default cached;

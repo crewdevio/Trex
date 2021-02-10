@@ -115,38 +115,41 @@ export async function newVersion(): Promise<void> {
  * show a pretty loading instalation message
  * @param {string} text
  */
-export function LoadingSpinner(text: string) {
-  console.clear();
-  const spinner = wait({
-    spinner: {
-      frames: [
-        ".    ",
-        "..   ",
-        "...  ",
-        ".... ",
-        ".....",
-        " ....",
-        "  ...",
-        "   ..",
-        "    .",
-      ],
-      interval: 50,
-    },
-    text: "",
-  }).start();
+export function LoadingSpinner(text: string, show = true) {
+  if (show) {
+    console.clear();
+    const spinner = wait({
+      spinner: {
+        frames: [
+          ".    ",
+          "..   ",
+          "...  ",
+          ".... ",
+          ".....",
+          " ....",
+          "  ...",
+          "   ..",
+          "    .",
+        ],
+        interval: 50,
+      },
+      text: "",
+    }).start();
 
-  const colors: string[] = [
-    "red",
-    "green",
-    "yellow",
-    "blue",
-    "magenta",
-    "cyan",
-    "white",
-  ];
+    const colors: string[] = [
+      "red",
+      "green",
+      "yellow",
+      "blue",
+      "magenta",
+      "cyan",
+      "white",
+    ];
 
-  spinner.color = colors[Math.floor(Math.random() * 6) + 1];
-  spinner.text = text;
+    spinner.color = colors[Math.floor(Math.random() * 6) + 1];
+    spinner.text = text;
 
-  return spinner;
+    return spinner;
+
+  }
 }

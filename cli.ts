@@ -102,7 +102,7 @@ async function mainCli() {
     }
 
 
-    customPackage(..._arguments);
+    customPackage(_arguments);
   }
   // * uninstall some package
   else if (_arguments[0] === keyWords.uninstall) {
@@ -128,9 +128,9 @@ async function mainCli() {
         green(
           `Removing ${bold(yellow(pkg))} from import_map.json`
           )
-        );
+        )!;
       await deletepackage(pkg);
-      loading.stop();
+      loading?.stop();
     }
   }
   // * update to lastest version of trex

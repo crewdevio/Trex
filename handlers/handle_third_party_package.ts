@@ -58,12 +58,13 @@ export async function nestPackageUrl(
  * @return {void} void
  */
 
-export async function cacheNestpackage(url: string): Promise<void> {
+export async function cacheNestpackage(url: string, show = true): Promise<void> {
 
   const { hostname } = new URL(url);
 
   const loading = LoadingSpinner(
-    green(` Installing ${bold(yellow("package"))} from ${bold(yellow(hostname))}`)
+    green(` Installing ${bold(yellow("package"))} from ${bold(yellow(hostname))}`),
+    show
   );
 
   const process = Deno.run({
@@ -73,13 +74,13 @@ export async function cacheNestpackage(url: string): Promise<void> {
   });
 
   if (!(await process.status()).success) {
-    loading.stop();
+    loading?.stop();
     process.close();
     ErrorInstalling();
     return;
   }
 
-  loading.stop();
+  loading?.stop();
   process.close();
 }
 

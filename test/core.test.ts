@@ -4,7 +4,6 @@ import { isCachePackage } from "../handlers/handle_cache.ts";
 import { HelpCommand, LogPackages } from "../utils/logs.ts";
 import { getImportMap } from "../handlers/handle_files.ts";
 import { packageTreeInfo } from "../tools/logs.ts";
-import { setupIDE } from "../tools/setup_ide.ts";
 import { Merlin } from "../imports/merlin.ts";
 
 const Test = new Merlin();
@@ -12,10 +11,11 @@ const Test = new Merlin();
 Test.assertEqual("install custom package from raw github link", {
   async expect(): Promise<boolean> {
     const data = await customPackage(
-      ...[
+      [
         "--custom",
         "merlin=https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts",
-      ]
+      ],
+      false
     );
 
     return data;
@@ -25,12 +25,11 @@ Test.assertEqual("install custom package from raw github link", {
   },
   Ops: false,
   Resources: false,
-  ignore: true
 });
 
 Test.assertEqual("install dinoenv package from deno.land", {
   async expect() {
-    const pkg = await installPackages(["install", "--map", "dinoenv"]);
+    const pkg = await installPackages(["install", "--map", "dinoenv"], false);
     return pkg;
   },
   toBe() {
@@ -38,12 +37,11 @@ Test.assertEqual("install dinoenv package from deno.land", {
   },
   Ops: false,
   Resources: false,
-  ignore: true
 });
 
 Test.assertEqual("install dinoenv package from nest.land", {
   async expect() {
-    const pkg = await installPackages(["i", "--nest", "dinoenv@1.0.0"]);
+    const pkg = await installPackages(["i", "--nest", "dinoenv@1.0.0"], false);
 
     return pkg;
   },
@@ -55,7 +53,6 @@ Test.assertEqual("install dinoenv package from nest.land", {
   },
   Ops: false,
   Resources: false,
-  ignore: true
 });
 
 Test.isUndefined("trex treeDeps test", {
@@ -127,7 +124,6 @@ Test.isUndefined("delete package", {
   // ignore: true,
   Ops: false,
   Resources: false,
-  ignore: true
 });
 
 Test.isUndefined("ls command", {

@@ -112,7 +112,7 @@ async function getNamePkg(pkg: string): Promise<string> {
  * @returns {Promise} returns a promise of a { [ key: string ]: string }
  */
 
-export async function installPackages(args: string[]): Promise<objectGen> {
+export async function installPackages(args: string[], show = true): Promise<objectGen> {
   // * package to push in import_map.json
   const map: objectGen = {};
 
@@ -126,7 +126,7 @@ export async function installPackages(args: string[]): Promise<objectGen> {
       if (flags.map.includes(args[1])) {
 
         const url = await detectVersion(args[index]);
-        await cache(args[index].split("@")[0], url);
+        await cache(args[index].split("@")[0], url, show);
         map[(await getNamePkg(args[index])).toLowerCase()] = url;
       }
 
@@ -206,7 +206,7 @@ export async function installPackages(args: string[]): Promise<objectGen> {
  * @returns {boolean} return installation state
  */
 
-export async function customPackage(...args: string[]): Promise<boolean> {
+export async function customPackage(args: string[], show = true): Promise<boolean> {
   const CMD = ["deno", "cache", "-q", "--unstable",];
 
   const entry = args[1] ?? "";
@@ -218,8 +218,9 @@ export async function customPackage(...args: string[]): Promise<boolean> {
   const [pkgName, url] = args[1].split("=");
   const { hostname } = new URL(url);
   const loading = LoadingSpinner(
-    green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`)
-  );
+    green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`),
+    show
+  )!;
 
   const custom: objectGen = {};
 
@@ -232,7 +233,7 @@ export async function customPackage(...args: string[]): Promise<boolean> {
   });
 
   if (!(await process.status()).success) {
-    loading.stop();
+    loading?.stop();
     process.close();
     Somebybroken("this package is invalid or the url is invalid");
     return false;
@@ -248,7 +249,7 @@ export async function customPackage(...args: string[]): Promise<boolean> {
     }
 
     catch (_) {
-      loading.stop();
+      loading?.stop();
       process.close();
       throw new Error(
         red("the import_map.json file does not have a valid format.")
@@ -262,7 +263,7 @@ export async function customPackage(...args: string[]): Promise<boolean> {
   }
 
   // * close main install process
-  loading.stop();
+  loading?.stop();
   process.close();
   return true;
 }
