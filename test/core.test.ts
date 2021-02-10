@@ -7,10 +7,10 @@ import { packageTreeInfo } from "../tools/logs.ts";
 import { setupIDE } from "../tools/setup_ide.ts";
 import { Merlin } from "../imports/merlin.ts";
 
-const merlin = new Merlin();
+const Test = new Merlin();
 
-merlin.assertEqual("install custom package", {
-  async expect() {
+Test.assertEqual("install custom package from raw github link", {
+  async expect(): Promise<boolean> {
     const data = await customPackage(
       ...[
         "--custom",
@@ -20,28 +20,26 @@ merlin.assertEqual("install custom package", {
 
     return data;
   },
-  toBe() {
+  toBe(): boolean {
     return true;
   },
   Ops: false,
   Resources: false,
-  ignore: false
 });
 
-merlin.assertEqual("install package from deno.land", {
+Test.assertEqual("install dinoenv package from deno.land", {
   async expect() {
-    const pkg = await installPackages(["i", "--map", "oak"]);
-
+    const pkg = await installPackages(["install", "--map", "dinoenv"]);
     return pkg;
   },
   toBe() {
-    return { oak: "https://deno.land/x/oak/mod.ts" };
+    return { dinoenv: "https://deno.land/x/dinoenv/mod.ts" };
   },
   Ops: false,
-  Resources: false,
+  Resources: false
 });
 
-merlin.assertEqual("install package from nest.land", {
+Test.assertEqual("install dinoenv package from nest.land", {
   async expect() {
     const pkg = await installPackages(["i", "--nest", "dinoenv@1.0.0"]);
 
@@ -53,86 +51,88 @@ merlin.assertEqual("install package from nest.land", {
         "https://arweave.net/Rru09TE8WVU_0eMY5lWAM6xsZxbVDScnqkrGvZPjEs4/mod.ts",
     };
   },
-});
-
-merlin.isUndefined("trex treeDeps test", {
-  async value() {
-    return (await packageTreeInfo(
-      ...["--unstable", "treeDeps", "react"]
-    )) as undefined;
-  },
-});
-
-merlin.isUndefined("Setup IDE", {
-  async value() {
-    return (await setupIDE("--vscode")) as undefined;
-  },
-  ignore: true,
-});
-
-merlin.isUndefined("Command helper test", {
-  value() {
-    return HelpCommand({
-      command: {
-        alias: ["install", "i"],
-        description: "install a package",
-      },
-      flags: [
-        {
-          alias: ["--map", "-m"],
-          description: "install package from deno.land",
-        },
-        {
-          alias: ["--nest", "-n"],
-          description: "install package from nest.land",
-        },
-        {
-          alias: ["--pkg", "-p"],
-          description: "install package from some repository",
-        },
-        { alias: ["--help, -h"], description: "show command help" },
-      ],
-    }) as undefined;
-  },
-});
-
-merlin.assertEqual("is cache package", {
-  async expect() {
-    const data = await isCachePackage(
-      "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
-    );
-
-    return data.exist;
-  },
-
-  toBe() {
-    return true;
-  },
-});
-
-merlin.isString("is cache package path", {
-  async value() {
-    const data = await isCachePackage(
-      "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
-    );
-
-    return data.path;
-  },
-});
-
-merlin.isUndefined("delete package", {
-  async value() {
-    const response = await deletepackage("merlin");
-
-    return response as undefined;
-  },
-  // ignore: true,
   Ops: false,
   Resources: false
 });
 
-merlin.isUndefined("ls command", {
-  async value() {
-    return LogPackages(await getImportMap(), true) as undefined;
-  },
-});
+// merlin.isUndefined("trex treeDeps test", {
+//   async value() {
+//     return (await packageTreeInfo(
+//       ...["--unstable", "treeDeps", "react"]
+//     )) as undefined;
+//   },
+// });
+
+// merlin.isUndefined("Setup IDE", {
+//   async value() {
+//     return (await setupIDE("--vscode")) as undefined;
+//   },
+//   ignore: true,
+// });
+
+// merlin.isUndefined("Command helper test", {
+//   value() {
+//     return HelpCommand({
+//       command: {
+//         alias: ["install", "i"],
+//         description: "install a package",
+//       },
+//       flags: [
+//         {
+//           alias: ["--map", "-m"],
+//           description: "install package from deno.land",
+//         },
+//         {
+//           alias: ["--nest", "-n"],
+//           description: "install package from nest.land",
+//         },
+//         {
+//           alias: ["--pkg", "-p"],
+//           description: "install package from some repository",
+//         },
+//         { alias: ["--help, -h"], description: "show command help" },
+//       ],
+//     }) as undefined;
+//   },
+// });
+
+// merlin.assertEqual("is cache package", {
+//   async expect() {
+//     const data = await isCachePackage(
+//       "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
+//     );
+
+//     return data.exist;
+//   },
+
+//   toBe() {
+//     return true;
+//   },
+// });
+
+// merlin.isString("is cache package path", {
+//   async value() {
+//     const data = await isCachePackage(
+//       "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
+//     );
+
+//     return data.path;
+//   },
+// });
+
+// merlin.isUndefined("delete package", {
+//   async value() {
+//     const response = await deletepackage("merlin");
+
+//     return response as undefined;
+//   },
+//   // ignore: true,
+//   Ops: false,
+//   Resources: false
+// });
+
+// merlin.isUndefined("ls command", {
+//   async value() {
+//     return LogPackages(await getImportMap(), true) as undefined;
+//   },
+// });

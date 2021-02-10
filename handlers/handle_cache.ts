@@ -103,10 +103,10 @@ async function cached(pkgName: string, pkgUrl: string) {
       process.close();
       ErrorInstalling();
       return;
-    } else {
-      process.close();
-      loading.stop();
     }
+
+    process.close();
+    loading.stop();
   }
 
   // * install standard package by default use mod.ts
@@ -116,13 +116,14 @@ async function cached(pkgName: string, pkgUrl: string) {
     });
 
     if (!(await process.status()).success) {
+      loading.stop();
       process.close();
       ErrorInstalling();
       return;
-    } else {
-      process.close();
-      loading.stop();
     }
+
+    process.close();
+    loading.stop();
   }
 
   // * install third party package
@@ -135,10 +136,10 @@ async function cached(pkgName: string, pkgUrl: string) {
     if (!(await process.status()).success) {
       process.close();
       ErrorInstalling();
-    } else {
-      process.close();
-      loading.stop();
     }
+
+    process.close();
+    loading.stop();
   }
 
   // * log error if package is not found
