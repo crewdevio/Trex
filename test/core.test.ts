@@ -25,6 +25,7 @@ Test.assertEqual("install custom package from raw github link", {
   },
   Ops: false,
   Resources: false,
+  ignore: true
 });
 
 Test.assertEqual("install dinoenv package from deno.land", {
@@ -36,7 +37,8 @@ Test.assertEqual("install dinoenv package from deno.land", {
     return { dinoenv: "https://deno.land/x/dinoenv/mod.ts" };
   },
   Ops: false,
-  Resources: false
+  Resources: false,
+  ignore: true
 });
 
 Test.assertEqual("install dinoenv package from nest.land", {
@@ -52,87 +54,84 @@ Test.assertEqual("install dinoenv package from nest.land", {
     };
   },
   Ops: false,
+  Resources: false,
+  ignore: true
+});
+
+Test.isUndefined("trex treeDeps test", {
+  async value() {
+    return (await packageTreeInfo(
+      ...["--unstable", "treeDeps", "react"]
+    )) as undefined;
+  },
+  Ops: false,
   Resources: false
 });
 
-// merlin.isUndefined("trex treeDeps test", {
-//   async value() {
-//     return (await packageTreeInfo(
-//       ...["--unstable", "treeDeps", "react"]
-//     )) as undefined;
-//   },
-// });
+Test.isUndefined("Command helper test", {
+  value() {
+    return HelpCommand({
+      command: {
+        alias: ["install", "i"],
+        description: "install a package",
+      },
+      flags: [
+        {
+          alias: ["--map", "-m"],
+          description: "install package from deno.land",
+        },
+        {
+          alias: ["--nest", "-n"],
+          description: "install package from nest.land",
+        },
+        {
+          alias: ["--pkg", "-p"],
+          description: "install package from some repository",
+        },
+        { alias: ["--help, -h"], description: "show command help" },
+      ],
+    });
+  },
+});
 
-// merlin.isUndefined("Setup IDE", {
-//   async value() {
-//     return (await setupIDE("--vscode")) as undefined;
-//   },
-//   ignore: true,
-// });
+Test.assertEqual("is cache package", {
+  async expect() {
+    const data = await isCachePackage(
+      "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
+    );
 
-// merlin.isUndefined("Command helper test", {
-//   value() {
-//     return HelpCommand({
-//       command: {
-//         alias: ["install", "i"],
-//         description: "install a package",
-//       },
-//       flags: [
-//         {
-//           alias: ["--map", "-m"],
-//           description: "install package from deno.land",
-//         },
-//         {
-//           alias: ["--nest", "-n"],
-//           description: "install package from nest.land",
-//         },
-//         {
-//           alias: ["--pkg", "-p"],
-//           description: "install package from some repository",
-//         },
-//         { alias: ["--help, -h"], description: "show command help" },
-//       ],
-//     }) as undefined;
-//   },
-// });
+    return data.exist;
+  },
 
-// merlin.assertEqual("is cache package", {
-//   async expect() {
-//     const data = await isCachePackage(
-//       "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
-//     );
+  toBe() {
+    return true;
+  },
+});
 
-//     return data.exist;
-//   },
+Test.isString("is cache package path", {
+  async value() {
+    const data = await isCachePackage(
+      "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
+    );
 
-//   toBe() {
-//     return true;
-//   },
-// });
+    return data.path;
+  },
+});
 
-// merlin.isString("is cache package path", {
-//   async value() {
-//     const data = await isCachePackage(
-//       "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
-//     );
+Test.isUndefined("delete package", {
+  async value() {
+    const response = await deletepackage("merlin");
 
-//     return data.path;
-//   },
-// });
+    return response;
+  },
+  // ignore: true,
+  Ops: false,
+  Resources: false,
+  ignore: true
+});
 
-// merlin.isUndefined("delete package", {
-//   async value() {
-//     const response = await deletepackage("merlin");
-
-//     return response as undefined;
-//   },
-//   // ignore: true,
-//   Ops: false,
-//   Resources: false
-// });
-
-// merlin.isUndefined("ls command", {
-//   async value() {
-//     return LogPackages(await getImportMap(), true) as undefined;
-//   },
-// });
+Test.isUndefined("ls command", {
+  async value() {
+    return LogPackages(await getImportMap(), true);
+  },
+});
