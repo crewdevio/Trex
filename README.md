@@ -255,7 +255,7 @@ trex install --map fs@0.54.0
 
 > **note**: can be used with third party packages.
 
-### Run Scripts (experimental)
+### Run Scripts
 
 now you can create command aliases similar to [npm run](https://docs.npmjs.com/cli-commands/run-script.html), you just have to create a run.json file with the following structure:
 
@@ -280,6 +280,30 @@ now you can call a command within another or call a deno script like `denopack` 
     "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
     "bundler": "denopack -i mod.ts -o bundle.mod.js",
     "publish": "eggs publish"
+  }
+}
+```
+
+#### Installation life cycle
+
+when the command `trex install` or `trex i` executed, you can perform actions before and after the execution of `trex install`.
+
+**execution order**:
+
+- preinstall
+- install
+- postinstall
+
+```json
+// example
+{
+  "scripts": {
+    "start": "trex run welcome",
+    "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
+    "bundler": "denopack -i mod.ts -o bundle.mod.js",
+    "publish": "eggs publish",
+    "preinstall": "deno --version",
+    "postinstall": "deno test --unstable"
   }
 }
 ```

@@ -12,14 +12,15 @@ import {
   pkgRepo,
 } from "./handle_third_party_package.ts";
 import { getImportMap, createPackage } from "./handle_files.ts";
-import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
+import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
+import { Run, Scripts } from "../commands/run.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
-import { exists } from "../imports/fs.ts";
 import { denoApidb } from "../utils/db.ts";
 import { colors } from "../imports/fmt.ts";
+import { exists } from "../imports/fs.ts";
 import cache from "./handle_cache.ts";
 
 const { yellow, red, green, bold } = colors;
@@ -154,6 +155,10 @@ export async function installPackages(args: string[], show = true): Promise<obje
   else {
     try {
       const importmap: importMap = JSON.parse(await getImportMap());
+      const runJson = await Scripts();
+
+      // preinstall hook
+      if (runJson?.scripts?.preinstall) await Run("preinstall")
 
       for (const pkg in importmap.imports) {
         const url = importmap.imports[pkg];

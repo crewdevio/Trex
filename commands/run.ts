@@ -40,14 +40,10 @@ export async function Run(command: string) {
     throw new Error(red(`: ${yellow("use a single format run.json or run.yaml file")}`)).message;
   }
 
-
   else {
     async function Thread() {
-
       try {
-        const runJsonFile = prefix === "json"
-                            ? (await readJson("./run.json")) as runJson
-                            : (await parseToYaml());
+        const runJsonFile = await Scripts();
 
         if (!runJsonFile?.scripts) {
           throw new Error(
@@ -197,7 +193,7 @@ export async function Run(command: string) {
           if (timeout) clearTimeout(timeout);
           console.log(yellow("reloading..."));
           logMessages(event);
-            timeout = setTimeout(Thread, throttle);
+          timeout = setTimeout(Thread, throttle);
         }
       }
     }
@@ -206,4 +202,17 @@ export async function Run(command: string) {
       await Thread();
     }
   }
+}
+
+/**
+ * return run.json, run.yml .yaml info file
+ */
+export async function Scripts() {
+  let prefix = (await exists("./run.json")) ? "json" : "yaml";
+  const runJsonFile =
+    prefix === "json"
+      ? ((await readJson("./run.json")) as runJson)
+      : await parseToYaml();
+
+  return runJsonFile;
 }

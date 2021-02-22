@@ -53,6 +53,7 @@ Test.assertEqual("install dinoenv package from nest.land", {
   },
   Ops: false,
   Resources: false,
+  ignore: true
 });
 
 Test.isUndefined("trex treeDeps test", {

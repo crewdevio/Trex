@@ -26,11 +26,11 @@ import { purge } from "./handlers/purge_package.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
 import type { importMap } from "./utils/types.ts";
 import { LoadingSpinner } from "./tools/logs.ts";
+import { Run, Scripts } from "./commands/run.ts";
 import { setupIDE } from "./tools/setup_ide.ts"
 import { Spinner } from "./imports/wait.ts";
 import { colors } from "./imports/fmt.ts";
 import { exists } from "./imports/fs.ts";
-import { Run } from "./commands/run.ts";
 
 const { bold, green, yellow } = colors;
 
@@ -79,6 +79,10 @@ async function mainCli() {
     } else {
       await createPackage(await installPackages(_arguments), true);
     }
+
+    const runJson = await Scripts();
+    // post install hook
+    if (runJson?.scripts?.preinstall) await Run("postinstall");
   }
   // * display trex version
   else if (flags.version.includes(_arguments[0])) {
