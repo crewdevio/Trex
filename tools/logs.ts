@@ -9,6 +9,7 @@
 import { getImportMap } from "../handlers/handle_files.ts";
 import { Somebybroken, offLine } from "../utils/logs.ts";
 import { needProxy, Proxy } from "../imports/proxy.ts";
+import { ResolveDenoPath } from "../commands/run.ts";
 import type { importMap } from "../utils/types.ts";
 import { STD, VERSION } from "../utils/info.ts";
 import { colors } from "../imports/fmt.ts";
@@ -38,7 +39,7 @@ export async function packageTreeInfo(
             : map.imports[pkg] + "mod.ts";
 
           const process = Deno.run({
-            cmd: ["deno", "info", "--unstable", _pkg],
+            cmd: [ResolveDenoPath(), "info", "--unstable", _pkg],
           });
 
           if (!(await process.status()).success) {
@@ -58,7 +59,7 @@ export async function packageTreeInfo(
 
         if (moduleName === pkg) {
           const process = Deno.run({
-            cmd: ["deno", "info", "--unstable", map.imports[pkg]],
+            cmd: [ResolveDenoPath(), "info", "--unstable", map.imports[pkg]],
           });
 
           if (!(await process.status()).success) {

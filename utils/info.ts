@@ -71,8 +71,6 @@ export const helpsInfo = [
 
   `   ${yellow("run")}             run a script alias in a file run.json\n`,
 
-  `   ${yellow("setup")}           create a deno configuration for your IDE\n`,
-
   `   ${yellow("purge")}           remove a package or url from cache\n`,
 
   `   ${yellow("ls")}              shows the list of installed packages\n`,

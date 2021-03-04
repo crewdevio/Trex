@@ -7,6 +7,7 @@
  */
 
 import { needProxy, Proxy } from "../imports/proxy.ts";
+import { ResolveDenoPath } from "../commands/run.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
 import { createHash } from "../imports/hash.ts";
@@ -90,7 +91,7 @@ async function cached(pkgName: string, pkgUrl: string, show = true) {
     green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`),
     show
   );
-  const CMD = ["deno", "cache", "-q", "--unstable"];
+  const CMD = [ResolveDenoPath(), "cache", "-q", "--unstable"];
 
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({

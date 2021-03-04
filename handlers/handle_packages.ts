@@ -11,10 +11,10 @@ import {
   cacheNestpackage,
   pkgRepo,
 } from "./handle_third_party_package.ts";
+import { Run, Scripts, ResolveDenoPath } from "../commands/run.ts";
 import { getImportMap, createPackage } from "./handle_files.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
-import { Run, Scripts } from "../commands/run.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
@@ -212,7 +212,7 @@ export async function installPackages(args: string[], show = true): Promise<obje
  */
 
 export async function customPackage(args: string[], show = true): Promise<boolean> {
-  const CMD = ["deno", "cache", "-q", "--unstable",];
+  const CMD = [ResolveDenoPath(), "cache", "-q", "--unstable",];
 
   const entry = args[1] ?? "";
 

@@ -17,7 +17,7 @@ import {
   updateTrex,
   HelpCommand,
   CommandNotFound,
-  LogPackages
+  LogPackages,
 } from "./utils/logs.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
@@ -27,7 +27,6 @@ import { packageTreeInfo } from "./tools/logs.ts";
 import type { importMap } from "./utils/types.ts";
 import { LoadingSpinner } from "./tools/logs.ts";
 import { Run, Scripts } from "./commands/run.ts";
-import { setupIDE } from "./tools/setup_ide.ts"
 import { Spinner } from "./imports/wait.ts";
 import { colors } from "./imports/fmt.ts";
 import { exists } from "./imports/fs.ts";
@@ -71,10 +70,8 @@ async function mainCli() {
         const newPackage = await installPackages(_arguments);
 
         await createPackage({ ...oldPackage, ...newPackage }, true);
-      }
-
-      catch (_) {
-        throw new Error(_).message;
+      } catch (error) {
+        throw new Error(error).message;
       }
     } else {
       await createPackage(await installPackages(_arguments), true);
@@ -94,7 +91,6 @@ async function mainCli() {
   }
   // * install a custom package
   else if (flags.custom.includes(_arguments[0])) {
-
     if (flags.help.includes(_arguments[1])) {
       return HelpCommand({
         command: {
@@ -104,7 +100,6 @@ async function mainCli() {
         flags: [{ alias: flags.help, description: "show command help" }],
       });
     }
-
 
     customPackage(_arguments);
   }
@@ -129,10 +124,8 @@ async function mainCli() {
     const [, ...pkgs] = _arguments;
     for (const pkg of pkgs) {
       loading = LoadingSpinner(
-        green(
-          `Removing ${bold(yellow(pkg))} from import_map.json`
-          )
-        )!;
+        green(`Removing ${bold(yellow(pkg))} from import_map.json`)
+      )!;
       await deletepackage(pkg);
       loading?.stop();
     }
@@ -185,48 +178,17 @@ async function mainCli() {
           { alias: flags.help, description: "show command help" },
           {
             alias: ["--watch", "-w"],
-            description: "use reboot script alias protocol (rsap)"
+            description: "use reboot script alias protocol (rsap)",
           },
-          { alias: ["-wv"], description: "verbose output in --watch mode (rsap)"}
+          {
+            alias: ["-wv"],
+            description: "verbose output in --watch mode (rsap)",
+          },
         ],
       });
     }
 
     await Run(_arguments[1]);
-  }
-
-  // * setup command
-  else if (_arguments[0] === keyWords.setup){
-
-    CommandNotFound({
-      commands: [keyWords.setup],
-      flags: ["--vscode", "--atom", ...flags.help]
-    })
-
-    if (flags.help.includes(_arguments[1])) {
-      return HelpCommand({
-        command: {
-          alias: [keyWords.setup],
-          description: "create a deno configuration for your IDE",
-        },
-        flags: [
-          {
-            alias: flags.help,
-            description: "show command help"
-          },
-          {
-            alias: ["--vscode"],
-            description: "create the necessary configuration for vscode"
-          },
-          {
-            alias: ["--atom"],
-            description: "create the necessary configuration for atom"
-          }
-        ],
-      });
-    }
-
-    setupIDE(_arguments[1])
   }
 
   // * purge command
@@ -235,14 +197,14 @@ async function mainCli() {
       HelpCommand({
         command: {
           alias: [keyWords.purge],
-          description: "remove a package or url from cache"
+          description: "remove a package or url from cache",
         },
         flags: [
           {
             alias: flags.help,
-            description: "show command help"
-          }
-        ]
+            description: "show command help",
+          },
+        ],
       });
     }
 
@@ -255,14 +217,14 @@ async function mainCli() {
       HelpCommand({
         command: {
           alias: [keyWords.ls],
-          description: "shows the list of installed packages"
+          description: "shows the list of installed packages",
         },
         flags: [
           {
             alias: flags.help,
-            description: "show command help"
-          }
-        ]
+            description: "show command help",
+          },
+        ],
       });
     }
 
@@ -285,7 +247,7 @@ async function mainCli() {
         ...flags.help,
         ...flags.version,
         keyWords.setup,
-        keyWords.ls
+        keyWords.ls,
       ],
       flags: [],
     });

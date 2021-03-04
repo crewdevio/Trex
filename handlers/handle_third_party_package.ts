@@ -9,6 +9,7 @@
 import { offLine, ErrorInstalling } from "../utils/logs.ts";
 import { needProxy, Proxy } from "../imports/proxy.ts";
 import type { NestResponse } from "../utils/types.ts";
+import { ResolveDenoPath } from "../commands/run.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
 import { colors } from "../imports/fmt.ts";
 import { STD } from "../utils/info.ts";
@@ -68,7 +69,7 @@ export async function cacheNestpackage(url: string, show = true): Promise<void> 
   );
 
   const process = Deno.run({
-    cmd: ["deno", "cache", "-q", "--unstable", url],
+    cmd: [ResolveDenoPath(), "cache", "-q", "--unstable", url],
     stdout: "null",
     stdin: "null",
   });

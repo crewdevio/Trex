@@ -6,11 +6,12 @@
  *
  */
 
+import { ResolveDenoPath } from "../commands/run.ts";
 import type { Params } from "../utils/types.ts";
 import { Somebybroken } from "../utils/logs.ts";
 
 function installTools(args: string[]) {
-  return Deno.run({ cmd: ["deno", ...args], stdout: "piped" });
+  return Deno.run({ cmd: [ResolveDenoPath(), ...args], stdout: "piped" });
 }
 
 /**
