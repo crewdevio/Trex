@@ -51,8 +51,6 @@ For more information about the import maps in deno see [import maps](https://den
 
 - [Proxy](docs/proxy.md)
 
-- [Setup your IDE](docs/setup.md)
-
 - [Integration with nest.land](docs/nest_land_setup.md)
 
 - [How can I have my package available to download with Trex?](docs/add_package.md)
