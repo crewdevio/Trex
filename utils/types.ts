@@ -11,6 +11,7 @@ export type proxyPkg = { module: string; url: string };
 
 export interface importMap {
   imports: objectGen;
+  hash: objectGen;
 }
 
 export interface Params {

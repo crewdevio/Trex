@@ -1,8 +1,7 @@
 {
   "deno.enable": true,
-  "deno.import_map": "./import_map.json",
+  "deno.importMap": "./import_map.json",
+  "deno.codeLens.implementations": true,
+  "deno.codeLens.references": true,
   "deno.unstable": true,
-  "deno.import_intellisense_origins": {
-    "https://deno.land": true
-  }
 }

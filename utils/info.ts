@@ -39,7 +39,7 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.5.0" };
+export const VERSION = { VERSION: "v1.6.0" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
@@ -70,8 +70,6 @@ export const helpsInfo = [
   `   ${yellow("tree")}            view dependency tree\n`,
 
   `   ${yellow("run")}             run a script alias in a file run.json\n`,
-
-  `   ${yellow("setup")}           create a deno configuration for your IDE\n`,
 
   `   ${yellow("purge")}           remove a package or url from cache\n`,
 

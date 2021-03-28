@@ -36,18 +36,14 @@ export async function Run(command: string) {
     throw new Error(red(`: ${yellow("run.json or run.yaml not found")}`)).message;
   }
 
-  if (await exists("./run.json") && await exists("./run.yaml") && (await exists("./run.yml"))) {
+  if (await exists("./run.json") && (await exists("./run.yaml") || (await exists("./run.yml")))) {
     throw new Error(red(`: ${yellow("use a single format run.json or run.yaml file")}`)).message;
   }
 
-
   else {
     async function Thread() {
-
       try {
-        const runJsonFile = prefix === "json"
-                            ? (await readJson("./run.json")) as runJson
-                            : (await parseToYaml());
+        const runJsonFile = await Scripts();
 
         if (!runJsonFile?.scripts) {
           throw new Error(
@@ -117,7 +113,12 @@ export async function Run(command: string) {
         }
 
         const process = run({
-          cmd: [...runnerCommand, ...runArgs],
+          cmd: [...runnerCommand, ...runArgs]
+          .map((command, index) =>
+          command === "deno" && (index === 0 || index === 1)
+            ? ResolveDenoPath()
+            : command
+        ),
           env: env.toObject(),
           cwd: Deno.cwd(),
         });
@@ -139,8 +140,8 @@ export async function Run(command: string) {
                 )} file not have a valid syntax`
               )
             : err instanceof Deno.errors.NotFound
-            ? colors.red(err.message)
-            : colors.yellow(err)
+              ? colors.red(err.message)
+              : colors.yellow(err)
         ).message;
       }
     }
@@ -197,7 +198,7 @@ export async function Run(command: string) {
           if (timeout) clearTimeout(timeout);
           console.log(yellow("reloading..."));
           logMessages(event);
-            timeout = setTimeout(Thread, throttle);
+          timeout = setTimeout(Thread, throttle);
         }
       }
     }
@@ -206,4 +207,38 @@ export async function Run(command: string) {
       await Thread();
     }
   }
+}
+
+/**
+ * return run.json, run.yml .yaml info file
+ */
+export async function Scripts() {
+  let prefix = (await exists("./run.json")) ? "json" : "yaml";
+  const runJsonFile =
+    prefix === "json"
+      ? ((await readJson("./run.json")) as runJson)
+      : await parseToYaml();
+
+  return runJsonFile;
+}
+
+/**
+ * resolve deno bin path.
+ */
+export function ResolveDenoPath() {
+  let fallback = "deno";
+
+  switch (Deno.build.os) {
+    case "linux":
+      fallback = `${Deno.env.get("HOME")}/.deno/bin/deno`;
+      break;
+    case "darwin":
+      // TODO(buttercubz) resolve macos path
+      break
+    case "windows":
+
+      break;
+  }
+
+  return Deno.execPath() ?? fallback;
 }

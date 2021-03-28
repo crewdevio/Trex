@@ -9,7 +9,12 @@
 import { offLine, ErrorInstalling } from "../utils/logs.ts";
 import { needProxy, Proxy } from "../imports/proxy.ts";
 import type { NestResponse } from "../utils/types.ts";
+import { ResolveDenoPath } from "../commands/run.ts";
+import { LoadingSpinner } from "../tools/logs.ts";
+import { colors } from "../imports/fmt.ts";
 import { STD } from "../utils/info.ts";
+
+const { yellow, green, bold } = colors;
 
 /**
  * connects to the nest.land api and returns a url for package installation.
@@ -54,16 +59,29 @@ export async function nestPackageUrl(
  * @return {void} void
  */
 
-export async function cacheNestpackage(url: string): Promise<void> {
+export async function cacheNestpackage(url: string, show = true): Promise<void> {
+
+  const { hostname } = new URL(url);
+
+  const loading = LoadingSpinner(
+    green(` Installing ${bold(yellow("package"))} from ${bold(yellow(hostname))}`),
+    show
+  );
+
   const process = Deno.run({
-    cmd: ["deno", "install", "-f", "-n", "trex_Cache_Map", "--unstable", url],
+    cmd: [ResolveDenoPath(), "cache", "-q", "--unstable", url],
+    stdout: "null",
+    stdin: "null",
   });
 
   if (!(await process.status()).success) {
+    loading?.stop();
     process.close();
     ErrorInstalling();
+    return;
   }
 
+  loading?.stop();
   process.close();
 }
 

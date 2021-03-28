@@ -7,14 +7,16 @@
  */
 
 import { needProxy, Proxy } from "../imports/proxy.ts";
+import { ResolveDenoPath } from "../commands/run.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
+import { LoadingSpinner } from "../tools/logs.ts";
 import { createHash } from "../imports/hash.ts";
 import { colors } from "../imports/fmt.ts";
 import { denoApidb } from "../utils/db.ts";
 import { exists } from "../imports/fs.ts";
 import { STD } from "../utils/info.ts";
 
-const { green, red, yellow } = colors;
+const { red, yellow, green, bold } = colors;
 
 // * create a simple delay
 export const delay = (time: number) =>
@@ -80,33 +82,33 @@ export async function isCachePackage(packageUrl: string) {
  * @return void
  */
 
-async function cached(pkgName: string, pkgUrl: string) {
-  const ID = "trex_Cache_Map";
+async function cached(pkgName: string, pkgUrl: string, show = true) {
   let process: Deno.Process;
 
-  console.log(green("cache package... \n"));
+  const { hostname } = new URL(pkgUrl);
 
-  const CMD = ["deno", "install", "-f", "-n", ID, "--unstable"];
+  const loading = LoadingSpinner(
+    green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`),
+    show
+  );
+  const CMD = [ResolveDenoPath(), "cache", "-q", "--unstable"];
 
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({
       cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts"],
+      stdout: "null",
+      stdin: "null",
     });
 
     if (!(await process.status()).success) {
+      loading?.stop();
       process.close();
       ErrorInstalling();
+      return;
     }
-    // TODO(buttercubz) create a better way to handler this
-    if ((await isCachePackage(pkgUrl + "mod.ts")).exist) {
-      console.log(
-        yellow(`omitted, this version of ${red(pkgName)} is already installed`)
-      );
-      await delay(0.4);
-    } else {
-      process.close();
-      console.log(green("\n Done. \n"));
-    }
+
+    process.close();
+    loading?.stop();
   }
 
   // * install standard package by default use mod.ts
@@ -116,19 +118,14 @@ async function cached(pkgName: string, pkgUrl: string) {
     });
 
     if (!(await process.status()).success) {
+      loading?.stop();
       process.close();
       ErrorInstalling();
+      return;
     }
 
-    if ((await isCachePackage(pkgUrl + "mod.ts")).exist) {
-      console.log(
-        yellow(`omitted, this version of ${red(pkgName)} is already installed`)
-      );
-      await delay(0.4);
-    } else {
-      process.close();
-      console.log(green("\n Done. \n"));
-    }
+    process.close();
+    loading?.stop();
   }
 
   // * install third party package
@@ -143,15 +140,8 @@ async function cached(pkgName: string, pkgUrl: string) {
       ErrorInstalling();
     }
 
-    if ((await isCachePackage(pkgUrl)).exist) {
-      console.log(
-        yellow(`omitted, this version of ${red(pkgName)} is already installed`)
-      );
-      await delay(0.4);
-    } else {
-      process.close();
-      console.log(green("\n Done. \n"));
-    }
+    process.close();
+    loading?.stop();
   }
 
   // * log error if package is not found
@@ -159,6 +149,7 @@ async function cached(pkgName: string, pkgUrl: string) {
     throw new Error(red("package not found.")).message;
   }
 
+  loading?.stop();
 }
 
 export default cached;

@@ -11,16 +11,19 @@ import {
   cacheNestpackage,
   pkgRepo,
 } from "./handle_third_party_package.ts";
+import { Run, Scripts, ResolveDenoPath } from "../commands/run.ts";
 import { getImportMap, createPackage } from "./handle_files.ts";
-import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
+import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
+import { LoadingSpinner } from "../tools/logs.ts";
+import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
-import { exists } from "../imports/fs.ts";
 import { denoApidb } from "../utils/db.ts";
 import { colors } from "../imports/fmt.ts";
+import { exists } from "../imports/fs.ts";
 import cache from "./handle_cache.ts";
 
-const { yellow, red, green } = colors;
+const { yellow, red, green, bold } = colors;
 /**
  * verify that the imports key exists in the import map file.
  * @param {object} map - the import map json object.
@@ -110,7 +113,7 @@ async function getNamePkg(pkg: string): Promise<string> {
  * @returns {Promise} returns a promise of a { [ key: string ]: string }
  */
 
-export async function installPackages(args: string[]): Promise<objectGen> {
+export async function installPackages(args: string[], show = true): Promise<objectGen> {
   // * package to push in import_map.json
   const map: objectGen = {};
 
@@ -124,7 +127,7 @@ export async function installPackages(args: string[]): Promise<objectGen> {
       if (flags.map.includes(args[1])) {
 
         const url = await detectVersion(args[index]);
-        await cache(args[index].split("@")[0], url);
+        await cache(args[index].split("@")[0], url, show);
         map[(await getNamePkg(args[index])).toLowerCase()] = url;
       }
 
@@ -152,21 +155,35 @@ export async function installPackages(args: string[]): Promise<objectGen> {
   else {
     try {
       const importmap: importMap = JSON.parse(await getImportMap());
+      const runJson = await Scripts();
+
+      // preinstall hook
+      if (runJson?.scripts?.preinstall) await Run("preinstall")
 
       for (const pkg in importmap.imports) {
-        const md = importmap.imports[pkg];
+        const url = importmap.imports[pkg];
 
-        if (md.includes("deno.land")) {
-          const mod = pkg.split("/").join("");
-          await cache(mod, await detectVersion(mod));
+        if (await validateHash(url, importmap.hash[pkg])) {
+          if (url.includes("deno.land")) {
+            const mod = pkg.split("/").join("");
+            await cache(mod, await detectVersion(mod));
 
-          map[(await getNamePkg(mod)).toLowerCase()] = md;
+            map[(await getNamePkg(mod)).toLowerCase()] = url;
+          }
+
+          else {
+            await cacheNestpackage(importmap.imports[pkg]);
+            map[pkg.toLowerCase()] = importmap.imports[pkg];
+          }
         }
 
         else {
-          await cacheNestpackage(importmap.imports[pkg]);
+          console.log(
+            colors.white(
+              `\nthe generated hash does not match the package "${colors.green(pkg)}",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${colors.red('=>')} ${colors.cyan('https://github.com/crewdevio/Trex')}`
+              ));
 
-          map[pkg.toLowerCase()] = importmap.imports[pkg];
+          Deno.exit(0);
         }
       }
     }
@@ -194,16 +211,8 @@ export async function installPackages(args: string[]): Promise<objectGen> {
  * @returns {boolean} return installation state
  */
 
-export async function customPackage(...args: string[]): Promise<boolean> {
-  const CMD = [
-    "deno",
-    "install",
-    "-f",
-    "-n",
-    "trex_Cache_Map",
-    "-r",
-    "--unstable",
-  ];
+export async function customPackage(args: string[], show = true): Promise<boolean> {
+  const CMD = [ResolveDenoPath(), "cache", "-q", "--unstable",];
 
   const entry = args[1] ?? "";
 
@@ -212,6 +221,11 @@ export async function customPackage(...args: string[]): Promise<boolean> {
   }
 
   const [pkgName, url] = args[1].split("=");
+  const { hostname } = new URL(url);
+  const loading = LoadingSpinner(
+    green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`),
+    show
+  )!;
 
   const custom: objectGen = {};
 
@@ -219,11 +233,15 @@ export async function customPackage(...args: string[]): Promise<boolean> {
   // * cache custom module
   const process = Deno.run({
     cmd: [...CMD, url],
+    stdin: "null",
+    stdout: "null"
   });
 
   if (!(await process.status()).success) {
+    loading?.stop();
     process.close();
     Somebybroken("this package is invalid or the url is invalid");
+    return false;
   }
 
   // * if import_map exists update it
@@ -236,6 +254,7 @@ export async function customPackage(...args: string[]): Promise<boolean> {
     }
 
     catch (_) {
+      loading?.stop();
       process.close();
       throw new Error(
         red("the import_map.json file does not have a valid format.")
@@ -249,6 +268,7 @@ export async function customPackage(...args: string[]): Promise<boolean> {
   }
 
   // * close main install process
+  loading?.stop();
   process.close();
   return true;
 }

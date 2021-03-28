@@ -9,11 +9,12 @@
 import { createPackage, getImportMap } from "./handle_files.ts";
 import { haveVersion } from "./handle_delete_package.ts";
 import { existImports } from "./handle_packages.ts";
+import type { importMap } from "../utils/types.ts";
 import { colors } from "../imports/fmt.ts";
 import { exists } from "../imports/fs.ts";
 import { STD } from "../utils/info.ts";
 
-const { green, yellow, red } = colors;
+const { red } = colors;
 
 /**
  * remove package from import_map.json
@@ -23,7 +24,7 @@ export async function deletepackage(toDelete: string) {
   if (await exists("./import_map.json")) {
     try {
       const pkg: string = toDelete.trim();
-      const Packages = JSON.parse(await getImportMap());
+      const Packages = JSON.parse(await getImportMap()) as importMap;
 
       if (Packages?.imports) {
         delete Packages.imports[
@@ -32,11 +33,16 @@ export async function deletepackage(toDelete: string) {
             : haveVersion(pkg)
         ];
 
+        delete Packages.hash[
+          STD.includes(haveVersion(pkg))
+            ? haveVersion(pkg) + "/"
+            : haveVersion(pkg)
+        ];
+
         const newPackage = existImports(Packages);
 
         await createPackage(newPackage);
-
-        console.log(yellow(pkg + ":"), green(" removed from import_map.json"));
+        console.clear();
       } else {
         throw new Error(red("'imports' key not found in import_map.json"))
           .message;
