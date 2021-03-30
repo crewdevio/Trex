@@ -311,7 +311,7 @@ when the command `trex install` or `trex i` executed, you can perform actions be
 you can pass arguments in the command alias and these will be resisted by the file to execute
 
 ```console
-imports run start --port=3000 --env
+trex run start --port=3000 --env
 ```
 
 ```typescript
