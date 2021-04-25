@@ -21,9 +21,11 @@ export async function parseToYaml() {
     const decoder = new TextDecoder("utf8");
 
     if (await exists("./run.yaml")) {
-      YAMLFile = "./run.yaml"
+      YAMLFile = "./run.yaml";
+    } else if (await exists("./run.yml")) {
+      YAMLFile = "./run.yml";
     } else {
-      YAMLFile = "./run.yml"
+      return;
     }
 
     const data = await Deno.readFile(YAMLFile);
@@ -33,8 +35,7 @@ export async function parseToYaml() {
     });
 
     return runFile as runJson;
-  }
-  catch (err) {
+  } catch (err) {
     console.error(err.message);
   }
 }
