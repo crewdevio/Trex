@@ -65,7 +65,7 @@ async function mainCli() {
 
     if (await exists("./import_map.json")) {
       try {
-        const data = await getImportMap()! as any;
+        const data = (await getImportMap()) as any;
         const oldPackage = existImports(data);
         const newPackage = await installPackages(Args);
 
@@ -229,8 +229,8 @@ async function mainCli() {
     }
 
     else {
-      const map = await getImportMap<importMap>()!;
-      LogPackages(map?.imports!, false);
+      const map = (await getImportMap<importMap>())!;
+      LogPackages(map?.imports, false);
     }
   }
 

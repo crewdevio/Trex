@@ -154,14 +154,14 @@ export async function installPackages(args: string[], show = true): Promise<obje
   // * take the packages from the import map file and install them.
   else {
     try {
-      const importmap = await getImportMap<importMap>();
+      const importmap = (await getImportMap<importMap>())!;
       const runJson = await Scripts();
 
       // preinstall hook
       if (runJson?.scripts?.preinstall) await Run("preinstall")
 
       for (const pkg in importmap?.imports) {
-        const url = importmap?.imports[pkg]!;
+        const url = importmap.imports[pkg];
 
         if (await validateHash(url, importmap?.hash[pkg]!)) {
           if (url?.includes("deno.land")) {
@@ -247,8 +247,8 @@ export async function customPackage(args: string[], show = true): Promise<boolea
   // * if import_map exists update it
   if (await exists("./import_map.json")) {
     try {
-      const data = await getImportMap<importMap>();
-      const oldPackage = existImports(data!);
+      const data = (await getImportMap<importMap>())!;
+      const oldPackage = existImports(data);
 
       createPackage({ ...custom, ...oldPackage }, true);
     }

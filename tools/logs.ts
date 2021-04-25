@@ -27,7 +27,7 @@ export async function packageTreeInfo(
   ...args: string[]
 ): Promise<boolean | undefined> {
   try {
-    const map: importMap = await getImportMap<importMap>();
+    const map: importMap = (await getImportMap<importMap>())!;
 
     for (const pkg in map?.imports) {
       if (STD.includes(args[1])) {
