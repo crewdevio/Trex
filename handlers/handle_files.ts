@@ -12,19 +12,22 @@ import type { objectGen } from "../utils/types.ts";
 import { createHash } from "../imports/hash.ts";
 import { LogPackages } from "../utils/logs.ts";
 import { newVersion } from "../tools/logs.ts";
+import { exists } from "../imports/fs.ts";
 
 /**
  * takes the import map file and returns its information.
  * @return {string} string.
  */
 
-export async function getImportMap(): Promise<string>{
-  const decoder = new TextDecoder("utf-8");
+export async function getImportMap<T extends any>(): Promise<T | undefined>{
+  if (await exists("./import_map.json")) {
+    const decoder = new TextDecoder("utf-8");
 
-  // * get data from import_map and return data
-  const Package = await Deno.readFile("./import_map.json");
+    // * get data from import_map and return data
+    const Package = await Deno.readFile("./import_map.json");
 
-  return decoder.decode(Package);
+    return JSON.parse(decoder.decode(Package)) as T;
+  }
 }
 
 /**

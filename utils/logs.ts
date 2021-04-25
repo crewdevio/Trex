@@ -22,7 +22,7 @@ export function Version(version: string) {
   console.log(
     `${colors.green("trex:")}\n ${colors.yellow(version)} \n${colors.green(
       "Deno:"
-    )}\n ${colors.yellow("v" + Deno.version.deno)}`
+    )}\n ${colors.yellow(`v${Deno.version.deno}`)}`
   );
 }
 

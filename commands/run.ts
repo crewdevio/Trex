@@ -171,7 +171,7 @@ export async function Run(command: string) {
             `[#] exit using ctrl+c \n ${
               filesToWatch?.files?.length
                 ? filesToWatch.files
-                    .map((file) => {
+                    .map((file: string) => {
                       console.log(" |- ", yellow(join(file)));
                       return "";
                     })

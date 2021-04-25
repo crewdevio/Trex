@@ -24,18 +24,18 @@ export async function deletepackage(toDelete: string) {
   if (await exists("./import_map.json")) {
     try {
       const pkg: string = toDelete.trim();
-      const Packages = JSON.parse(await getImportMap()) as importMap;
+      const Packages = await getImportMap<importMap>();
 
-      if (Packages?.imports) {
+      if (Packages?.imports!) {
         delete Packages.imports[
           STD.includes(haveVersion(pkg))
-            ? haveVersion(pkg) + "/"
+            ? `${haveVersion(pkg)}/`
             : haveVersion(pkg)
         ];
 
         delete Packages.hash[
           STD.includes(haveVersion(pkg))
-            ? haveVersion(pkg) + "/"
+            ? `${haveVersion(pkg)}/`
             : haveVersion(pkg)
         ];
 

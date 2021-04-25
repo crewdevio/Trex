@@ -77,11 +77,11 @@ async function getNamePkg(pkg: string): Promise<string> {
     const [pkgName, ,] = pkg.split("@");
 
     if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
-      name = pkgName + "/";
+      name = `${pkgName}/`;
     }
 
     else if (STD.includes(pkgName)) {
-      name = pkgName + "/";
+      name = `${pkgName}/`;
     }
 
     else if ((await denoApidb(pkgName)).length) {
@@ -92,11 +92,11 @@ async function getNamePkg(pkg: string): Promise<string> {
   else {
 
     if (STD.includes(pkg) && (await denoApidb(pkg)).length) {
-      name = pkg + "/";
+      name = `${pkg}/`;
     }
 
     else if (STD.includes(pkg)) {
-      name = pkg + "/";
+      name = `${pkg}/`;
     }
 
     else if ((await denoApidb(pkg)).length) {
@@ -154,17 +154,17 @@ export async function installPackages(args: string[], show = true): Promise<obje
   // * take the packages from the import map file and install them.
   else {
     try {
-      const importmap: importMap = JSON.parse(await getImportMap());
+      const importmap = await getImportMap<importMap>();
       const runJson = await Scripts();
 
       // preinstall hook
       if (runJson?.scripts?.preinstall) await Run("preinstall")
 
-      for (const pkg in importmap.imports) {
-        const url = importmap.imports[pkg];
+      for (const pkg in importmap?.imports) {
+        const url = importmap?.imports[pkg]!;
 
-        if (await validateHash(url, importmap.hash[pkg])) {
-          if (url.includes("deno.land")) {
+        if (await validateHash(url, importmap?.hash[pkg]!)) {
+          if (url?.includes("deno.land")) {
             const mod = pkg.split("/").join("");
             await cache(mod, await detectVersion(mod));
 
@@ -172,8 +172,8 @@ export async function installPackages(args: string[], show = true): Promise<obje
           }
 
           else {
-            await cacheNestpackage(importmap.imports[pkg]);
-            map[pkg.toLowerCase()] = importmap.imports[pkg];
+            await cacheNestpackage(importmap?.imports[pkg]!);
+            map[pkg.toLowerCase()] = importmap?.imports[pkg]!;
           }
         }
 
@@ -247,8 +247,8 @@ export async function customPackage(args: string[], show = true): Promise<boolea
   // * if import_map exists update it
   if (await exists("./import_map.json")) {
     try {
-      const data = JSON.parse(await getImportMap());
-      const oldPackage = existImports(data);
+      const data = await getImportMap<importMap>();
+      const oldPackage = existImports(data!);
 
       createPackage({ ...custom, ...oldPackage }, true);
     }

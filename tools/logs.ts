@@ -27,16 +27,16 @@ export async function packageTreeInfo(
   ...args: string[]
 ): Promise<boolean | undefined> {
   try {
-    const map: importMap = JSON.parse(await getImportMap());
+    const map: importMap = await getImportMap<importMap>();
 
     for (const pkg in map?.imports) {
       if (STD.includes(args[1])) {
-        const moduleName = args[1] + "/";
+        const moduleName = `${args[1]}/`;
 
         if (moduleName === pkg) {
           const _pkg = needProxy(args[1])
             ? Proxy(args[1])
-            : map.imports[pkg] + "mod.ts";
+            : `${map.imports[pkg]}mod.ts`;
 
           const process = Deno.run({
             cmd: [ResolveDenoPath(), "info", "--unstable", _pkg],

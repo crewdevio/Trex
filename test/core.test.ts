@@ -129,6 +129,6 @@ Test.isUndefined("delete package", {
 
 Test.isUndefined("ls command", {
   async value() {
-    return LogPackages(await getImportMap(), true);
+    return LogPackages((await getImportMap())!, true);
   },
 });

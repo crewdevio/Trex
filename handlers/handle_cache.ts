@@ -64,12 +64,12 @@ export async function isCachePackage(packageUrl: string) {
   else {
     const { hostname, protocol, pathname, search } = new URL(packageUrl);
     const toHash = createHash("sha256")
-      .update(`${pathname}${search ? "?" + search : ""}`)
+      .update(`${pathname}${search ? `?${search}` : ""}`)
       .toString();
     const filePath = getCachePath(protocol, hostname, toHash);
 
     return {
-      exist: await (exists(filePath) || exists(filePath + ".metadata.json")),
+      exist: await (exists(filePath) || exists(`${filePath}.metadata.json`)),
       path: filePath,
     };
   }
@@ -95,7 +95,7 @@ async function cached(pkgName: string, pkgUrl: string, show = true) {
 
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({
-      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts"],
+      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : `${pkgUrl}mod.ts`],
       stdout: "null",
       stdin: "null",
     });
@@ -114,7 +114,7 @@ async function cached(pkgName: string, pkgUrl: string, show = true) {
   // * install standard package by default use mod.ts
   else if (STD.includes(pkgName)) {
     process = Deno.run({
-      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts"],
+      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : `${pkgUrl}mod.ts`],
     });
 
     if (!(await process.status()).success) {

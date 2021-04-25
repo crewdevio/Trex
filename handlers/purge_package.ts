@@ -6,7 +6,6 @@
  *
  */
 
-
 import { Proxy, needProxy } from "../imports/proxy.ts";
 import type { importMap } from "../utils/types.ts";
 import { isCachePackage } from "./handle_cache.ts";
@@ -23,49 +22,52 @@ const { args } = Deno;
  */
 export async function purge() {
   const [, pkgOrUrl] = args;
-  const map = JSON.parse(await getImportMap()) as importMap;
 
-  // for url package
-  if (pkgOrUrl.includes("http://") || pkgOrUrl.includes("https://")) {
-    const data = await isCachePackage(pkgOrUrl);
+  const map = await getImportMap<importMap>();
 
-    if (!data.exist) {
-      throw new Error(red("this package was not found in the cache")).message;
+  if (map) {
+    // for url package
+    if (pkgOrUrl.includes("http://") || pkgOrUrl.includes("https://")) {
+      const data = await isCachePackage(pkgOrUrl);
+
+      if (!data.exist) {
+        throw new Error(red("this package was not found in the cache")).message;
+      }
+
+      try {
+        await Deno.remove(data.path, { recursive: true });
+        console.log(
+          green(`${yellow(pkgOrUrl)} package was removed from cache`)
+        );
+      } catch (err) {
+        throw new Error(red(err.message)).message;
+      }
     }
 
-    try {
-      await Deno.remove(data.path, { recursive: true });
-      console.log(
-        green(
-          `${yellow(pkgOrUrl)} package was removed from cache`));
-    } catch (err) {
-      throw new Error(red(err.message)).message;
-    }
-  }
+    // for import map package
+    else if (pkgOrUrl in map?.imports) {
+      const pkg = pkgOrUrl.replace("/", "");
+      let url = needProxy(pkg) ? Proxy(pkg) : map?.imports[pkgOrUrl]!;
 
-  // for import map package
-  else if (pkgOrUrl in map.imports) {
-    const pkg = pkgOrUrl.replace("/", "");
-    let url = needProxy(pkg)
-              ? Proxy(pkg)
-              : map.imports[pkgOrUrl];
+      // if is a std package
+      if (STD.includes(pkg) && !(url.endsWith(".js") || url.endsWith(".ts"))) {
+        url += "mod.ts";
+      }
 
-    // if is a std package
-    if (STD.includes(pkg) && !(url.endsWith(".js") || url.endsWith(".ts"))) {
-      url += "mod.ts";
-    }
+      const data = await isCachePackage(url);
 
-    const data = await isCachePackage(url);
+      if (!data.exist) {
+        throw new Error(red("this package was not found in the cache")).message;
+      }
 
-    if (!data.exist) {
-      throw new Error(red("this package was not found in the cache")).message;
-    }
-
-    try {
-      await Deno.remove(data.path, { recursive: true });
-      console.log(green(`${yellow(pkgOrUrl)} package was removed from cache`));
-    } catch (err) {
-      throw new Error(red(err.message)).message;
+      try {
+        await Deno.remove(data.path, { recursive: true });
+        console.log(
+          green(`${yellow(pkgOrUrl)} package was removed from cache`)
+        );
+      } catch (err) {
+        throw new Error(red(err.message)).message;
+      }
     }
   }
 
@@ -73,9 +75,8 @@ export async function purge() {
   else {
     if (!["--help", "-h"].includes(pkgOrUrl)) {
       throw new Error(
-        red(
-          `package ${yellow(pkgOrUrl)} was not found in import map file `)).message;
+        red(`package ${yellow(pkgOrUrl)} was not found in import map file `)
+      ).message;
     }
   }
-
 }

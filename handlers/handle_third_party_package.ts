@@ -49,7 +49,7 @@ export async function nestPackageUrl(
 
     const data: NestResponse = await response.json();
 
-    return data.prefix + data.entry;
+    return `${data.prefix}${data.entry}`;
   }
 }
 
