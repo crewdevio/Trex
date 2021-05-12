@@ -41,11 +41,12 @@ export async function deletepackage(toDelete: string) {
         const newPackage = existImports(Packages);
 
         await createPackage(newPackage);
-        console.clear();
+        return console.clear();
       }
 
       throw new Error(red("'imports' key not found in import_map.json")).message;
     } catch (exception) {
+      console.log(exception);
       throw new Error(
         red(
           exception instanceof TypeError
