@@ -62,12 +62,5 @@ export function needProxy(pkg: string) {
  * return package proxy url.
  */
 export function Proxy(pkg: string): string {
-  console.log(yellow("warning: "), red(pkg), green(" is using a proxy. \n"));
-
-  console.log(
-    green(
-      "For more information on how the proxy works visit https://github.com/crewdevio/Trex\n"
-    )
-  );
   return modulesProxys.find((pxy) => pxy.module === pkg)?.url as string;
 }
