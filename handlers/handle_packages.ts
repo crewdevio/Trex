@@ -19,9 +19,9 @@ import { LoadingSpinner } from "../tools/logs.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import { denoApidb } from "../utils/db.ts";
-import { colors } from "../imports/fmt.ts";
-import { exists } from "../imports/fs.ts";
+import * as colors from "fmt/colors.ts";
 import cache from "./handle_cache.ts";
+import { exists } from "fs/mod.ts";
 
 const { yellow, red, green, bold } = colors;
 /**

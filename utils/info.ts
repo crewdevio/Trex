@@ -6,7 +6,7 @@
  *
  */
 
-import { colors } from "../imports/fmt.ts";
+import * as colors from "fmt/colors.ts";
 
 const { green, yellow } = colors;
 export const URI_STD = "https://deno.land/std";

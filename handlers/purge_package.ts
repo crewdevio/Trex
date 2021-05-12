@@ -6,11 +6,11 @@
  *
  */
 
-import { Proxy, needProxy } from "../imports/proxy.ts";
+import { Proxy, needProxy } from "proxy";
 import type { importMap } from "../utils/types.ts";
 import { isCachePackage } from "./handle_cache.ts";
 import { getImportMap } from "./handle_files.ts";
-import { colors } from "../imports/fmt.ts";
+import * as colors from "fmt/colors.ts";
 import { STD } from "../utils/info.ts";
 
 const { red, yellow, green } = colors;

@@ -27,9 +27,9 @@ import { packageTreeInfo } from "./tools/logs.ts";
 import type { importMap } from "./utils/types.ts";
 import { LoadingSpinner } from "./tools/logs.ts";
 import { Run, Scripts } from "./commands/run.ts";
-import { Spinner } from "./imports/wait.ts";
-import { colors } from "./imports/fmt.ts";
-import { exists } from "./imports/fs.ts";
+import * as colors from "fmt/colors.ts";
+import { exists } from "fs/mod.ts";
+import { Spinner } from "wait";
 
 const { bold, green, yellow } = colors;
 

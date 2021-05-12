@@ -7,11 +7,11 @@
  */
 
 import { offLine, ErrorInstalling } from "../utils/logs.ts";
-import { needProxy, Proxy } from "../imports/proxy.ts";
 import type { NestResponse } from "../utils/types.ts";
 import { ResolveDenoPath } from "../commands/run.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
-import { colors } from "../imports/fmt.ts";
+import { needProxy, Proxy } from "proxy";
+import * as colors from "fmt/colors.ts";
 import { STD } from "../utils/info.ts";
 
 const { yellow, green, bold } = colors;

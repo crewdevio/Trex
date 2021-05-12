@@ -9,9 +9,9 @@
 import { parseToYaml } from "../tools/parseToyaml.ts";
 import { readJson } from "../temp_deps/writeJson.ts";
 import type { runJson } from "../utils/types.ts";
-import { colors } from "../imports/fmt.ts";
-import { exists } from "../imports/fs.ts";
-import { join } from "../imports/path.ts";
+import * as colors from "fmt/colors.ts";
+import { exists } from "fs/mod.ts";
+import { join } from "path/mod.ts";
 
 const { red, yellow, green } = colors;
 const { env, run, args } = Deno;

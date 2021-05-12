@@ -8,9 +8,9 @@
 
 import type { CommandNotFoundParams, HelpCommandParams } from "./types.ts";
 import { didYouMean } from "../tools/did_you_mean.ts";
-import exec from "../tools/install_tools.ts";
-import { colors } from "../imports/fmt.ts";
 import { helpsInfo, VERSION } from "./info.ts";
+import exec from "../tools/install_tools.ts";
+import * as colors from "fmt/colors.ts";
 
 const { cyan, red, green, yellow } = colors;
 

@@ -9,10 +9,10 @@
 import { KillProcess } from "../tools/kill_process.ts";
 import { writeJson } from "../temp_deps/writeJson.ts";
 import type { objectGen } from "../utils/types.ts";
-import { createHash } from "../imports/hash.ts";
 import { LogPackages } from "../utils/logs.ts";
 import { newVersion } from "../tools/logs.ts";
-import { exists } from "../imports/fs.ts";
+import { createHash } from "hash/mod.ts";
+import { exists } from "fs/mod.ts";
 
 /**
  * takes the import map file and returns its information.

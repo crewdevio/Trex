@@ -6,15 +6,15 @@
  *
  */
 
-import { needProxy, Proxy } from "../imports/proxy.ts";
 import { ResolveDenoPath } from "../commands/run.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
-import { createHash } from "../imports/hash.ts";
-import { colors } from "../imports/fmt.ts";
 import { denoApidb } from "../utils/db.ts";
-import { exists } from "../imports/fs.ts";
+import { needProxy, Proxy } from "proxy";
+import { createHash } from "hash/mod.ts";
+import * as colors from "fmt/colors.ts";
 import { STD } from "../utils/info.ts";
+import { exists } from "fs/mod.ts";
 
 const { red, yellow, green, bold } = colors;
 

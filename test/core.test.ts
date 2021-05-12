@@ -4,8 +4,8 @@ import { isCachePackage } from "../handlers/handle_cache.ts";
 import { HelpCommand, LogPackages } from "../utils/logs.ts";
 import { getImportMap } from "../handlers/handle_files.ts";
 import { packageTreeInfo } from "../tools/logs.ts";
-import { Merlin } from "../imports/merlin.ts";
 import { importMap } from "../utils/types.ts";
+import { Merlin } from "merlin";
 
 const Test = new Merlin();
 

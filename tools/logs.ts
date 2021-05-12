@@ -8,12 +8,12 @@
 
 import { getImportMap } from "../handlers/handle_files.ts";
 import { Somebybroken, offLine } from "../utils/logs.ts";
-import { needProxy, Proxy } from "../imports/proxy.ts";
 import { ResolveDenoPath } from "../commands/run.ts";
 import type { importMap } from "../utils/types.ts";
 import { STD, VERSION } from "../utils/info.ts";
-import { colors } from "../imports/fmt.ts";
-import { wait } from "../imports/wait.ts";
+import { needProxy, Proxy } from "proxy";
+import * as colors from "fmt/colors.ts";
+import { wait } from "wait";
 
 const { yellow, cyan, red, white, green } = colors;
 
