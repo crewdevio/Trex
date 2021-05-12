@@ -163,7 +163,8 @@ export async function installPackages(args: string[], show = true): Promise<obje
       for (const pkg in importmap?.imports) {
         const url = importmap.imports[pkg];
 
-        if (await validateHash(url, importmap?.hash[pkg]!)) {
+        // TODO (buttercubz): add virtual locks
+        // if (await validateHash(url, importmap?.hash[pkg]!)) {
           if (url?.includes("deno.land")) {
             const mod = pkg.split("/").join("");
             await cache(mod, await detectVersion(mod));
@@ -175,16 +176,16 @@ export async function installPackages(args: string[], show = true): Promise<obje
             await cacheNestpackage(importmap?.imports[pkg]!);
             map[pkg.toLowerCase()] = importmap?.imports[pkg]!;
           }
-        }
+        // }
+        // TODO (buttercubz): add virtual locks
+        // else {
+          // console.log(
+          //   colors.white(
+          //     `\nthe generated hash does not match the package "${colors.green(pkg)}",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${colors.red('=>')} ${colors.cyan('https://github.com/crewdevio/Trex')}`
+          //     ));
 
-        else {
-          console.log(
-            colors.white(
-              `\nthe generated hash does not match the package "${colors.green(pkg)}",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${colors.red('=>')} ${colors.cyan('https://github.com/crewdevio/Trex')}`
-              ));
-
-          Deno.exit(0);
-        }
+          // Deno.exit(0);
+        // }
       }
     }
 

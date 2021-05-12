@@ -33,11 +33,12 @@ export async function deletepackage(toDelete: string) {
             : haveVersion(pkg)
         ];
 
-        delete Packages.hash[
-          STD.includes(haveVersion(pkg))
-            ? `${haveVersion(pkg)}/`
-            : haveVersion(pkg)
-        ];
+        // TODO (buttercubz): add virtual locks
+        // delete Packages.hash[
+        //   STD.includes(haveVersion(pkg))
+        //     ? `${haveVersion(pkg)}/`
+        //     : haveVersion(pkg)
+        // ];
 
         const newPackage = existImports(Packages);
 

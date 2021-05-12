@@ -53,11 +53,12 @@ function sortedPackage(map: any): objectGen {
  */
 
 export async function createPackage(map: objectGen, log?: Boolean) {
-  const hashes: objectGen  = {};
+  // TODO (buttercubz): add virtual locks
+  // const hashes: objectGen  = {};
 
-  for (const [pkg, url] of Object.entries(map)) {
-    hashes[pkg] = await generateHash(url);
-  }
+  // for (const [pkg, url] of Object.entries(map)) {
+    // hashes[pkg] = await generateHash(url);
+  // }
 
   // * create import_map.json
   const create = await Deno.create("./import_map.json");
@@ -66,7 +67,7 @@ export async function createPackage(map: objectGen, log?: Boolean) {
   // * write import config inside import_map.json
   await writeJson(
     "./import_map.json",
-    { imports: sortedPackage(map), hash: { ...hashes } },
+    { imports: sortedPackage(map), /* hash: { ...hashes } */ },
     { spaces: 2 }
   );
 
