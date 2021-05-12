@@ -58,20 +58,10 @@ For more information about the import maps in deno see [import maps](https://den
 ## Installation
 
 ```console
-deno install -A --unstable -n trex --no-check https://deno.land/x/trex/cli.ts
+deno install -A --unstable --import-map=https://deno.land/x/trex/import_map.json.ts -n trex --no-check https://deno.land/x/trex/cli.ts
 ```
 
 > **note**: Works with deno >= 1.2.0
-
-### `Trex imports`
-
-This is a version that does not use import maps as a central hub, it can be used to handle dependencies for libraries and packages. you can see the documentation [here](https://github.com/crewdevio/Trex/tree/imports)
-
-```console
-deno install -A --unstable -n trex https://denopkg.com/crewdevio/Trex@imports/cli.ts
-```
-
-> **note**: if you try to install this version with the name trex it will replace the current version, if you want to have both versions you can use another name in the installation `-n [otherName]`
 
 **we shorten the install command so it's not that long**
 
@@ -90,7 +80,7 @@ You can give those permissions explicitly.
 Install new version with the `-f` flag:
 
 ```console
-deno install -f -A --unstable -n trex https://deno.land/x/trex/cli.ts
+deno install -f -A --unstable --import-map=https://deno.land/x/trex/import_map.json.ts -n trex --no-check https://deno.land/x/trex/cli.ts
 ```
 
 Or use the `upgrade` command:

@@ -50,14 +50,24 @@ export async function updateTrex(): Promise<void> {
     setTimeout(async () => {
       await exec({
         config: {
-          permissions: ["-A", "-r", "--unstable", "-n", "trex"],
+          permissions: [
+            "-A",
+            "-r",
+            "--no-check",
+            "--import-map",
+            `https://deno.land/x/trex@${repoVersion.tag_name}/import_map.json`,
+            "--unstable",
+            "-n",
+            "trex",
+          ],
           url: `https://deno.land/x/trex@${repoVersion.tag_name}/cli.ts`,
         },
       });
 
-      console.log(cyan(`trex ${green(repoVersion.tag_name)} is now installed.`));
+      console.log(
+        cyan(`trex ${green(repoVersion.tag_name)} is now installed.`)
+      );
     }, 1000);
-
   } else {
     console.log(cyan(`you have the last version trex ${repoVersion.tag_name}`));
   }
@@ -121,7 +131,7 @@ export function HelpCommand({ command, flags }: HelpCommandParams) {
 export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
   const { args } = Deno;
 
-  const [command = '', flag = ''] = args;
+  const [command = "", flag = ""] = args;
 
   if (!args.length) {
     LogHelp(helpsInfo);
@@ -132,7 +142,11 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
     console.log(
       red("Command not found:\n"),
 
-      green(`\n${red("trex")} ${yellow(command ?? "empty command")}: unknown command\n`),
+      green(
+        `\n${red("trex")} ${yellow(
+          command ?? "empty command"
+        )}: unknown command\n`
+      ),
 
       green(
         `\nuse ${red("trex")} ${yellow("--help")} to see available commands\n`
@@ -179,7 +193,7 @@ export function LogPackages(map: Object, message = true) {
   console.groupEnd();
 
   if (message) {
-    console.log(green("Happy Coding"))
-  };
+    console.log(green("Happy Coding"));
+  }
   console.log();
 }
