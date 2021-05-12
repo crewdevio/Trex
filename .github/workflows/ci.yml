@@ -23,4 +23,4 @@ jobs:
         uses: denolib/setup-deno@master
         with:
           deno-version: ${{ matrix.deno }}
-      - run: deno test -A --unstable --import-map=./import_map.json
+      - run: cd ./test && deno test -A --unstable --import-map=../import_map.json
