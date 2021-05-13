@@ -19,6 +19,7 @@ jobs:
         deno: [1.10.1]
     name: Trex cli test
     steps:
+      - uses: actions/checkout@master
       - name: Setup Deno
         uses: denoland/setup-deno@main
         with:
