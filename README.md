@@ -58,7 +58,7 @@ For more information about the import maps in deno see [import maps](https://den
 ## Installation
 
 ```console
-deno install -A --unstable --import-map=https://deno.land/x/trex/import_map.json.ts -n trex --no-check https://deno.land/x/trex/cli.ts
+deno install -A --unstable --import-map=https://deno.land/x/trex/import_map.json -n trex --no-check https://deno.land/x/trex/cli.ts
 ```
 
 > **note**: Works with deno >= 1.2.0
