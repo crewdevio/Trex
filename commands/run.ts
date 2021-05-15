@@ -9,7 +9,9 @@
 import { parseToYaml } from "../tools/parseToyaml.ts";
 import { readJson } from "../temp_deps/writeJson.ts";
 import type { runJson } from "../utils/types.ts";
+import { isGH } from "../utils/storage.ts";
 import * as colors from "fmt/colors.ts";
+import { Match } from "../utils/mod.ts";
 import { exists } from "fs/mod.ts";
 import { join } from "path/mod.ts";
 
@@ -65,20 +67,23 @@ export async function Run(command: string) {
         // normalize command
         const runnerCommand = toRun[0].split(" ").filter((arg) => !!arg);
 
+        // github action fallback deno dir path
+        const ghFallBack = Match(Deno.build.os)
+                            .case("darwin", () => "/Users/runner/.deno/bin")
+                            .case("linux", () => "/home/runner/.deno/bin")
+                            .case("windows", () => "C:\\Users\\runneradmin\\.deno\\bin")
+                            .default()
+                            .Value() as string;
+
         // get path to deno scripts
         const scriptPath =
-          Deno.build.os === "windows"
-            ? // to windows base
-              join(
-                "C:",
-                "Users",
-                env.get("USERNAME")!,
-                ".deno",
-                "bin",
-                runnerCommand[0]
-              )
-            : // to unix base
-              join(env.get("HOME")!, ".deno", "bin", runnerCommand[0]);
+          isGH
+          ? ghFallBack
+          : Deno.build.os === "windows"
+              ? // to windows base
+                join("C:", "Users", env.get("USERNAME")!, ".deno", "bin", runnerCommand[0])
+              : // to unix base
+                join(env.get("HOME")!, ".deno", "bin", runnerCommand[0]);
 
         // prevent deno scrips not found error
         if ((await exists(scriptPath)) || (await exists(`${scriptPath}.cmd`))) {
@@ -101,7 +106,7 @@ export async function Run(command: string) {
 
         // remove path to compare on unix base os
         const toCompare =
-          Deno.build.os === "linux" || Deno.build.os == "darwin"
+          Deno.build.os === "linux" || Deno.build.os === "darwin"
             ? last[last.length - 1]
             : execCommand;
 

@@ -33,7 +33,7 @@ import { Spinner } from "wait";
 
 const { bold, green, yellow } = colors;
 
-async function mainCli() {
+async function Main() {
   const Args = Deno.args;
   // * install some packages
   if (keyWords.install.includes(Args[0])) {
@@ -255,5 +255,5 @@ async function mainCli() {
 }
 
 if (import.meta.main) {
-  await mainCli();
+  await Main();
 }

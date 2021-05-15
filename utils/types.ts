@@ -68,3 +68,5 @@ export interface CommandNotFoundParams {
 }
 
 export type DefaultStore = { [key: string]: any };
+
+export type Fn = () => any;
