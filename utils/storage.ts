@@ -12,20 +12,38 @@ import { createHash } from "hash/mod.ts";
 import { exists } from "fs/mod.ts";
 import { join } from "path/mod.ts";
 
+
+const { env, remove, mkdir, build } = Deno;
+const commonDir = "trex_storage";
+
+/**
+ * detect if is runnig on gh action workflow
+ */
+export const isGH =
+  !!env.get("GITHUB_ACTIONS")! ||
+  !!env.get("GITHUB_WORKFLOW")! ||
+  !!env.get("GITHUB_JOB")!;
+
+/**
+ * github actions fallback storage path
+ */
+const ghFallBack = join(Deno.cwd(), commonDir);
+
 /**
  * create a persistent json storage per CWD.
  */
 export async function JsonStorage() {
   const hash = createHash("sha256").update(Deno.cwd()).toString();
 
-  const storagePath =
-    Deno.build.os === "windows"
-      ? join("C:", "Users", Deno.env.get("USERNAME")!, ".deno","trex_storage\\")
-      : join(Deno.env.get("HOME")!, ".deno", "trex_storage/");
+  const storagePath = isGH
+    ? ghFallBack
+    : build.os === "windows"
+      ? join("C:", "Users", env.get("USERNAME")!, ".deno", `${commonDir}\\`)
+      : join(env.get("HOME")!, ".deno", `${commonDir}/`);
 
   const currentStorage = join(storagePath, `${hash}.json`);
 
-  if (!(await exists(storagePath))) await Deno.mkdir(storagePath);
+  if (!(await exists(storagePath))) await mkdir(storagePath);
 
   if (!(await exists(currentStorage))) {
     await writeJson(currentStorage, {}, { spaces: 2, create: true });
@@ -71,7 +89,7 @@ export async function JsonStorage() {
       throw new Error("storage was removed").message;
     },
     async dropStorage() {
-      return await Deno.remove(currentStorage, { recursive: true });
+      return await remove(currentStorage, { recursive: true });
     },
     async deleteItem(item: string) {
       if (await exists(currentStorage)) {
