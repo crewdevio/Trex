@@ -6,15 +6,15 @@
  *
  */
 
-import { needProxy, Proxy } from "../imports/proxy.ts";
 import { ResolveDenoPath } from "../commands/run.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
-import { createHash } from "../imports/hash.ts";
-import { colors } from "../imports/fmt.ts";
 import { denoApidb } from "../utils/db.ts";
-import { exists } from "../imports/fs.ts";
+import { needProxy, Proxy } from "proxy";
+import { createHash } from "hash/mod.ts";
+import * as colors from "fmt/colors.ts";
 import { STD } from "../utils/info.ts";
+import { exists } from "fs/mod.ts";
 
 const { red, yellow, green, bold } = colors;
 
@@ -64,12 +64,12 @@ export async function isCachePackage(packageUrl: string) {
   else {
     const { hostname, protocol, pathname, search } = new URL(packageUrl);
     const toHash = createHash("sha256")
-      .update(`${pathname}${search ? "?" + search : ""}`)
+      .update(`${pathname}${search ? `?${search}` : ""}`)
       .toString();
     const filePath = getCachePath(protocol, hostname, toHash);
 
     return {
-      exist: await (exists(filePath) || exists(filePath + ".metadata.json")),
+      exist: await (exists(filePath) || exists(`${filePath}.metadata.json`)),
       path: filePath,
     };
   }
@@ -95,7 +95,7 @@ async function cached(pkgName: string, pkgUrl: string, show = true) {
 
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({
-      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts"],
+      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : `${pkgUrl}mod.ts`],
       stdout: "null",
       stdin: "null",
     });
@@ -114,7 +114,7 @@ async function cached(pkgName: string, pkgUrl: string, show = true) {
   // * install standard package by default use mod.ts
   else if (STD.includes(pkgName)) {
     process = Deno.run({
-      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : pkgUrl + "mod.ts"],
+      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : `${pkgUrl}mod.ts`],
     });
 
     if (!(await process.status()).success) {

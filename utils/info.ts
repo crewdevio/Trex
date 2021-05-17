@@ -6,7 +6,7 @@
  *
  */
 
-import { colors } from "../imports/fmt.ts";
+import * as colors from "fmt/colors.ts";
 
 const { green, yellow } = colors;
 export const URI_STD = "https://deno.land/std";
@@ -39,7 +39,7 @@ export const STD = [
   "wasi",
 ];
 
-export const VERSION = { VERSION: "v1.6.0" };
+export const VERSION = { VERSION: "v1.7.0" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),

@@ -10,9 +10,10 @@ import { createPackage, getImportMap } from "./handle_files.ts";
 import { haveVersion } from "./handle_delete_package.ts";
 import { existImports } from "./handle_packages.ts";
 import type { importMap } from "../utils/types.ts";
-import { colors } from "../imports/fmt.ts";
-import { exists } from "../imports/fs.ts";
+import Store from "./handler_storage.ts";
+import * as colors from "fmt/colors.ts";
 import { STD } from "../utils/info.ts";
+import { exists } from "fs/mod.ts";
 
 const { red } = colors;
 
@@ -24,33 +25,31 @@ export async function deletepackage(toDelete: string) {
   if (await exists("./import_map.json")) {
     try {
       const pkg: string = toDelete.trim();
-      const Packages = JSON.parse(await getImportMap()) as importMap;
+      const Packages = (await getImportMap<importMap>())!;
 
-      if (Packages?.imports) {
-        delete Packages.imports[
-          STD.includes(haveVersion(pkg))
-            ? haveVersion(pkg) + "/"
-            : haveVersion(pkg)
-        ];
+      if (Packages.imports) {
 
-        delete Packages.hash[
-          STD.includes(haveVersion(pkg))
-            ? haveVersion(pkg) + "/"
-            : haveVersion(pkg)
-        ];
+        const toDelete = STD.includes(haveVersion(pkg))
+                            ? `${haveVersion(pkg)}/`
+                            : haveVersion(pkg);
+
+        delete Packages.imports[toDelete];
+
+        // delete virtual lock hash
+        await Store.deleteItem(`internal__trex__hash:${toDelete}`);
 
         const newPackage = existImports(Packages);
 
         await createPackage(newPackage);
-        console.clear();
-      } else {
-        throw new Error(red("'imports' key not found in import_map.json"))
-          .message;
+        return console.clear();
       }
-    } catch (_) {
+
+      throw new Error(red("'imports' key not found in import_map.json")).message;
+    } catch (exception) {
+      console.log(exception);
       throw new Error(
         red(
-          _ instanceof TypeError
+          exception instanceof TypeError
             ? "add the name of the package to remove"
             : "the import_map.json file does not have a valid format."
         )

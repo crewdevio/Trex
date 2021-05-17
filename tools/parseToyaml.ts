@@ -6,9 +6,9 @@
  *
  */
 
-import { yaml } from "../imports/encoding.ts";
-import { exists } from "../imports/fs.ts";
 import { runJson } from "../utils/types.ts";
+import * as yaml from "encoding/yaml.ts";
+import { exists } from "fs/mod.ts";
 
 /**
  * parse .yaml file to javascript json

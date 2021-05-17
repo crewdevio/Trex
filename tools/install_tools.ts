@@ -17,7 +17,6 @@ function installTools(args: string[]) {
 /**
  * install script from database.json
  */
-
 export default async function exec(param: Params): Promise<boolean> {
   const args: string[] = [
     "install",

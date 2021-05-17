@@ -27,25 +27,25 @@ import { packageTreeInfo } from "./tools/logs.ts";
 import type { importMap } from "./utils/types.ts";
 import { LoadingSpinner } from "./tools/logs.ts";
 import { Run, Scripts } from "./commands/run.ts";
-import { Spinner } from "./imports/wait.ts";
-import { colors } from "./imports/fmt.ts";
-import { exists } from "./imports/fs.ts";
+import * as colors from "fmt/colors.ts";
+import { exists } from "fs/mod.ts";
+import { Spinner } from "wait";
 
 const { bold, green, yellow } = colors;
 
-async function mainCli() {
-  const _arguments = Deno.args;
+async function Main() {
+  const Args = Deno.args;
   // * install some packages
-  if (keyWords.install.includes(_arguments[0])) {
+  if (keyWords.install.includes(Args[0])) {
     // * prevent error in trex install
-    if (_arguments[1]) {
+    if (Args[1]) {
       CommandNotFound({
         commands: keyWords.install,
         flags: [...flags.map, ...flags.nest, ...flags.pkg, ...flags.help],
       });
     }
 
-    if (flags.help.includes(_arguments[1])) {
+    if (flags.help.includes(Args[1])) {
       return HelpCommand({
         command: {
           alias: keyWords.install,
@@ -65,16 +65,16 @@ async function mainCli() {
 
     if (await exists("./import_map.json")) {
       try {
-        const data = JSON.parse(await getImportMap());
+        const data = (await getImportMap()) as any;
         const oldPackage = existImports(data);
-        const newPackage = await installPackages(_arguments);
+        const newPackage = await installPackages(Args);
 
         await createPackage({ ...oldPackage, ...newPackage }, true);
       } catch (error) {
         throw new Error(error).message;
       }
     } else {
-      await createPackage(await installPackages(_arguments), true);
+      await createPackage(await installPackages(Args), true);
     }
 
     const runJson = await Scripts();
@@ -82,16 +82,16 @@ async function mainCli() {
     if (runJson?.scripts?.preinstall) await Run("postinstall");
   }
   // * display trex version
-  else if (flags.version.includes(_arguments[0])) {
+  else if (flags.version.includes(Args[0])) {
     Version(VERSION.VERSION);
   }
   // * show help info
-  else if (flags.help.includes(_arguments[0])) {
+  else if (flags.help.includes(Args[0])) {
     LogHelp(helpsInfo);
   }
   // * install a custom package
-  else if (flags.custom.includes(_arguments[0])) {
-    if (flags.help.includes(_arguments[1])) {
+  else if (flags.custom.includes(Args[0])) {
+    if (flags.help.includes(Args[1])) {
       return HelpCommand({
         command: {
           alias: flags.custom,
@@ -101,11 +101,11 @@ async function mainCli() {
       });
     }
 
-    customPackage(_arguments);
+    customPackage(Args);
   }
   // * uninstall some package
-  else if (_arguments[0] === keyWords.uninstall) {
-    if (flags.help.includes(_arguments[1])) {
+  else if (Args[0] === keyWords.uninstall) {
+    if (flags.help.includes(Args[1])) {
       return HelpCommand({
         command: {
           alias: [keyWords.uninstall],
@@ -121,7 +121,7 @@ async function mainCli() {
     }
 
     let loading: Spinner;
-    const [, ...pkgs] = _arguments;
+    const [, ...pkgs] = Args;
     for (const pkg of pkgs) {
       loading = LoadingSpinner(
         green(`Removing ${bold(yellow(pkg))} from import_map.json`)
@@ -131,15 +131,15 @@ async function mainCli() {
     }
   }
   // * update to lastest version of trex
-  else if (_arguments[0] === keyWords.upgrade) {
-    if (_arguments[1]) {
+  else if (Args[0] === keyWords.upgrade) {
+    if (Args[1]) {
       CommandNotFound({
         commands: [keyWords.upgrade],
         flags: [...flags.help],
       });
     }
 
-    if (flags.help.includes(_arguments[1])) {
+    if (flags.help.includes(Args[1])) {
       return HelpCommand({
         command: {
           alias: [keyWords.upgrade],
@@ -152,8 +152,8 @@ async function mainCli() {
     await updateTrex();
   }
   // * shows the dependency tree of a package
-  else if (_arguments[0] === keyWords.tree) {
-    if (flags.help.includes(_arguments[1])) {
+  else if (Args[0] === keyWords.tree) {
+    if (flags.help.includes(Args[1])) {
       return HelpCommand({
         command: {
           alias: [keyWords.tree],
@@ -163,12 +163,12 @@ async function mainCli() {
       });
     }
 
-    await packageTreeInfo(..._arguments);
+    await packageTreeInfo(...Args);
   }
 
   // * run script aliases
-  else if (_arguments[0] === keyWords.run) {
-    if (flags.help.includes(_arguments[1])) {
+  else if (Args[0] === keyWords.run) {
+    if (flags.help.includes(Args[1])) {
       return HelpCommand({
         command: {
           alias: [keyWords.run],
@@ -188,12 +188,12 @@ async function mainCli() {
       });
     }
 
-    await Run(_arguments[1]);
+    await Run(Args[1]);
   }
 
   // * purge command
-  else if (_arguments[0] === keyWords.purge) {
-    if (flags.help.includes(_arguments[1])) {
+  else if (Args[0] === keyWords.purge) {
+    if (flags.help.includes(Args[1])) {
       HelpCommand({
         command: {
           alias: [keyWords.purge],
@@ -212,8 +212,8 @@ async function mainCli() {
   }
 
   // * ls command
-  else if (_arguments[0] === keyWords.ls) {
-    if (flags.help.includes(_arguments[1])) {
+  else if (Args[0] === keyWords.ls) {
+    if (flags.help.includes(Args[1])) {
       HelpCommand({
         command: {
           alias: [keyWords.ls],
@@ -229,8 +229,8 @@ async function mainCli() {
     }
 
     else {
-      const map = JSON.parse(await getImportMap()) as importMap;
-      LogPackages(map.imports, false);
+      const map = (await getImportMap<importMap>())!;
+      LogPackages(map?.imports, false);
     }
   }
 
@@ -255,5 +255,5 @@ async function mainCli() {
 }
 
 if (import.meta.main) {
-  await mainCli();
+  await Main();
 }

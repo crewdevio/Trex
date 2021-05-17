@@ -9,22 +9,26 @@
 import { KillProcess } from "../tools/kill_process.ts";
 import { writeJson } from "../temp_deps/writeJson.ts";
 import type { objectGen } from "../utils/types.ts";
-import { createHash } from "../imports/hash.ts";
 import { LogPackages } from "../utils/logs.ts";
 import { newVersion } from "../tools/logs.ts";
+import { createHash } from "hash/mod.ts";
+import Store from "./handler_storage.ts";
+import { exists } from "fs/mod.ts";
 
 /**
  * takes the import map file and returns its information.
  * @return {string} string.
  */
 
-export async function getImportMap(): Promise<string>{
-  const decoder = new TextDecoder("utf-8");
+export async function getImportMap<T extends any>(): Promise<T | undefined>{
+  if (await exists("./import_map.json")) {
+    const decoder = new TextDecoder("utf-8");
 
-  // * get data from import_map and return data
-  const Package = await Deno.readFile("./import_map.json");
+    // * get data from import_map and return data
+    const Package = await Deno.readFile("./import_map.json");
 
-  return decoder.decode(Package);
+    return JSON.parse(decoder.decode(Package)) as T;
+  }
 }
 
 /**
@@ -50,10 +54,9 @@ function sortedPackage(map: any): objectGen {
  */
 
 export async function createPackage(map: objectGen, log?: Boolean) {
-  const hashes: objectGen  = {};
-
+  // add virtual lock hash
   for (const [pkg, url] of Object.entries(map)) {
-    hashes[pkg] = await generateHash(url);
+    await Store.setItem(`internal__trex__hash:${pkg}`, await generateHash(url));
   }
 
   // * create import_map.json
@@ -63,7 +66,7 @@ export async function createPackage(map: objectGen, log?: Boolean) {
   // * write import config inside import_map.json
   await writeJson(
     "./import_map.json",
-    { imports: sortedPackage(map), hash: { ...hashes } },
+    { imports: sortedPackage(map) },
     { spaces: 2 }
   );
 
@@ -111,6 +114,10 @@ export async function generateHash(url: string) {
  * @param hash string
  */
 export async function validateHash(url: string, hash: string) {
+  const isNew = Object.keys(await Store.getStorage()).some((key) => key.startsWith("internal__trex__hash:"));
+
+  if (!isNew) return true;
+
   const _hash = createHash("sha256");
   _hash.update(await readURLContent(url) + url);
   return _hash.toString() === hash;

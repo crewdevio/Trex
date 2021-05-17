@@ -6,7 +6,7 @@
  *
  */
 
-import { colors } from "../imports/fmt.ts";
+import * as colors from "fmt/colors.ts";
 
 /**
 MIT License

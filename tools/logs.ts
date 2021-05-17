@@ -8,12 +8,12 @@
 
 import { getImportMap } from "../handlers/handle_files.ts";
 import { Somebybroken, offLine } from "../utils/logs.ts";
-import { needProxy, Proxy } from "../imports/proxy.ts";
 import { ResolveDenoPath } from "../commands/run.ts";
 import type { importMap } from "../utils/types.ts";
 import { STD, VERSION } from "../utils/info.ts";
-import { colors } from "../imports/fmt.ts";
-import { wait } from "../imports/wait.ts";
+import { needProxy, Proxy } from "proxy";
+import * as colors from "fmt/colors.ts";
+import { wait } from "wait";
 
 const { yellow, cyan, red, white, green } = colors;
 
@@ -27,16 +27,16 @@ export async function packageTreeInfo(
   ...args: string[]
 ): Promise<boolean | undefined> {
   try {
-    const map: importMap = JSON.parse(await getImportMap());
+    const map: importMap = (await getImportMap<importMap>())!;
 
     for (const pkg in map?.imports) {
       if (STD.includes(args[1])) {
-        const moduleName = args[1] + "/";
+        const moduleName = `${args[1]}/`;
 
         if (moduleName === pkg) {
           const _pkg = needProxy(args[1])
             ? Proxy(args[1])
-            : map.imports[pkg] + "mod.ts";
+            : `${map.imports[pkg]}mod.ts`;
 
           const process = Deno.run({
             cmd: [ResolveDenoPath(), "info", "--unstable", _pkg],

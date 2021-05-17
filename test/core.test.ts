@@ -4,7 +4,8 @@ import { isCachePackage } from "../handlers/handle_cache.ts";
 import { HelpCommand, LogPackages } from "../utils/logs.ts";
 import { getImportMap } from "../handlers/handle_files.ts";
 import { packageTreeInfo } from "../tools/logs.ts";
-import { Merlin } from "../imports/merlin.ts";
+import { importMap } from "../utils/types.ts";
+import { Merlin } from "merlin";
 
 const Test = new Merlin();
 
@@ -53,7 +54,7 @@ Test.assertEqual("install dinoenv package from nest.land", {
   },
   Ops: false,
   Resources: false,
-  ignore: true
+  ignore: true,
 });
 
 Test.isUndefined("trex treeDeps test", {
@@ -63,7 +64,7 @@ Test.isUndefined("trex treeDeps test", {
     )) as undefined;
   },
   Ops: false,
-  Resources: false
+  Resources: false,
 });
 
 Test.isUndefined("Command helper test", {
@@ -129,6 +130,7 @@ Test.isUndefined("delete package", {
 
 Test.isUndefined("ls command", {
   async value() {
-    return LogPackages(await getImportMap(), true);
+    const map = (await getImportMap<importMap>())!;
+    return LogPackages(map?.imports, false);
   },
 });
