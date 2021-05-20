@@ -15,6 +15,7 @@ import { Run, Scripts, ResolveDenoPath } from "../commands/run.ts";
 import { getImportMap, createPackage } from "./handle_files.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
+import { getMainFile } from "../utils/file_resolver.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
@@ -54,7 +55,8 @@ async function detectVersion(pkgName: string): Promise<string> {
   if (STD.includes(name)) {
     return `${URI_STD}${versionSuffix}/${name}/`;
   } else if ((await denoApidb(name)).length) {
-    return `${URI_X}${name}${versionSuffix}/mod.ts`;
+    const target = await getMainFile(name, maybeVersion) as { file: string };
+    return `${URI_X}${name}${versionSuffix}/${target.file}`;
   }
 
   throw new Error(
@@ -91,7 +93,6 @@ async function getNamePkg(pkg: string): Promise<string> {
   }
 
   else {
-
     if (STD.includes(pkg) && (await denoApidb(pkg)).length) {
       name = `${pkg}/`;
     }
