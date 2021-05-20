@@ -89,9 +89,9 @@ export async function newVersion(): Promise<void> {
 
   const data = (await response.json()) as { tag_name: string };
 
-  if (data.tag_name !== VERSION.VERSION) {
+  if (data?.tag_name !== VERSION.VERSION) {
     const versionMessage = white(
-      `Actual ${red(VERSION.VERSION)} -> new ${cyan(data.tag_name)}`
+      `Actual ${red(VERSION.VERSION)} -> new ${cyan(data?.tag_name ?? "?")}`
     );
 
     const upgradeMessage = white(`use ${green("trex")} upgrade `);
