@@ -75,6 +75,8 @@ export const helpsInfo = [
 
   `   ${yellow("ls")}              shows the list of installed packages\n`,
 
+  `   ${yellow("exec")}            execute any cli tool without install\n`,
+
   green(
     "\nyou can see the different options available for each command using:\n"
   ),
@@ -99,31 +101,6 @@ export const keyWords = {
   run: "run",
   purge: "purge",
   setup: "setup",
-  ls: "ls"
-};
-
-export const IDESsettings = [
-  {
-    "deno.enable": true,
-    "deno.import_map": "./import_map.json",
-    "deno.unstable": true,
-  },
-  {
-    compilerOptions: {
-      plugins: [
-        {
-          name: "typescript-deno-plugin",
-          enable: true,
-          importmap: "import_map.json",
-        },
-      ],
-    },
-  }
-];
-
-export const IDES = ["--vscode", "--atom"];
-
-export const atomInstaller = {
-  npm: ["npm", "install", "--save-dev", "typescript-deno-plugin", "typescript"],
-  yarn: ["yarn", "add", "-D", "typescript-deno-plugin", "typescript"],
+  ls: "ls",
+  exec: "exec",
 };

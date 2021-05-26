@@ -4,4 +4,11 @@
   "deno.codeLens.implementations": true,
   "deno.codeLens.references": true,
   "deno.unstable": true,
+  "deno.codeLens.referencesAllFunctions": true,
+  "deno.suggest.names": true,
+  "deno.suggest.autoImports": true,
+  "deno.suggest.paths": true,
+  "deno.suggest.imports.hosts": {
+    "https://deno.land/": true
+  }
 }

@@ -24,9 +24,6 @@
    <a href="https://nest.land/package/Trex">
      <img src="https://nest.land/badge.svg" />
    </a>
-   <a href="https://cdn.discordapp.com/attachments/727169454667989016/728363543614980116/ajio.gif">
-     <img src="http://hits.dwyl.com/crewdevio/Trex.svg" />
-   </a>
 </p>
 
 ![Use Trex](https://cdn.discordapp.com/attachments/727169454667989016/728363543614980116/ajio.gif)
@@ -248,7 +245,6 @@ trex install --map fs@0.54.0
 now you can create command aliases similar to [npm run](https://docs.npmjs.com/cli-commands/run-script.html), you just have to create a run.json file with the following structure:
 
 ```json
-// example
 {
   "scripts": {
     "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts"
@@ -261,13 +257,12 @@ now you can create command aliases similar to [npm run](https://docs.npmjs.com/c
 now you can call a command within another or call a deno script like `denopack` or `eggs` within a command alias
 
 ```json
-// example
 {
   "scripts": {
     "start": "trex run welcome",
     "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
-    "bundler": "denopack -i mod.ts -o bundle.mod.js",
-    "publish": "eggs publish"
+    "dev": "denon run ./app.ts",
+    "build": "aleph build"
   }
 }
 ```
@@ -283,13 +278,12 @@ when the command `trex install` or `trex i` executed, you can perform actions be
 - postinstall
 
 ```json
-// example
 {
   "scripts": {
     "start": "trex run welcome",
     "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
-    "bundler": "denopack -i mod.ts -o bundle.mod.js",
-    "publish": "eggs publish",
+    "dev": "denon run ./app.ts",
+    "build": "aleph build",
     "preinstall": "deno --version",
     "postinstall": "deno test --unstable"
   }
@@ -319,8 +313,8 @@ with trex you can create script aliases that are reloaded every time a file is c
   "scripts": {
     "start": "trex run welcome",
     "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
-    "bundler": "denopack -i mod.ts -o bundle.mod.js",
-    "publish": "eggs publish"
+    "dev": "denon run ./app.ts",
+    "build": "aleph build"
   },
   "files": ["./app.ts"]
 }
@@ -357,6 +351,76 @@ and of course it can be used with any cli tool, compiler or interpreter.
     - ./main.go
 ```
 
+a limitation of watch mode is that they do not restart the processes that never end as http servers, in those cases we recommend other alternatives such as [denon](https://deno.land/x/denon)
+
+### Virtual cli tool execution (experimental)
+
+trex exec allows you to run many cli tools hosted at `deno.land/x`
+
+```console
+trex exec aleph init hello_world
+```
+
+trex will fetch aleph's cli and run without installing it locally using `deno install`, you can also specify the version you want to use.
+
+```console
+trex exec aleph@v0.2.28 init hello_world
+```
+
+You can also specify the permissions that the cli will use
+
+```console
+trex exec --perms env,read,write,net denon run ./app.ts
+```
+
+you just have to pass the `--perms` flag followed by the permissions separated by commas
+
+**perms**
+
+- `env`: --allow-env
+- `write`: --allow-write
+- `read`: --allow-read
+- `net`: --allow-net
+- `run`: --allow-run
+- `reload`: --reload
+- `plugin`: --allow-plugin
+- `hrtime`: --allow-hrtime
+- `A`: --allow-all
+
+> **note**: if you don't specify the permissions, they are all automatically granted to you
+
+you can also use this combined with the command alias
+
+`example`
+
+```javascript
+// run.json
+{
+  "scripts": {
+    "denon": "trex exec denon run"
+  },
+  "files": ["./app.ts"]
+}
+```
+
+```console
+trex run denon ./app.ts
+```
+
+and yes you can do this:
+
+```console
+trex exec trex exec trex exec ....
+```
+
+even this:
+
+```console
+trex exec land trex exec land trex exec ....
+```
+
+this functionality is heavily inspired by [npx](https://docs.npmjs.com/cli/v7/commands/npx) and [land](https://deno.land/x/land). if you need another alternative to `trex exec` to use in `deno`, [land](https://deno.land/x/land) this is a great option.
+
 ### Purge a package or URL
 
 if you want delete a package or url package from cache memory in deno, you can use the purge command to remove from cache memory.
@@ -384,7 +448,7 @@ trex tree fs
 This prints out something like:
 
 ```console
-local: C:\Users\trex\AppData\Local\deno\deps\https\deno.land\434fe4a7be02d187573484b382f4c1fec5b023d27d1dcf4f768f300799a073e0
+local: C:\Users\trex\AppData\Local\deno\deps\https\deno.land\434fe4a7be02d1875....
 type: TypeScript
 compiled: C:\Users\trex\AppData\Local\deno\gen\https\deno.land\std\fs\mod.ts.js
 map: C:\Users\trex\AppData\Local\deno\gen\https\deno.land\std\fs\mod.ts.js.map
@@ -532,8 +596,6 @@ This adds `oak` to the `import_map.json` file:
   }
 }
 ```
-
-> **note**: third party packages are added using **mod.ts**
 
 Then create an oak application. Note the `import` statement.
 

@@ -129,11 +129,11 @@ export async function Run(command: string) {
         });
 
         if (!(await process.status()).success) {
-          process.close();
+          Deno.close(process.rid);
           throw new Error(`Error: running command ${red(toRun[0])}`).message;
         }
 
-        process.close();
+        Deno.close(process.rid);
       }
 
       catch (err) {

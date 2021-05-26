@@ -22,6 +22,7 @@ import {
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
 import { deletepackage } from "./handlers/delete_package.ts";
+import { execution } from "./handlers/handle_execution.ts";
 import { purge } from "./handlers/purge_package.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
 import type { importMap } from "./utils/types.ts";
@@ -35,6 +36,7 @@ const { bold, green, yellow } = colors;
 
 async function Main() {
   const Args = Deno.args;
+
   // * install some packages
   if (keyWords.install.includes(Args[0])) {
     // * prevent error in trex install
@@ -234,6 +236,32 @@ async function Main() {
     }
   }
 
+  // * execute a cli with out install
+  else if (Args[0] === keyWords.exec) {
+    if (flags.help.includes(Args[1])) {
+      HelpCommand({
+        command: {
+          alias: [keyWords.exec],
+          description: "execute a cli tool with out install then",
+        },
+        flags: [
+          {
+            alias: flags.help,
+            description: "show command help",
+          },
+          {
+            alias: ["--perms"],
+            description: "specify cli permisions"
+          }
+        ],
+      });
+    }
+
+    else {
+      await execution();
+    }
+  }
+
   // * displays help information
   else {
     CommandNotFound({
@@ -248,6 +276,7 @@ async function Main() {
         ...flags.version,
         keyWords.setup,
         keyWords.ls,
+        keyWords.exec,
       ],
       flags: [],
     });
