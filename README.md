@@ -80,7 +80,7 @@ You can give those permissions explicitly.
 Install new version with the `-f` flag:
 
 ```console
-deno install -f -A --unstable --import-map=https://deno.land/x/trex/import_map.json.ts -n trex --no-check https://deno.land/x/trex/cli.ts
+deno install -f -A --unstable --import-map=https://deno.land/x/trex/import_map.json -n trex --no-check https://deno.land/x/trex/cli.ts
 ```
 
 Or use the `upgrade` command:
