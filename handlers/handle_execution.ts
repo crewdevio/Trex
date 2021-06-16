@@ -86,7 +86,7 @@ export async function execution() {
     perms.add(denoPerms.A);
   }
 
-  let [cliName, cliVersion] = name.split("@");
+  let [cliName = "no_name", cliVersion] = name?.split("@") ?? [];
 
   if (cliName === "trex") {
     const messages = [
@@ -104,7 +104,7 @@ export async function execution() {
     if (!response.ok && response.status > 299) {
       throw new Error(
         `${colors.yellow(
-          `${cliName} can't be found in https://deno.land/x/${cliName}`
+          `${colors.red(cliName)} can't be found in https://deno.land/x/${cliName}`
         )}`
       ).message;
     }
