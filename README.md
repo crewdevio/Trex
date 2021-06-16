@@ -19,7 +19,7 @@
      <img alt="GitHub license" src="https://img.shields.io/github/license/crewdevio/Trex">
    </a>
    <a href="https://deno.land">
-     <img src="https://img.shields.io/badge/deno-%5E1.2.0-green?logo=deno"/>
+     <img src="https://img.shields.io/badge/deno-%5E1.10.2-green?logo=deno"/>
    </a>
    <a href="https://nest.land/package/Trex">
      <img src="https://nest.land/badge.svg" />
@@ -58,7 +58,7 @@ For more information about the import maps in deno see [import maps](https://den
 deno install -A --unstable --import-map=https://deno.land/x/trex/import_map.json -n trex --no-check https://deno.land/x/trex/cli.ts
 ```
 
-> **note**: Works with deno >= 1.2.0
+> **note**: Works with deno >= 1.10.2
 
 **we shorten the install command so it's not that long**
 
