@@ -38,6 +38,7 @@ Test.assertEqual("install dinoenv package from deno.land", {
   },
   Ops: false,
   Resources: false,
+  ignore: true
 });
 
 Test.assertEqual("install dinoenv package from nest.land", {
