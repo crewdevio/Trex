@@ -223,7 +223,7 @@ export async function customPackage(args: string[], show = true): Promise<boolea
     throw new Error(red("Add a valid package")).message;
   }
 
-  const [pkgName, url] = args[1].split("=");
+  const [pkgName, url, ...rest] = args[1].split("=");
   const { hostname } = new URL(url);
   const loading = LoadingSpinner(
     green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`),
@@ -232,7 +232,7 @@ export async function customPackage(args: string[], show = true): Promise<boolea
 
   const custom: objectGen = {};
 
-  custom[pkgName.toLowerCase()] = url;
+  custom[pkgName.toLowerCase()] = rest.length > 0 ? `${[url, ...rest].join("=")}` : url;
   // * cache custom module
   const process = Deno.run({
     cmd: [...CMD, url],
@@ -253,7 +253,7 @@ export async function customPackage(args: string[], show = true): Promise<boolea
       const data = (await getImportMap<importMap>())!;
       const oldPackage = existImports(data);
 
-      createPackage({ ...custom, ...oldPackage }, true);
+      createPackage({ ...oldPackage, ...custom }, true);
     }
 
     catch (_) {
