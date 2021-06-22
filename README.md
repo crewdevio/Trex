@@ -1,7 +1,7 @@
 <h1 align="center">Trex 🦕</h1>
 
 <p align="center">
-  <img src="http://clipart-library.com/image_gallery/3119.png" width="350">
+  <img src="https://cdn.discordapp.com/attachments/772853383803437058/828483429787500564/687474703a2f2f636c69706172742d6c6962726172792e636f6d2f696d6167655f67616c6c6572792f333131392e706e67.png" width="350">
   <p align="center">Package management for deno (pronounced "tee rex") </p>
 </p>
 
@@ -77,7 +77,7 @@ You can give those permissions explicitly.
 Install new version with the `-f` flag:
 
 ```console
-deno install -f -A --unstable --import-map=https://deno.land/x/trex/import_map.json.ts -n trex --no-check https://deno.land/x/trex/cli.ts
+deno install -f -A --unstable --import-map=https://deno.land/x/trex/import_map.json -n trex --no-check https://deno.land/x/trex/cli.ts
 ```
 
 Or use the `upgrade` command:
@@ -86,7 +86,7 @@ Or use the `upgrade` command:
 trex upgrade
 ```
 
-Note: available for versions 0.2.0 or higher.
+> **note**: available for versions 0.2.0 or higher.
 
 Verify the installation of Trex:
 
@@ -628,7 +628,7 @@ Trex is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
 
 </br>
  <p align="center">
-    <img src="http://clipart-library.com/image_gallery/3119.png" width="150">
+    <img src="https://cdn.discordapp.com/attachments/772853383803437058/828483429787500564/687474703a2f2f636c69706172742d6c6962726172792e636f6d2f696d6167655f67616c6c6572792f333131392e706e67.png" width="150">
     <h3 align="center">Trex is powered by</h3>
     <p align="center">
        <a href="https://nest.land/">
