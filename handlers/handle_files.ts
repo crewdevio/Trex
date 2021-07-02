@@ -20,7 +20,7 @@ import { exists } from "fs/mod.ts";
  * @return {string} string.
  */
 
-export async function getImportMap<T extends any>(): Promise<T | undefined>{
+export async function getImportMap<T extends any>(): Promise<T | undefined> {
   if (await exists("./import_map.json")) {
     const decoder = new TextDecoder("utf-8");
 
@@ -79,7 +79,6 @@ export async function createPackage(map: objectGen, log?: Boolean) {
   }
 }
 
-
 /**
  * reads the content of a path either local or remote and returns it in string format
  * @param path string
@@ -88,10 +87,22 @@ async function readURLContent(path: string) {
   if (new RegExp("^https?://[a-z.]").test(path)) {
     const data = await fetch(path);
     const text = await data.text();
-    return text;
-  }
 
-  else {
+    return text;
+  } else {
+    const isLocalFile = (url: string) => {
+      return (
+        url.startsWith("./") ||
+        url.startsWith("../") ||
+        url.startsWith("/") ||
+        url.startsWith("file:") ||
+        url.startsWith("C:\\")
+      );
+    };
+
+    // ignore no external deps
+    if (isLocalFile(path)) return "DEFAULT";
+
     const decoder = new TextDecoder("utf-8");
     const buffer = await Deno.readFile(path);
     return decoder.decode(buffer);
@@ -104,7 +115,7 @@ async function readURLContent(path: string) {
  */
 export async function generateHash(url: string) {
   const hash = createHash("sha256");
-  hash.update(await readURLContent(url) + url);
+  hash.update((await readURLContent(url)) + url);
   return hash.toString();
 }
 
@@ -114,11 +125,13 @@ export async function generateHash(url: string) {
  * @param hash string
  */
 export async function validateHash(url: string, hash: string) {
-  const isNew = Object.keys(await Store.getStorage()).some((key) => key.startsWith("internal__trex__hash:"));
+  const isNew = Object.keys(await Store.getStorage()).some((key) =>
+    key.startsWith("internal__trex__hash:")
+  );
 
   if (!isNew) return true;
 
   const _hash = createHash("sha256");
-  _hash.update(await readURLContent(url) + url);
+  _hash.update((await readURLContent(url)) + url);
   return _hash.toString() === hash;
 }

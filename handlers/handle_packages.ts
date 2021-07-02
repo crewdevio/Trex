@@ -15,6 +15,7 @@ import { Run, Scripts, ResolveDenoPath } from "../commands/run.ts";
 import { getImportMap, createPackage } from "./handle_files.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
+import { getMainFile } from "../utils/file_resolver.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
@@ -54,7 +55,8 @@ async function detectVersion(pkgName: string): Promise<string> {
   if (STD.includes(name)) {
     return `${URI_STD}${versionSuffix}/${name}/`;
   } else if ((await denoApidb(name)).length) {
-    return `${URI_X}${name}${versionSuffix}/mod.ts`;
+    const target = await getMainFile(name, maybeVersion) as { file: string };
+    return `${URI_X}${name}${versionSuffix}/${target.file}`;
   }
 
   throw new Error(
@@ -91,7 +93,6 @@ async function getNamePkg(pkg: string): Promise<string> {
   }
 
   else {
-
     if (STD.includes(pkg) && (await denoApidb(pkg)).length) {
       name = `${pkg}/`;
     }
@@ -222,7 +223,7 @@ export async function customPackage(args: string[], show = true): Promise<boolea
     throw new Error(red("Add a valid package")).message;
   }
 
-  const [pkgName, url] = args[1].split("=");
+  const [pkgName, url, ...rest] = args[1].split("=");
   const { hostname } = new URL(url);
   const loading = LoadingSpinner(
     green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`),
@@ -231,7 +232,7 @@ export async function customPackage(args: string[], show = true): Promise<boolea
 
   const custom: objectGen = {};
 
-  custom[pkgName.toLowerCase()] = url;
+  custom[pkgName.toLowerCase()] = rest.length > 0 ? `${[url, ...rest].join("=")}` : url;
   // * cache custom module
   const process = Deno.run({
     cmd: [...CMD, url],
@@ -252,7 +253,7 @@ export async function customPackage(args: string[], show = true): Promise<boolea
       const data = (await getImportMap<importMap>())!;
       const oldPackage = existImports(data);
 
-      createPackage({ ...custom, ...oldPackage }, true);
+      createPackage({ ...oldPackage, ...custom }, true);
     }
 
     catch (_) {

@@ -34,3 +34,15 @@ export async function denoApidb(query: string) {
 
   return [];
 }
+
+/**
+ * get module info
+ */
+export const moduleUrl = (name: string, version: string) =>
+  `https://cdn.deno.land/${name}/versions/${version}/meta/meta.json`;
+
+/**
+ * get module versions
+ */
+export const moduleVersions = (name: string) =>
+  `https://cdn.deno.land/${name}/meta/versions.json`;

@@ -93,9 +93,15 @@ async function cached(pkgName: string, pkgUrl: string, show = true) {
   );
   const CMD = [ResolveDenoPath(), "cache", "-q", "--unstable"];
 
+  const target = needProxy(pkgName)
+    ? Proxy(pkgName)
+    : `${
+        pkgUrl.startsWith("https://deno.land/std") ? `${pkgUrl}mod.ts` : pkgUrl
+      }`;
+
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({
-      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : `${pkgUrl}mod.ts`],
+      cmd: [...CMD, target],
       stdout: "null",
       stdin: "null",
     });
@@ -114,7 +120,7 @@ async function cached(pkgName: string, pkgUrl: string, show = true) {
   // * install standard package by default use mod.ts
   else if (STD.includes(pkgName)) {
     process = Deno.run({
-      cmd: [...CMD, needProxy(pkgName) ? Proxy(pkgName) : `${pkgUrl}mod.ts`],
+      cmd: [...CMD, target],
     });
 
     if (!(await process.status()).success) {

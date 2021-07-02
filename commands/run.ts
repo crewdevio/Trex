@@ -8,10 +8,10 @@
 
 import { parseToYaml } from "../tools/parseToyaml.ts";
 import { readJson } from "../temp_deps/writeJson.ts";
+import { Match } from "../utils/file_resolver.ts";
 import type { runJson } from "../utils/types.ts";
 import { isGH } from "../utils/storage.ts";
 import * as colors from "fmt/colors.ts";
-import { Match } from "../utils/mod.ts";
 import { exists } from "fs/mod.ts";
 import { join } from "path/mod.ts";
 
@@ -129,11 +129,11 @@ export async function Run(command: string) {
         });
 
         if (!(await process.status()).success) {
-          process.close();
+          Deno.close(process.rid);
           throw new Error(`Error: running command ${red(toRun[0])}`).message;
         }
 
-        process.close();
+        Deno.close(process.rid);
       }
 
       catch (err) {
@@ -146,7 +146,7 @@ export async function Run(command: string) {
               )
             : err instanceof Deno.errors.NotFound
               ? colors.red(err.message)
-              : colors.yellow(err)
+              : colors.yellow(err.message)
         ).message;
       }
     }
