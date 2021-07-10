@@ -154,3 +154,18 @@ export function LoadingSpinner(text: string, show = true) {
 
   }
 }
+
+/**
+ * check if a local file.
+ * @param {string} url
+ * @returns {boolean}
+ */
+export const isLocalFile = (url: string) => {
+  return (
+    url.startsWith("./") ||
+    url.startsWith("../") ||
+    url.startsWith("/") ||
+    url.startsWith("file:") ||
+    url.startsWith("C:\\")
+  );
+};

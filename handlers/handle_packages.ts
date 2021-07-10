@@ -13,10 +13,10 @@ import {
 } from "./handle_third_party_package.ts";
 import { Run, Scripts, ResolveDenoPath } from "../commands/run.ts";
 import { getImportMap, createPackage } from "./handle_files.ts";
+import { LoadingSpinner, isLocalFile } from "../tools/logs.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
 import { STD, URI_STD, URI_X, flags } from "../utils/info.ts";
 import { getMainFile } from "../utils/file_resolver.ts";
-import { LoadingSpinner } from "../tools/logs.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import { denoApidb } from "../utils/db.ts";
@@ -165,28 +165,31 @@ export async function installPackages(args: string[], show = true): Promise<obje
       for (const pkg in importmap?.imports) {
         const url = importmap.imports[pkg];
 
-        // check virtual lock hash
-        if (await validateHash(url, await Store.getItem(`internal__trex__hash:${pkg}`))) {
-          if (url?.includes("deno.land")) {
-            const mod = pkg.split("/").join("");
-            await cache(mod, await detectVersion(mod));
+        // skip packages that are local files
+        if (!isLocalFile(url)) {
+          // check virtual lock hash
+          if (await validateHash(url, await Store.getItem(`internal__trex__hash:${pkg}`))) {
+            if (url?.includes("deno.land")) {
+              const mod = pkg.split("/").join("");
+              await cache(mod, await detectVersion(mod));
 
-            map[(await getNamePkg(mod)).toLowerCase()] = url;
+              map[(await getNamePkg(mod)).toLowerCase()] = url;
+            }
+
+            else {
+              await cacheNestpackage(importmap?.imports[pkg]!);
+              map[pkg.toLowerCase()] = importmap?.imports[pkg]!;
+            }
           }
 
           else {
-            await cacheNestpackage(importmap?.imports[pkg]!);
-            map[pkg.toLowerCase()] = importmap?.imports[pkg]!;
+            console.log(
+              colors.white(
+                `\nthe generated hash does not match the package "${colors.green(pkg)}",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${colors.red('=>')} ${colors.cyan('https://github.com/crewdevio/Trex')}`
+                ));
+
+            Deno.exit(0);
           }
-        }
-
-        else {
-          console.log(
-            colors.white(
-              `\nthe generated hash does not match the package "${colors.green(pkg)}",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${colors.red('=>')} ${colors.cyan('https://github.com/crewdevio/Trex')}`
-              ));
-
-          Deno.exit(0);
         }
       }
     }

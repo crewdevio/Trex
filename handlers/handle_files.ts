@@ -6,11 +6,11 @@
  *
  */
 
+import { newVersion, isLocalFile } from "../tools/logs.ts";
 import { KillProcess } from "../tools/kill_process.ts";
 import { writeJson } from "../temp_deps/writeJson.ts";
 import type { objectGen } from "../utils/types.ts";
 import { LogPackages } from "../utils/logs.ts";
-import { newVersion } from "../tools/logs.ts";
 import { createHash } from "hash/mod.ts";
 import Store from "./handler_storage.ts";
 import { exists } from "fs/mod.ts";
@@ -90,16 +90,6 @@ async function readURLContent(path: string) {
 
     return text;
   } else {
-    const isLocalFile = (url: string) => {
-      return (
-        url.startsWith("./") ||
-        url.startsWith("../") ||
-        url.startsWith("/") ||
-        url.startsWith("file:") ||
-        url.startsWith("C:\\")
-      );
-    };
-
     // ignore no external deps
     if (isLocalFile(path)) return "DEFAULT";
 
