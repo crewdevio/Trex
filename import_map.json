@@ -1,11 +1,11 @@
 {
   "imports": {
-    "encoding/": "https://deno.land/std@0.100.0/encoding/",
-    "fmt/": "https://deno.land/std@0.100.0/fmt/",
-    "fs/": "https://deno.land/std@0.100.0/fs/",
-    "hash/": "https://deno.land/std@0.100.0/hash/",
+    "encoding/": "https://deno.land/std@0.101.0/encoding/",
+    "fmt/": "https://deno.land/std@0.101.0/fmt/",
+    "fs/": "https://deno.land/std@0.101.0/fs/",
+    "hash/": "https://deno.land/std@0.101.0/hash/",
     "merlin": "https://deno.land/x/merlin/mod.ts",
-    "path/": "https://deno.land/std@0.100.0/path/",
+    "path/": "https://deno.land/std@0.101.0/path/",
     "proxy": "https://denopkg.com/crewdevio/Trex@proxy/proxy/proxy.ts",
     "wait": "https://deno.land/x/wait@0.1.11/mod.ts"
   }
