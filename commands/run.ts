@@ -146,7 +146,7 @@ export async function Run(command: string) {
               )
             : err instanceof Deno.errors.NotFound
               ? colors.red(err.message)
-              : colors.yellow(err.message)
+              : colors.yellow(err.message ?? `${err}`)
         ).message;
       }
     }
