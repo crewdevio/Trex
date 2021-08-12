@@ -6,7 +6,7 @@
  *
  */
 
-import { parseToYaml } from "../tools/parseToyaml.ts";
+import { parseToYaml } from "../tools/parse_to_yaml.ts";
 import { readJson } from "../temp_deps/writeJson.ts";
 import { Match } from "../utils/file_resolver.ts";
 import type { runJson } from "../utils/types.ts";

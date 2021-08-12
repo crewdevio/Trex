@@ -104,4 +104,5 @@ export const keyWords = {
   setup: "setup",
   ls: "ls",
   exec: "exec",
+  versions: "versions",
 };
