@@ -13,6 +13,7 @@ import type { importMap } from "../utils/types.ts";
 import { STD, VERSION } from "../utils/info.ts";
 import { needProxy, Proxy } from "proxy";
 import * as colors from "fmt/colors.ts";
+import { ltr, clean } from "semver";
 import { wait } from "wait";
 
 const { yellow, cyan, red, white, green } = colors;
@@ -89,7 +90,8 @@ export async function newVersion(): Promise<void> {
 
   const data = (await response.json()) as { tag_name: string };
 
-  if (data?.tag_name !== VERSION.VERSION) {
+  // check if trex is outdate
+  if (data?.tag_name !== VERSION.VERSION && ltr(clean(VERSION.VERSION)!, clean(data?.tag_name)!)) {
     const versionMessage = white(
       `Actual ${red(VERSION.VERSION)} -> new ${cyan(data?.tag_name ?? "?")}`
     );
@@ -154,3 +156,18 @@ export function LoadingSpinner(text: string, show = true) {
 
   }
 }
+
+/**
+ * check if a local file.
+ * @param {string} url
+ * @returns {boolean}
+ */
+export const isLocalFile = (url: string) => {
+  return (
+    url.startsWith("./") ||
+    url.startsWith("../") ||
+    url.startsWith("/") ||
+    url.startsWith("file:") ||
+    url.startsWith("C:\\")
+  );
+};

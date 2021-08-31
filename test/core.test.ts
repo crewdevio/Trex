@@ -92,6 +92,8 @@ Test.isUndefined("Command helper test", {
       ],
     });
   },
+  Ops: false,
+  Resources: false,
 });
 
 Test.assertEqual("is cache package", {
@@ -106,6 +108,8 @@ Test.assertEqual("is cache package", {
   toBe() {
     return true;
   },
+  Ops: false,
+  Resources: false,
 });
 
 Test.isString("is cache package path", {
@@ -116,6 +120,8 @@ Test.isString("is cache package path", {
 
     return data.path;
   },
+  Ops: false,
+  Resources: false,
 });
 
 Test.isUndefined("delete package", {
@@ -134,4 +140,6 @@ Test.isUndefined("ls command", {
     const map = (await getImportMap<importMap>())!;
     return LogPackages(map?.imports, false);
   },
+  Ops: false,
+  Resources: false,
 });

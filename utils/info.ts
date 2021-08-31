@@ -37,9 +37,10 @@ export const STD = [
   "uuid",
   "ws",
   "wasi",
+  "collections",
 ];
 
-export const VERSION = { VERSION: "v1.8.0" };
+export const VERSION = { VERSION: "v1.9.0" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
@@ -103,4 +104,5 @@ export const keyWords = {
   setup: "setup",
   ls: "ls",
   exec: "exec",
+  versions: "versions",
 };

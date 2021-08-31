@@ -125,6 +125,7 @@ async function Main() {
     let loading: Spinner;
     const [, ...pkgs] = Args;
     for (const pkg of pkgs) {
+      // @ts-ignore
       loading = LoadingSpinner(
         green(`Removing ${bold(yellow(pkg))} from import_map.json`)
       )!;
@@ -163,6 +164,10 @@ async function Main() {
         },
         flags: [{ alias: flags.help, description: "show command help" }],
       });
+    }
+
+    if (!Args[1]){
+      throw new Error(colors.red("you need to pass a package name")).message;
     }
 
     await packageTreeInfo(...Args);
