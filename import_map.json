@@ -8,6 +8,6 @@
     "path/": "https://deno.land/std@0.106.0/path/",
     "proxy": "https://denopkg.com/crewdevio/Trex@proxy/proxy/proxy.ts",
     "semver": "https://deno.land/x/semver@v1.4.0/mod.ts",
-    "wait": "http://denopkg.com/crewdevio/tools@main/wait/mod.ts"
+    "wait": "https://denopkg.com/crewdevio/tools@main/wait/mod.ts"
   }
 }
