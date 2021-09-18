@@ -21,6 +21,7 @@ import {
 } from "./utils/logs.ts";
 import { getImportMap, createPackage } from "./handlers/handle_files.ts";
 import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
+import { checkDepsUpdates } from "./handlers/handler_check.ts";
 import { deletepackage } from "./handlers/delete_package.ts";
 import { execution } from "./handlers/handle_execution.ts";
 import { purge } from "./handlers/purge_package.ts";
@@ -138,7 +139,7 @@ async function Main() {
     if (Args[1]) {
       CommandNotFound({
         commands: [keyWords.upgrade],
-        flags: [...flags.help],
+        flags: [...flags.help, "--canary"],
       });
     }
 
@@ -148,7 +149,10 @@ async function Main() {
           alias: [keyWords.upgrade],
           description: "update trex",
         },
-        flags: [{ alias: flags.help, description: "show command help" }],
+        flags: [
+          { alias: flags.help, description: "show command help" },
+          { alias: ["--canary"], description: "install from dev branch" }
+        ],
       });
     }
 
@@ -267,6 +271,32 @@ async function Main() {
     }
   }
 
+  // * check deno.land updates
+  else if (Args[0] === keyWords.check) {
+    if (flags.help.includes(Args[1])) {
+      HelpCommand({
+        command: {
+          alias: [keyWords.check],
+          description: "check deno.land [std/x] dependencies updates",
+        },
+        flags: [
+          {
+            alias: flags.help,
+            description: "show command help",
+          },
+          {
+            alias: flags.fix,
+            description: "update outdate dependencies",
+          }
+        ],
+      });
+    }
+
+    else {
+      await checkDepsUpdates();
+    }
+  }
+
   // * displays help information
   else {
     CommandNotFound({
@@ -282,6 +312,7 @@ async function Main() {
         keyWords.setup,
         keyWords.ls,
         keyWords.exec,
+        keyWords.check,
       ],
       flags: [],
     });
