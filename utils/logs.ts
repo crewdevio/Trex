@@ -46,7 +46,13 @@ export async function updateTrex(): Promise<void> {
   // * get the latest release
   const repoVersion = (await response.json()) as { tag_name: string };
 
-  if (repoVersion.tag_name !== VERSION.VERSION) {
+  const isCanary = Deno.args[1] === "--canary";
+  const canaryURL = "https://denopkg.com/crewdevio/trex@dev";
+  const standarURL = `https://deno.land/x/trex@${repoVersion.tag_name}`;
+  // check if is a canary update
+  const url = isCanary ? canaryURL : standarURL;
+
+  if (repoVersion.tag_name !== VERSION.VERSION || isCanary) {
     setTimeout(async () => {
       await exec({
         config: {
@@ -55,12 +61,12 @@ export async function updateTrex(): Promise<void> {
             "-r",
             "--no-check",
             "--import-map",
-            `https://deno.land/x/trex@${repoVersion.tag_name}/import_map.json`,
+            `${url}/import_map.json`,
             "--unstable",
             "-n",
             "trex",
           ],
-          url: `https://deno.land/x/trex@${repoVersion.tag_name}/cli.ts`,
+          url: `${url}/cli.ts`,
         },
       });
 
@@ -197,5 +203,3 @@ export function LogPackages(map: Object, message = true) {
   }
   console.log();
 }
-
-

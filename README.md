@@ -87,6 +87,7 @@ trex upgrade
 ```
 
 > **note**: available for versions 0.2.0 or higher.
+> **note**: if you want to try the latest features before release you can use -the `--canary` flag.
 
 Verify the installation of Trex:
 
@@ -101,8 +102,6 @@ For help on the commands that Trex provides, use:
 ```console
 trex --help
 ```
-
-For a better implementation of this tool you can use the [Commands](https://deno.land/x/commands) utility.
 
 ## Usage
 
@@ -239,6 +238,18 @@ trex install --map fs@0.54.0
 ```
 
 > **note**: can be used with third party packages.
+
+### Check if a dependencie is outdate
+
+if you want to check if one or more dependencies are out of date, only run trex check command.
+
+```console
+trex check
+```
+
+this checks the dependencies and if there are updates for that dependency.
+
+for now only works for [`deno.land/std`](https://deno.land/std) and [`deno.land/x`](https://deno.land/x) but eventually should work with many registers an cdn
 
 ### Run Scripts
 

@@ -97,7 +97,7 @@ export async function Run(command: string) {
         const [currentCMD, execCommand] = [
           ["trex", "run", command].join(" "),
           [...runnerCommand]
-            .map((cmd) => cmd.trim())
+            .map((cmd) => cmd?.trim())
             .join(" ")
             .replaceAll(".cmd", ""),
         ];

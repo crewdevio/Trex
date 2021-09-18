@@ -89,7 +89,7 @@ export async function getMainFile(name: string, version?: string) {
     "deno/index.js",
   ].map(async (target) => {
     const file = target.includes("%name%")
-      ? target.replace("%name%", name.trim())
+      ? target.replace("%name%", name?.trim())
       : target;
 
     const response = await fetch(

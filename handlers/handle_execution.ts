@@ -71,7 +71,7 @@ export async function execution() {
     name = _name;
     commands = _commands;
 
-    const userPerms = _perms.split(",").map((ac) => ac.trim());
+    const userPerms = _perms.split(",").map((ac) => ac?.trim());
 
     userPerms.forEach((perm) => {
       if (denoPerms[perm] !== undefined) {

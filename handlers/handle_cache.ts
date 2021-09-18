@@ -29,7 +29,6 @@ export const delay = (time: number) =>
  * @param {string} hash
  * @returns string
  */
-
 function getCachePath(protocol: string, hostname: string, hash: string) {
   const user = Deno.env.get("USERNAME")! || Deno.env.get("HOME")!;
   protocol = protocol.includes(":") ? protocol.replace(":", "") : protocol;
@@ -51,7 +50,6 @@ function getCachePath(protocol: string, hostname: string, hash: string) {
  * detect if a package is installed
  * @param {string} packageUrl
  */
-
 export async function isCachePackage(packageUrl: string) {
   if (!(packageUrl.includes("http://") || packageUrl.includes("https://"))) {
     throw new Error(
@@ -81,8 +79,7 @@ export async function isCachePackage(packageUrl: string) {
  * @param {string} pkgUrl - package url.
  * @return void
  */
-
-async function cached(pkgName: string, pkgUrl: string, show = true) {
+export async function cached(pkgName: string, pkgUrl: string, show = true) {
   let process: Deno.Process;
 
   const { hostname } = new URL(pkgUrl);

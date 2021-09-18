@@ -8,9 +8,9 @@
 
 import { getImportMap } from "../handlers/handle_files.ts";
 import { Somebybroken, offLine } from "../utils/logs.ts";
-import { ResolveDenoPath } from "../commands/run.ts";
 import type { importMap } from "../utils/types.ts";
 import { STD, VERSION } from "../utils/info.ts";
+import { createGraph } from "deno_graph";
 import { needProxy, Proxy } from "proxy";
 import * as colors from "fmt/colors.ts";
 import { ltr, clean } from "semver";
@@ -39,19 +39,16 @@ export async function packageTreeInfo(
             ? Proxy(args[1])
             : `${map.imports[pkg]}mod.ts`;
 
-          const process = Deno.run({
-            cmd: [ResolveDenoPath(), "info", "--unstable", _pkg],
-          });
+            try {
+              // create package graph
+              const graph = await createGraph(_pkg);
 
-          if (!(await process.status()).success) {
-            process.close();
-            Somebybroken("package information could not be obtained");
-          }
+              console.log(graph.toString());
+            } catch (error: any) {
+              Somebybroken("package information could not be obtained");
+            }
 
-          const status = (await process.status()).success;
-
-          process.close();
-          return status;
+          return true;
         }
       }
 
@@ -59,18 +56,16 @@ export async function packageTreeInfo(
         const moduleName = args[1];
 
         if (moduleName === pkg) {
-          const process = Deno.run({
-            cmd: [ResolveDenoPath(), "info", "--unstable", map.imports[pkg]],
-          });
+          try {
+            // create package graph
+            const graph = await createGraph(map.imports[pkg]);
 
-          if (!(await process.status()).success) {
-            process.close();
+            console.log(graph.toString());
+          } catch (error: any) {
             Somebybroken("package information could not be obtained");
           }
-          const status = (await process.status()).success;
 
-          process.close();
-          return status;
+          return true;
         }
       }
     }

@@ -24,7 +24,7 @@ const { red } = colors;
 export async function deletepackage(toDelete: string) {
   if (await exists("./import_map.json")) {
     try {
-      const pkg: string = toDelete.trim();
+      const pkg: string = toDelete?.trim();
       const Packages = (await getImportMap<importMap>())!;
 
       if (Packages.imports) {
