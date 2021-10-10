@@ -6,7 +6,7 @@
  *
  */
 
-import { newVersion, isLocalFile } from "../tools/logs.ts";
+import { isLocalFile, newVersion } from "../tools/logs.ts";
 import { KillProcess } from "../tools/kill_process.ts";
 import { writeJson } from "../temp_deps/writeJson.ts";
 import type { objectGen } from "../utils/types.ts";
@@ -67,7 +67,7 @@ export async function createPackage(map: objectGen, log?: Boolean) {
   await writeJson(
     "./import_map.json",
     { imports: sortedPackage(map) },
-    { spaces: 2 }
+    { spaces: 2 },
   );
 
   if (log) {

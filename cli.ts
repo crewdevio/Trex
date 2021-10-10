@@ -7,20 +7,20 @@
  */
 
 import {
-  installPackages,
-  existImports,
   customPackage,
+  existImports,
+  installPackages,
 } from "./handlers/handle_packages.ts";
 import {
-  LogHelp,
-  Version,
-  updateTrex,
-  HelpCommand,
   CommandNotFound,
+  HelpCommand,
+  LogHelp,
   LogPackages,
+  updateTrex,
+  Version,
 } from "./utils/logs.ts";
-import { getImportMap, createPackage } from "./handlers/handle_files.ts";
-import { VERSION, helpsInfo, flags, keyWords } from "./utils/info.ts";
+import { createPackage, getImportMap } from "./handlers/handle_files.ts";
+import { flags, helpsInfo, keyWords, VERSION } from "./utils/info.ts";
 import { checkDepsUpdates } from "./handlers/handler_check.ts";
 import { deletepackage } from "./handlers/delete_package.ts";
 import { execution } from "./handlers/handle_execution.ts";
@@ -83,16 +83,13 @@ async function Main() {
     const runJson = await Scripts();
     // post install hook
     if (runJson?.scripts?.preinstall) await Run("postinstall");
-  }
-  // * display trex version
+  } // * display trex version
   else if (flags.version.includes(Args[0])) {
     Version(VERSION.VERSION);
-  }
-  // * show help info
+  } // * show help info
   else if (flags.help.includes(Args[0])) {
     LogHelp(helpsInfo);
-  }
-  // * install a custom package
+  } // * install a custom package
   else if (flags.custom.includes(Args[0])) {
     if (flags.help.includes(Args[1])) {
       return HelpCommand({
@@ -105,8 +102,7 @@ async function Main() {
     }
 
     customPackage(Args);
-  }
-  // * uninstall some package
+  } // * uninstall some package
   else if (Args[0] === keyWords.uninstall) {
     if (flags.help.includes(Args[1])) {
       return HelpCommand({
@@ -128,13 +124,12 @@ async function Main() {
     for (const pkg of pkgs) {
       // @ts-ignore
       loading = LoadingSpinner(
-        green(`Removing ${bold(yellow(pkg))} from import_map.json`)
+        green(`Removing ${bold(yellow(pkg))} from import_map.json`),
       )!;
       await deletepackage(pkg);
       loading?.stop();
     }
-  }
-  // * update to lastest version of trex
+  } // * update to lastest version of trex
   else if (Args[0] === keyWords.upgrade) {
     if (Args[1]) {
       CommandNotFound({
@@ -151,14 +146,13 @@ async function Main() {
         },
         flags: [
           { alias: flags.help, description: "show command help" },
-          { alias: ["--canary"], description: "install from dev branch" }
+          { alias: ["--canary"], description: "install from dev branch" },
         ],
       });
     }
 
     await updateTrex();
-  }
-  // * shows the dependency tree of a package
+  } // * shows the dependency tree of a package
   else if (Args[0] === keyWords.tree) {
     if (flags.help.includes(Args[1])) {
       return HelpCommand({
@@ -170,14 +164,12 @@ async function Main() {
       });
     }
 
-    if (!Args[1]){
+    if (!Args[1]) {
       throw new Error(colors.red("you need to pass a package name")).message;
     }
 
     await packageTreeInfo(...Args);
-  }
-
-  // * run script aliases
+  } // * run script aliases
   else if (Args[0] === keyWords.run) {
     if (flags.help.includes(Args[1])) {
       return HelpCommand({
@@ -200,9 +192,7 @@ async function Main() {
     }
 
     await Run(Args[1]);
-  }
-
-  // * purge command
+  } // * purge command
   else if (Args[0] === keyWords.purge) {
     if (flags.help.includes(Args[1])) {
       HelpCommand({
@@ -220,9 +210,7 @@ async function Main() {
     }
 
     await purge();
-  }
-
-  // * ls command
+  } // * ls command
   else if (Args[0] === keyWords.ls) {
     if (flags.help.includes(Args[1])) {
       HelpCommand({
@@ -237,15 +225,11 @@ async function Main() {
           },
         ],
       });
-    }
-
-    else {
+    } else {
       const map = (await getImportMap<importMap>())!;
       LogPackages(map?.imports, false);
     }
-  }
-
-  // * execute a cli with out install
+  } // * execute a cli with out install
   else if (Args[0] === keyWords.exec) {
     if (flags.help.includes(Args[1])) {
       HelpCommand({
@@ -260,18 +244,14 @@ async function Main() {
           },
           {
             alias: ["--perms"],
-            description: "specify cli permisions"
-          }
+            description: "specify cli permisions",
+          },
         ],
       });
-    }
-
-    else {
+    } else {
       await execution();
     }
-  }
-
-  // * check deno.land updates
+  } // * check deno.land updates
   else if (Args[0] === keyWords.check) {
     if (flags.help.includes(Args[1])) {
       HelpCommand({
@@ -287,17 +267,13 @@ async function Main() {
           {
             alias: flags.fix,
             description: "update outdate dependencies",
-          }
+          },
         ],
       });
-    }
-
-    else {
+    } else {
       await checkDepsUpdates();
     }
-  }
-
-  // * displays help information
+  } // * displays help information
   else {
     CommandNotFound({
       commands: [

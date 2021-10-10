@@ -30,7 +30,9 @@
 
 ## About
 
-Trex is a package management tool for deno similar to npm but keeping close to the deno philosophy. Packages are cached and only one `import_map.json` file is generated.
+Trex is a package management tool for deno similar to npm but keeping close to
+the deno philosophy. Packages are cached and only one `import_map.json` file is
+generated.
 
 ```javascript
 // import_map.json
@@ -42,7 +44,8 @@ Trex is a package management tool for deno similar to npm but keeping close to t
 }
 ```
 
-For more information about the import maps in deno see [import maps](https://deno.land/manual/linking_to_external_code/import_maps).
+For more information about the import maps in deno see
+[import maps](https://deno.land/manual/linking_to_external_code/import_maps).
 
 ## Additional topics
 
@@ -50,7 +53,8 @@ For more information about the import maps in deno see [import maps](https://den
 
 - [Integration with nest.land](docs/nest_land_setup.md)
 
-- [How can I have my package available to download with Trex?](docs/add_package.md)
+- [How can I have my package available to download with
+  Trex?](docs/add_package.md)
 
 ## Installation
 
@@ -86,8 +90,8 @@ Or use the `upgrade` command:
 trex upgrade
 ```
 
-> **note**: available for versions 0.2.0 or higher.
-> **note**: if you want to try the latest features before release you can use -the `--canary` flag.
+> **note**: available for versions 0.2.0 or higher. **note**: if you want to try
+> the latest features before release you can use -the `--canary` flag.
 
 Verify the installation of Trex:
 
@@ -115,7 +119,8 @@ trex install --map fs http fmt
 
 > **note**: you can use `trex i --map fs http fmt`
 
-`--map` installs packages from the standard library and those hosted at `deno.land/x`
+`--map` installs packages from the standard library and those hosted at
+`deno.land/x`
 
 ### Installing from nest.land
 
@@ -125,9 +130,11 @@ Install a package hosted on [nest.land](https://nest.land/gallery):
 trex install --nest opine@0.13.0
 ```
 
-> **note**: if you want to install a package using nest.land you must specify a version explicitly as above
+> **note**: if you want to install a package using nest.land you must specify a
+> version explicitly as above
 
-You can install packages from std hosted in nest.land by specifying the package and the version:
+You can install packages from std hosted in nest.land by specifying the package
+and the version:
 
 ```console
 trex install --nest fs@0.61.0
@@ -145,7 +152,8 @@ Example:
 trex install --pkg oakserver/oak@main/mod.ts oak
 ```
 
-> **note**: In the event that the repository uses a branch other than master as the main branch, this must be specified
+> **note**: In the event that the repository uses a branch other than master as
+> the main branch, this must be specified
 
 The above downloads oak directly from its repository.
 
@@ -165,7 +173,8 @@ All installation methods produce an import_map.json file:
 
 ### Downloading packages
 
-Download all the packages listed in the `import_map.json` similar to `npm install`:
+Download all the packages listed in the `import_map.json` similar to
+`npm install`:
 
 ```console
 trex install
@@ -217,7 +226,8 @@ trex delete fs@0.52.0
 }
 ```
 
-Removing from cache only works with standard packages and those installed from `deno.land/x`
+Removing from cache only works with standard packages and those installed from
+`deno.land/x`
 
 ### Selecting a specific version of a package
 
@@ -241,7 +251,8 @@ trex install --map fs@0.54.0
 
 ### Check if a dependencie is outdate
 
-if you want to check if one or more dependencies are out of date, only run trex check command.
+if you want to check if one or more dependencies are out of date, only run trex
+check command.
 
 ```console
 trex check
@@ -249,11 +260,15 @@ trex check
 
 this checks the dependencies and if there are updates for that dependency.
 
-for now only works for [`deno.land/std`](https://deno.land/std) and [`deno.land/x`](https://deno.land/x) but eventually should work with many registers an cdn
+for now only works for [`deno.land/std`](https://deno.land/std) and
+[`deno.land/x`](https://deno.land/x) but eventually should work with many
+registers an cdn
 
 ### Run Scripts
 
-now you can create command aliases similar to [npm run](https://docs.npmjs.com/cli-commands/run-script.html), you just have to create a run.json file with the following structure:
+now you can create command aliases similar to
+[npm run](https://docs.npmjs.com/cli-commands/run-script.html), you just have to
+create a run.json file with the following structure:
 
 ```json
 {
@@ -265,7 +280,8 @@ now you can create command aliases similar to [npm run](https://docs.npmjs.com/c
 
 > **note**: to run command aliases you must use the command `trex run <aliases>`
 
-now you can call a command within another or call a deno script like `denopack` or `eggs` within a command alias
+now you can call a command within another or call a deno script like `denopack`
+or `eggs` within a command alias
 
 ```json
 {
@@ -280,7 +296,8 @@ now you can call a command within another or call a deno script like `denopack` 
 
 #### Installation life cycle
 
-when the command `trex install` or `trex i` executed, you can perform actions before and after the execution of `trex install`.
+when the command `trex install` or `trex i` executed, you can perform actions
+before and after the execution of `trex install`.
 
 **execution order**:
 
@@ -301,9 +318,12 @@ when the command `trex install` or `trex i` executed, you can perform actions be
 }
 ```
 
-> **note**: you can use the --watch flag to monitor the changes and rerun the script, example: `deno run --watch --unstable https://deno.land/std@0.71.0/examples/welcome.ts`
+> **note**: you can use the --watch flag to monitor the changes and rerun the
+> script, example:
+> `deno run --watch --unstable https://deno.land/std@0.71.0/examples/welcome.ts`
 
-you can pass arguments in the command alias and these will be resisted by the file to execute
+you can pass arguments in the command alias and these will be resisted by the
+file to execute
 
 ```console
 trex run start --port=3000 --env
@@ -315,7 +335,11 @@ console.log(Deno.args); // ["--port=3000", "--env"]
 
 #### **Reboot script alias protocol (rsap)**
 
-with trex you can create script aliases that are reloaded every time a file is changed, this can be done using deno's `--watch` flag. If you would like to have this same functionality but with any command alias you want, you can use trex reboot script protocol which reruns the command alias every time changes are detected in the files and folders you specify
+with trex you can create script aliases that are reloaded every time a file is
+changed, this can be done using deno's `--watch` flag. If you would like to have
+this same functionality but with any command alias you want, you can use trex
+reboot script protocol which reruns the command alias every time changes are
+detected in the files and folders you specify
 
 `example:`
 
@@ -331,9 +355,12 @@ with trex you can create script aliases that are reloaded every time a file is c
 }
 ```
 
-You only have to add the `files` option in the `run.json` file and it will only observe the files and folders that you specify, if you leave the array empty it will observe all the files.
+You only have to add the `files` option in the `run.json` file and it will only
+observe the files and folders that you specify, if you leave the array empty it
+will observe all the files.
 
-for the script alias to use `rsap` you just need to add the `--watch` or `-w` flag to the end of the command alias.
+for the script alias to use `rsap` you just need to add the `--watch` or `-w`
+flag to the end of the command alias.
 
 `example:`
 
@@ -362,7 +389,9 @@ and of course it can be used with any cli tool, compiler or interpreter.
     - ./main.go
 ```
 
-a limitation of watch mode is that they do not restart the processes that never end as http servers, in those cases we recommend other alternatives such as [denon](https://deno.land/x/denon)
+a limitation of watch mode is that they do not restart the processes that never
+end as http servers, in those cases we recommend other alternatives such as
+[denon](https://deno.land/x/denon)
 
 ### Virtual cli tool execution (experimental)
 
@@ -372,7 +401,8 @@ trex exec allows you to run many cli tools hosted at `deno.land/x`
 trex exec aleph init hello_world
 ```
 
-trex will fetch aleph's cli and run without installing it locally using `deno install`, you can also specify the version you want to use.
+trex will fetch aleph's cli and run without installing it locally using
+`deno install`, you can also specify the version you want to use.
 
 ```console
 trex exec aleph@v0.2.28 init hello_world
@@ -384,7 +414,8 @@ You can also specify the permissions that the cli will use
 trex exec --perms env,read,write,net denon run ./app.ts
 ```
 
-you just have to pass the `--perms` flag followed by the permissions separated by commas
+you just have to pass the `--perms` flag followed by the permissions separated
+by commas
 
 **perms**
 
@@ -398,7 +429,8 @@ you just have to pass the `--perms` flag followed by the permissions separated b
 - `hrtime`: --allow-hrtime
 - `A`: --allow-all
 
-> **note**: if you don't specify the permissions, they are all automatically granted to you
+> **note**: if you don't specify the permissions, they are all automatically
+> granted to you
 
 you can also use this combined with the command alias
 
@@ -430,11 +462,15 @@ even this:
 trex exec land trex exec land trex exec ....
 ```
 
-this functionality is heavily inspired by [npx](https://docs.npmjs.com/cli/v7/commands/npx) and [land](https://deno.land/x/land). if you need another alternative to `trex exec` to use in `deno`, [land](https://deno.land/x/land) this is a great option.
+this functionality is heavily inspired by
+[npx](https://docs.npmjs.com/cli/v7/commands/npx) and
+[land](https://deno.land/x/land). if you need another alternative to `trex exec`
+to use in `deno`, [land](https://deno.land/x/land) this is a great option.
 
 ### Purge a package or URL
 
-if you want delete a package or url package from cache memory in deno, you can use the purge command to remove from cache memory.
+if you want delete a package or url package from cache memory in deno, you can
+use the purge command to remove from cache memory.
 
 example:
 
@@ -442,7 +478,8 @@ example:
 trex purge oak
 ```
 
-this finds the oak package in the `import_map.json` file and removes it from the cache.
+this finds the oak package in the `import_map.json` file and removes it from the
+cache.
 
 ```console
 trex purge https://deno.land/x/oak@v6.3.1/mod.ts
@@ -529,13 +566,15 @@ https://deno.land/std/fs/mod.ts
 
 ### Integrity checking & lock files
 
-Let's say your module depends on a remote module.
-When you compile your module for the first time, it is retrieved, compiled and cached.
-It will remain this way until you run your module on a new machine (e.g. in production) or reload the cache.
+Let's say your module depends on a remote module. When you compile your module
+for the first time, it is retrieved, compiled and cached. It will remain this
+way until you run your module on a new machine (e.g. in production) or reload
+the cache.
 
-But what happens if the content in the remote url is changed?
-This could lead to your production module running with different dependency code than your local module.
-Deno's solution to avoid this is to use integrity checking and lock files.
+But what happens if the content in the remote url is changed? This could lead to
+your production module running with different dependency code than your local
+module. Deno's solution to avoid this is to use integrity checking and lock
+files.
 
 Create a lockfile:
 
@@ -551,7 +590,9 @@ If you use `import_map.json` in input file, you can specify it:
 deno cache --lock=lock.json --lock-write --import-map=import_map.json --unstable file.ts
 ```
 
-See [deno document](https://deno.land/manual/linking_to_external_code/integrity_checking) for more info.
+See
+[deno document](https://deno.land/manual/linking_to_external_code/integrity_checking)
+for more info.
 
 ## Complete example
 

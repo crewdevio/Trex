@@ -6,7 +6,7 @@
  *
  */
 
-import { yellow, cyan, red, green, bold } from "fmt/colors.ts";
+import { bold, cyan, green, red, yellow } from "fmt/colors.ts";
 import { getImportMap } from "../handlers/handle_files.ts";
 import { CommandNotFound } from "../utils/logs.ts";
 import type { importMap } from "../utils/types.ts";
@@ -88,38 +88,44 @@ export async function checkDepsUpdates(): Promise<void> {
   }
 
   for (const { isVersioned, name, pkg, latest, current, std, x } of toUpdate) {
-    if (std)
+    if (std) {
       console.log(cyan(`this is a ${bold(yellow("deno.land/std"))} package:`));
+    }
 
-    if (x)
+    if (x) {
       console.log(cyan(`this is a ${bold(yellow("deno.land/x"))} package:`));
+    }
 
     if (!isVersioned) {
       console.log(
         green(
-          `\n${yellow(`warning:`)} the package ${yellow(
-            `"${name}"`
-          )} is a unversioned url => ${yellow(`(${pkg})`)}\n`
-        )
+          `\n${yellow(`warning:`)} the package ${
+            yellow(
+              `"${name}"`,
+            )
+          } is a unversioned url => ${yellow(`(${pkg})`)}\n`,
+        ),
       );
 
       console.log(green(`The latest version is ${cyan(`${latest}`)}\n`));
       console.log(
-        green(`${yellow("[quick fix]")}: trex i -m ${name}@${latest}`)
+        green(`${yellow("[quick fix]")}: trex i -m ${name}@${latest}`),
       );
 
       console.log(red(`------------------------------------------------`));
     } else {
       console.log(
         green(
-          `\nThe package ${yellow(`"${name}"`)} is outdate: current = ${cyan(
-            `${current};`
-          )} latest = ${cyan(`${latest};`)}\n`
-        )
+          `\nThe package ${yellow(`"${name}"`)} is outdate: current = ${
+            cyan(
+              `${current};`,
+            )
+          } latest = ${cyan(`${latest};`)}\n`,
+        ),
       );
 
       console.log(
-        green(`${yellow("[quick fix]")}: trex i -m ${name}@${latest}`)
+        green(`${yellow("[quick fix]")}: trex i -m ${name}@${latest}`),
       );
       console.log(red(`------------------------------------------------`));
     }
@@ -128,7 +134,7 @@ export async function checkDepsUpdates(): Promise<void> {
 
 async function stdLatest() {
   const response = await fetch(
-    "https://api.github.com/repos/denoland/deno_std/releases/latest"
+    "https://api.github.com/repos/denoland/deno_std/releases/latest",
   );
   const { name = "" } = await response.json();
 

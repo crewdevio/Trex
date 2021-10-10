@@ -16,7 +16,8 @@ trex install --map [packageName]
 trex install --map [packageName]@[version]
 ```
 
-With this command you can install packages from the standard deno library and those hosted at `deno.land/x`
+With this command you can install packages from the standard deno library and
+those hosted at `deno.land/x`
 
 ### From `nest.land`:
 

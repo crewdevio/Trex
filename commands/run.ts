@@ -34,31 +34,40 @@ runArgs =
 export async function Run(command: string) {
   let prefix = (await exists("./run.json")) ? "json" : "yaml";
 
-  if (!(await exists("./run.json")) && !(await exists("./run.yaml")) && !(await exists("./run.yml"))) {
-    throw new Error(red(`: ${yellow("run.json or run.yaml not found")}`)).message;
+  if (
+    !(await exists("./run.json")) && !(await exists("./run.yaml")) &&
+    !(await exists("./run.yml"))
+  ) {
+    throw new Error(red(`: ${yellow("run.json or run.yaml not found")}`))
+      .message;
   }
 
-  if (await exists("./run.json") && (await exists("./run.yaml") || (await exists("./run.yml")))) {
-    throw new Error(red(`: ${yellow("use a single format run.json or run.yaml file")}`)).message;
-  }
-
-  else {
+  if (
+    await exists("./run.json") &&
+    (await exists("./run.yaml") || (await exists("./run.yml")))
+  ) {
+    throw new Error(
+      red(`: ${yellow("use a single format run.json or run.yaml file")}`),
+    ).message;
+  } else {
     async function Thread() {
       try {
         const runJsonFile = await Scripts();
 
         if (!runJsonFile?.scripts) {
           throw new Error(
-            red(`: ${yellow(`the 'scripts' key not found in run.${prefix} file`)}`)
+            red(
+              `: ${
+                yellow(`the 'scripts' key not found in run.${prefix} file`)
+              }`,
+            ),
           ).message;
         }
 
         const scripts = Object.keys(runJsonFile.scripts);
 
         const toRun = scripts
-          .map((key) =>
-            key === command ? runJsonFile.scripts[key] : undefined
-          )
+          .map((key) => key === command ? runJsonFile.scripts[key] : undefined)
           .filter((el) => !!el) as string[];
 
         if (!toRun.length) {
@@ -69,21 +78,25 @@ export async function Run(command: string) {
 
         // github action fallback deno dir path
         const ghFallBack = Match(Deno.build.os)
-                            .case("darwin", () => "/Users/runner/.deno/bin")
-                            .case("linux", () => "/home/runner/.deno/bin")
-                            .case("windows", () => "C:\\Users\\runneradmin\\.deno\\bin")
-                            .default()
-                            .Value() as string;
+          .case("darwin", () => "/Users/runner/.deno/bin")
+          .case("linux", () => "/home/runner/.deno/bin")
+          .case("windows", () => "C:\\Users\\runneradmin\\.deno\\bin")
+          .default()
+          .Value() as string;
 
         // get path to deno scripts
-        const scriptPath =
-          isGH
-          ? ghFallBack
-          : Deno.build.os === "windows"
-              ? // to windows base
-                join("C:", "Users", env.get("USERNAME")!, ".deno", "bin", runnerCommand[0])
-              : // to unix base
-                join(env.get("HOME")!, ".deno", "bin", runnerCommand[0]);
+        const scriptPath = isGH ? ghFallBack : Deno.build.os === "windows"
+          ? // to windows base
+            join(
+              "C:",
+              "Users",
+              env.get("USERNAME")!,
+              ".deno",
+              "bin",
+              runnerCommand[0],
+            )
+          : // to unix base
+            join(env.get("HOME")!, ".deno", "bin", runnerCommand[0]);
 
         // prevent deno scrips not found error
         if ((await exists(scriptPath)) || (await exists(`${scriptPath}.cmd`))) {
@@ -113,17 +126,17 @@ export async function Run(command: string) {
         // prevent circular call
         if (currentCMD === toCompare) {
           throw new EvalError(
-            `${yellow("Circular call found in: ")}${red(toRun[0])}`
+            `${yellow("Circular call found in: ")}${red(toRun[0])}`,
           ).message;
         }
 
         const process = run({
           cmd: [...runnerCommand, ...runArgs]
-          .map((command, index) =>
-          command === "deno" && (index === 0 || index === 1)
-            ? ResolveDenoPath()
-            : command
-        ),
+            .map((command, index) =>
+              command === "deno" && (index === 0 || index === 1)
+                ? ResolveDenoPath()
+                : command
+            ),
           env: env.toObject(),
           cwd: Deno.cwd(),
         });
@@ -134,29 +147,28 @@ export async function Run(command: string) {
         }
 
         Deno.close(process.rid);
-      }
-
-      catch (err) {
+      } catch (err) {
         throw new Error(
           err instanceof SyntaxError
             ? colors.red(
-                `the ${colors.yellow(
-                  `'run.${prefix}'`
-                )} file not have a valid syntax`
-              )
+              `the ${
+                colors.yellow(
+                  `'run.${prefix}'`,
+                )
+              } file not have a valid syntax`,
+            )
             : err instanceof Deno.errors.NotFound
-              ? colors.red(err.message)
-              : colors.yellow(err.message ?? `${err}`)
+            ? colors.red(err.message)
+            : colors.yellow(err.message ?? `${err}`),
         ).message;
       }
     }
 
     const filesToWatch = prefix === "json"
-                         ? (await readJson("./run.json")) as runJson
-                         : (await parseToYaml());
+      ? (await readJson("./run.json")) as runJson
+      : (await parseToYaml());
 
-    const watchFlags =
-      Deno.args[2] === "--watch" ||
+    const watchFlags = Deno.args[2] === "--watch" ||
       Deno.args[2] === "-w" ||
       Deno.args[2] === "-wv";
 
@@ -176,22 +188,22 @@ export async function Run(command: string) {
             `[#] exit using ctrl+c \n ${
               filesToWatch?.files?.length
                 ? filesToWatch.files
-                    .map((file: string) => {
-                      console.log(" |- ", yellow(join(file)));
-                      return "";
-                    })
-                    .join("")
+                  .map((file: string) => {
+                    console.log(" |- ", yellow(join(file)));
+                    return "";
+                  })
+                  .join("")
                 : (console.log(
-                    ` |- ${yellow("all files [ .* ]")}`
-                  ) as undefined) ?? ""
-            } `
-          )
+                  ` |- ${yellow("all files [ .* ]")}`,
+                ) as undefined) ?? ""
+            } `,
+          ),
         );
         if (Deno.args[2] === "-wv" && verbose) {
           console.log(
             green(` ╭─ Verbose output ${yellow("-wv")}:\n`),
             green(`│- Event Kind: ${yellow(verbose?.kind)}\n`),
-            green(`╰─ Path: ${yellow(verbose?.paths.join(""))}\n`)
+            green(`╰─ Path: ${yellow(verbose?.paths.join(""))}\n`),
           );
         }
       }
@@ -206,8 +218,7 @@ export async function Run(command: string) {
           timeout = setTimeout(Thread, throttle);
         }
       }
-    }
-    // run a single exec thread
+    } // run a single exec thread
     else {
       await Thread();
     }
@@ -219,10 +230,9 @@ export async function Run(command: string) {
  */
 export async function Scripts() {
   let prefix = (await exists("./run.json")) ? "json" : "yaml";
-  const runJsonFile =
-    prefix === "json"
-      ? ((await readJson("./run.json")) as runJson)
-      : await parseToYaml();
+  const runJsonFile = prefix === "json"
+    ? ((await readJson("./run.json")) as runJson)
+    : await parseToYaml();
 
   return runJsonFile;
 }
@@ -239,9 +249,8 @@ export function ResolveDenoPath() {
       break;
     case "darwin":
       // TODO(buttercubz) resolve macos path
-      break
+      break;
     case "windows":
-
       break;
   }
 

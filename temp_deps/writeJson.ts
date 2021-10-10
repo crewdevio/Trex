@@ -10,13 +10,13 @@ export interface WriteJsonOptions extends Deno.WriteFileOptions {
 function serialize(
   filePath: string,
   object: any,
-  options: WriteJsonOptions
+  options: WriteJsonOptions,
 ): string {
   try {
     const jsonString = JSON.stringify(
       object,
       options.replacer as string[],
-      options.spaces
+      options.spaces,
     );
     return `${jsonString}\n`;
   } catch (err) {
@@ -30,7 +30,7 @@ export async function writeJson(
   filePath: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   object: any,
-  options: WriteJsonOptions = {}
+  options: WriteJsonOptions = {},
 ): Promise<void> {
   const jsonString = serialize(filePath, object, options);
   await Deno.writeTextFile(filePath, jsonString, {
@@ -45,7 +45,7 @@ export function writeJsonSync(
   filePath: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   object: any,
-  options: WriteJsonOptions = {}
+  options: WriteJsonOptions = {},
 ): void {
   const jsonString = serialize(filePath, object, options);
   Deno.writeTextFileSync(filePath, jsonString, {

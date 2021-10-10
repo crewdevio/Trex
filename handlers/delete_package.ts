@@ -28,10 +28,9 @@ export async function deletepackage(toDelete: string) {
       const Packages = (await getImportMap<importMap>())!;
 
       if (Packages.imports) {
-
         const toDelete = STD.includes(haveVersion(pkg))
-                            ? `${haveVersion(pkg)}/`
-                            : haveVersion(pkg);
+          ? `${haveVersion(pkg)}/`
+          : haveVersion(pkg);
 
         delete Packages.imports[toDelete];
 
@@ -44,15 +43,16 @@ export async function deletepackage(toDelete: string) {
         return console.clear();
       }
 
-      throw new Error(red("'imports' key not found in import_map.json")).message;
+      throw new Error(red("'imports' key not found in import_map.json"))
+        .message;
     } catch (exception) {
       console.log(exception);
       throw new Error(
         red(
           exception instanceof TypeError
             ? "add the name of the package to remove"
-            : "the import_map.json file does not have a valid format."
-        )
+            : "the import_map.json file does not have a valid format.",
+        ),
       ).message;
     }
   } else {

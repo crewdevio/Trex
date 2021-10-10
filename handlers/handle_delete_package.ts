@@ -13,7 +13,7 @@
  */
 
 export function haveVersion(pkgName: string): string {
-  const [name,,] = pkgName.split("@");
+  const [name] = pkgName.split("@");
   if (pkgName.includes("@")) return name;
 
   return pkgName;
