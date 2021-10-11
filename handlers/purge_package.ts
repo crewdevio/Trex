@@ -6,7 +6,7 @@
  *
  */
 
-import { Proxy, needProxy } from "proxy";
+import { needProxy, Proxy } from "proxy";
 import type { importMap } from "../utils/types.ts";
 import { isCachePackage } from "./handle_cache.ts";
 import { getImportMap } from "./handle_files.ts";
@@ -37,14 +37,12 @@ export async function purge() {
       try {
         await Deno.remove(data.path, { recursive: true });
         console.log(
-          green(`${yellow(pkgOrUrl)} package was removed from cache`)
+          green(`${yellow(pkgOrUrl)} package was removed from cache`),
         );
       } catch (err) {
         throw new Error(red(err.message)).message;
       }
-    }
-
-    // for import map package
+    } // for import map package
     else if (pkgOrUrl in map?.imports) {
       const pkg = pkgOrUrl.replace("/", "");
       let url = needProxy(pkg) ? Proxy(pkg) : map?.imports[pkgOrUrl]!;
@@ -63,19 +61,17 @@ export async function purge() {
       try {
         await Deno.remove(data.path, { recursive: true });
         console.log(
-          green(`${yellow(pkgOrUrl)} package was removed from cache`)
+          green(`${yellow(pkgOrUrl)} package was removed from cache`),
         );
       } catch (err) {
         throw new Error(red(err.message)).message;
       }
     }
-  }
-
-  // display error
+  } // display error
   else {
     if (!["--help", "-h"].includes(pkgOrUrl)) {
       throw new Error(
-        red(`package ${yellow(pkgOrUrl)} was not found in import map file `)
+        red(`package ${yellow(pkgOrUrl)} was not found in import map file `),
       ).message;
     }
   }

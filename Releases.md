@@ -14,7 +14,8 @@ Changes:
 
 - feature: installed modules are removed from cache when run `$ Trex delete fs`
   - only with standard modules and those installed from `deno.land/x`
-- feature: proxy to download some modules from the standard library that do not have the `mod.ts` file
+- feature: proxy to download some modules from the standard library that do not
+  have the `mod.ts` file
 
 ### v0.2.2
 

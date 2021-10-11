@@ -78,10 +78,12 @@ export const helpsInfo = [
 
   `   ${yellow("exec")}            execute any cli tool without install\n`,
 
-  `   ${yellow("check")}           check deno.land [std/x] dependencies updates\n`,
+  `   ${
+    yellow("check")
+  }           check deno.land [std/x] dependencies updates\n`,
 
   green(
-    "\nyou can see the different options available for each command using:\n"
+    "\nyou can see the different options available for each command using:\n",
   ),
 
   `   ${green("trex")}  ${yellow("[command]")} ${yellow("--help or -h")}\n`,
@@ -94,7 +96,7 @@ export const flags = {
   help: ["--help", "-h"],
   nest: ["--nest", "-n"],
   pkg: ["--pkg", "-p"],
-  fix: ["--fix", "-f"]
+  fix: ["--fix", "-f"],
 };
 
 export const keyWords = {

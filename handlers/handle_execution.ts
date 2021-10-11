@@ -99,13 +99,18 @@ export async function execution() {
   }
 
   if (cliVersion === undefined) {
-    const response = (await fetch(moduleVersions(cliName)).catch(offLine)) as Response;
+    const response =
+      (await fetch(moduleVersions(cliName)).catch(offLine)) as Response;
 
     if (!response.ok && response.status > 299) {
       throw new Error(
-        `${colors.yellow(
-          `${colors.red(cliName)} can't be found in https://deno.land/x/${cliName}`
-        )}`
+        `${
+          colors.yellow(
+            `${
+              colors.red(cliName)
+            } can't be found in https://deno.land/x/${cliName}`,
+          )
+        }`,
       ).message;
     }
 
@@ -117,14 +122,17 @@ export async function execution() {
     cliVersion = latest;
   }
 
-  const response = (await fetch(moduleUrl(cliName, cliVersion)).catch(offLine)) as Response;
+  const response =
+    (await fetch(moduleUrl(cliName, cliVersion)).catch(offLine)) as Response;
   const { directory_listing } = (await response.json()) as CliInfo;
 
   let importMapFile: string | null = null;
   let mainFile: string | null = null;
 
   for (const file of importMaps) {
-    const match = directory_listing.some(({ path, type }) => path === `/${file}` && type === "file");
+    const match = directory_listing.some(({ path, type }) =>
+      path === `/${file}` && type === "file"
+    );
 
     if (match) {
       importMapFile = file;
@@ -134,7 +142,9 @@ export async function execution() {
 
   for (let file of mainFiles) {
     file = file.replace("%name%", cliName);
-    const match = directory_listing.some(({ path, type }) => path === `/${file}` && type === "file");
+    const match = directory_listing.some(({ path, type }) =>
+      path === `/${file}` && type === "file"
+    );
 
     if (match) {
       mainFile = `https://deno.land/x/${cliName}@${cliVersion}/${file}`;
@@ -144,12 +154,16 @@ export async function execution() {
 
   if (importMapFile !== null) {
     perms.add(
-      `--import-map=${`https://deno.land/x/${cliName}@${cliVersion}/${importMapFile}`}`
+      `--import-map=${`https://deno.land/x/${cliName}@${cliVersion}/${importMapFile}`}`,
     );
   }
 
   if (mainFile === null) {
-    throw new Error(colors.red(`can't find the main file to execute ${colors.yellow(cliName)}`)).message;
+    throw new Error(
+      colors.red(
+        `can't find the main file to execute ${colors.yellow(cliName)}`,
+      ),
+    ).message;
   }
 
   const cmd = [Deno.execPath(), "run", ...perms, mainFile!, ...commands];
@@ -163,6 +177,10 @@ export async function execution() {
     Deno.close(process.rid);
   } else {
     Deno.close(process.rid);
-    throw new Error(colors.red(`something went wrong while running ${colors.yellow(cliName)}`)).message;
+    throw new Error(
+      colors.red(
+        `something went wrong while running ${colors.yellow(cliName)}`,
+      ),
+    ).message;
   }
 }

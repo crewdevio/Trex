@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# test
+deno test -A --unstable --import-map=./import_map.json
+
+# format the code and commit it
+deno fmt
+
+# commit the code when it's formatted
+git add .
+git diff --quiet && git diff --staged --quiet || git commit -m "format"

@@ -20,9 +20,11 @@ const { cyan, red, green, yellow } = colors;
  */
 export function Version(version: string) {
   console.log(
-    `${colors.green("trex:")}\n ${colors.yellow(version)} \n${colors.green(
-      "Deno:"
-    )}\n ${colors.yellow(`v${Deno.version.deno}`)}`
+    `${colors.green("trex:")}\n ${colors.yellow(version)} \n${
+      colors.green(
+        "Deno:",
+      )
+    }\n ${colors.yellow(`v${Deno.version.deno}`)}`,
   );
 }
 
@@ -40,7 +42,7 @@ export function LogHelp(helpsInfo: string[]) {
 export async function updateTrex(): Promise<void> {
   // * get the version of the repo in github
   const response = (await fetch(
-    "https://api.github.com/repos/crewdevio/Trex/releases/latest"
+    "https://api.github.com/repos/crewdevio/Trex/releases/latest",
   ).catch((_) => offLine())) as Response;
 
   // * get the latest release
@@ -71,7 +73,7 @@ export async function updateTrex(): Promise<void> {
       });
 
       console.log(
-        cyan(`trex ${green(repoVersion.tag_name)} is now installed.`)
+        cyan(`trex ${green(repoVersion.tag_name)} is now installed.`),
       );
     }, 1000);
   } else {
@@ -85,8 +87,8 @@ export async function updateTrex(): Promise<void> {
 export function offLine() {
   throw new Error(
     red(
-      "something went wrong when making the request, maybe you're offline, check your connection."
-    )
+      "something went wrong when making the request, maybe you're offline, check your connection.",
+    ),
   ).message;
 }
 
@@ -102,9 +104,11 @@ export function Somebybroken(message: string = "some process is broken.") {
  * show install error message
  */
 export function ErrorInstalling() {
-  const logError = `${red("something went wrong\n")}${green(
-    "maybe this package is missing a mod.ts file, use custom install.\n"
-  )}${yellow("trex --custom module=moduleUrl\n")}`;
+  const logError = `${red("something went wrong\n")}${
+    green(
+      "maybe this package is missing a mod.ts file, use custom install.\n",
+    )
+  }${yellow("trex --custom module=moduleUrl\n")}`;
 
   throw new Error(logError).message;
 }
@@ -112,25 +116,25 @@ export function ErrorInstalling() {
 export function HelpCommand({ command, flags }: HelpCommandParams) {
   console.log(
     green(`${red("action: ")} ${command.description}\n`),
-
     yellow("\nuse:\n"),
-
     green(
-      `trex [${command.alias.map((cmd) => yellow(cmd))}]  ${flags.map((flag) =>
-        `[${flag.alias.map((name) => yellow(name))}]`.replace(",", ", ")
-      )}\n`.replace(",", " or ")
+      `trex [${command.alias.map((cmd) => yellow(cmd))}]  ${
+        flags.map((flag) =>
+          `[${flag.alias.map((name) => yellow(name))}]`.replace(",", ", ")
+        )
+      }\n`.replace(",", " or "),
     ),
-
     yellow(flags.length ? "\nflags:\n" : ""),
-
     green(
-      `${flags.map(
-        (flag) =>
-          ` ${red("*")} [${flag.alias.map((sub) => yellow(sub))}] : ${
-            flag.description
-          }\n`
-      )}`.replaceAll(",", " ")
-    )
+      `${
+        flags.map(
+          (flag) =>
+            ` ${red("*")} [${
+              flag.alias.map((sub) => yellow(sub))
+            }] : ${flag.description}\n`,
+        )
+      }`.replaceAll(",", " "),
+    ),
   );
 }
 
@@ -147,16 +151,16 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
   if (!commands.includes(command)) {
     console.log(
       red("Command not found:\n"),
-
       green(
-        `\n${red("trex")} ${yellow(
-          command ?? "empty command"
-        )}: unknown command\n`
+        `\n${red("trex")} ${
+          yellow(
+            command ?? "empty command",
+          )
+        }: unknown command\n`,
       ),
-
       green(
-        `\nuse ${red("trex")} ${yellow("--help")} to see available commands\n`
-      )
+        `\nuse ${red("trex")} ${yellow("--help")} to see available commands\n`,
+      ),
     );
 
     console.log(didYouMean(command, commands));
@@ -167,18 +171,20 @@ export function CommandNotFound({ commands, flags }: CommandNotFoundParams) {
   if (!flags.includes(flag)) {
     console.log(
       red("Command flag not found:\n"),
-
       green(
-        `\n${red("trex")} ${yellow(command ?? "empty command")}  ${yellow(
-          flag
-        )}: unknown command flag\n`
+        `\n${red("trex")} ${yellow(command ?? "empty command")}  ${
+          yellow(
+            flag,
+          )
+        }: unknown command flag\n`,
       ),
-
       green(
-        `\nuse ${red("trex")} ${yellow(command ?? "empty command")} ${yellow(
-          "--help"
-        )} to see available command flags\n`
-      )
+        `\nuse ${red("trex")} ${yellow(command ?? "empty command")} ${
+          yellow(
+            "--help",
+          )
+        } to see available command flags\n`,
+      ),
     );
 
     console.log(didYouMean(flag, flags, command));
