@@ -54,13 +54,13 @@ export async function getMainFile(name: string, version?: string) {
   // * filter a array promises
   async function filter<T extends any>(
     arr: Array<T>,
-    callback: (item: T) => Promise<boolean>
+    callback: (item: T) => Promise<boolean>,
   ) {
     const fail = Symbol();
 
     return (
       await Promise.all(
-        arr.map(async (item) => ((await callback(item)) ? item : fail))
+        arr.map(async (item) => ((await callback(item)) ? item : fail)),
       )
     ).filter((item) => item !== fail);
   }
@@ -89,11 +89,11 @@ export async function getMainFile(name: string, version?: string) {
     "deno/index.js",
   ].map(async (target) => {
     const file = target.includes("%name%")
-      ? target.replace("%name%", name.trim())
+      ? target.replace("%name%", name?.trim())
       : target;
 
     const response = await fetch(
-      `https://deno.land/x/${name}${version ? `@${version}` : ""}/${file}`
+      `https://deno.land/x/${name}${version ? `@${version}` : ""}/${file}`,
     );
 
     const { ok, status } = response;
@@ -108,7 +108,7 @@ export async function getMainFile(name: string, version?: string) {
   return (
     await filter(
       files,
-      async (file) => (await file).ok && (await file).status < 300
+      async (file) => (await file).ok && (await file).status < 300,
     )
   ).shift();
 }

@@ -1,4 +1,4 @@
-import { installPackages, customPackage } from "../handlers/handle_packages.ts";
+import { customPackage, installPackages } from "../handlers/handle_packages.ts";
 import { deletepackage } from "../handlers/delete_package.ts";
 import { isCachePackage } from "../handlers/handle_cache.ts";
 import { HelpCommand, LogPackages } from "../utils/logs.ts";
@@ -16,7 +16,7 @@ Test.assertEqual("install custom package from raw github link", {
         "--custom",
         "merlin=https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts",
       ],
-      false
+      false,
     );
 
     return data;
@@ -38,7 +38,7 @@ Test.assertEqual("install dinoenv package from deno.land", {
   },
   Ops: false,
   Resources: false,
-  ignore: true
+  ignore: true,
 });
 
 Test.assertEqual("install dinoenv package from nest.land", {
@@ -61,7 +61,7 @@ Test.assertEqual("install dinoenv package from nest.land", {
 Test.isUndefined("trex treeDeps test", {
   async value() {
     return (await packageTreeInfo(
-      ...["--unstable", "treeDeps", "react"]
+      ...["--unstable", "treeDeps", "react"],
     )) as undefined;
   },
   Ops: false,
@@ -99,7 +99,7 @@ Test.isUndefined("Command helper test", {
 Test.assertEqual("is cache package", {
   async expect() {
     const data = await isCachePackage(
-      "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
+      "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts",
     );
 
     return data.exist;
@@ -115,7 +115,7 @@ Test.assertEqual("is cache package", {
 Test.isString("is cache package path", {
   async value() {
     const data = await isCachePackage(
-      "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts"
+      "https://raw.githubusercontent.com/crewdevio/merlin/master/mod.ts",
     );
 
     return data.path;

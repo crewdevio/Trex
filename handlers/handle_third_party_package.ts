@@ -6,7 +6,7 @@
  *
  */
 
-import { offLine, ErrorInstalling } from "../utils/logs.ts";
+import { ErrorInstalling, offLine } from "../utils/logs.ts";
 import type { NestResponse } from "../utils/types.ts";
 import { ResolveDenoPath } from "../commands/run.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
@@ -25,16 +25,13 @@ const { yellow, green, bold } = colors;
 
 export async function nestPackageUrl(
   pkgName: string,
-  version: string
+  version: string,
 ): Promise<string> {
-
   if (STD.includes(pkgName)) {
     return needProxy(pkgName)
       ? Proxy(pkgName)
       : `https://x.nest.land/std@${version}/${pkgName}/mod.ts`;
-  }
-
-  else {
+  } else {
     const response = (await fetch(
       `https://x.nest.land/api/package/${pkgName}/${version}`,
       {
@@ -44,7 +41,7 @@ export async function nestPackageUrl(
           "Accept-Encoding": "gzip, deflate, br",
           Connection: "keep-alive",
         },
-      }
+      },
     ).catch((_) => offLine())) as Response;
 
     const data: NestResponse = await response.json();
@@ -59,13 +56,17 @@ export async function nestPackageUrl(
  * @return {void} void
  */
 
-export async function cacheNestpackage(url: string, show = true): Promise<void> {
-
+export async function cacheNestpackage(
+  url: string,
+  show = true,
+): Promise<void> {
   const { hostname } = new URL(url);
 
   const loading = LoadingSpinner(
-    green(` Installing ${bold(yellow("package"))} from ${bold(yellow(hostname))}`),
-    show
+    green(
+      ` Installing ${bold(yellow("package"))} from ${bold(yellow(hostname))}`,
+    ),
+    show,
   );
 
   const process = Deno.run({

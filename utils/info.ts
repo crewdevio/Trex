@@ -15,8 +15,10 @@ export const URI_X = "https://deno.land/x/";
 
 export const STD = [
   "_util",
+  "_wasm_crypto",
   "fs",
   "http",
+  "crypto",
   "archive",
   "async",
   "bytes",
@@ -40,7 +42,7 @@ export const STD = [
   "collections",
 ];
 
-export const VERSION = { VERSION: "v1.9.1" };
+export const VERSION = { VERSION: "v1.10.0" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
@@ -78,8 +80,12 @@ export const helpsInfo = [
 
   `   ${yellow("exec")}            execute any cli tool without install\n`,
 
+  `   ${
+    yellow("check")
+  }           check deno.land [std/x] dependencies updates\n`,
+
   green(
-    "\nyou can see the different options available for each command using:\n"
+    "\nyou can see the different options available for each command using:\n",
   ),
 
   `   ${green("trex")}  ${yellow("[command]")} ${yellow("--help or -h")}\n`,
@@ -92,6 +98,7 @@ export const flags = {
   help: ["--help", "-h"],
   nest: ["--nest", "-n"],
   pkg: ["--pkg", "-p"],
+  fix: ["--fix", "-f"],
 };
 
 export const keyWords = {
@@ -104,5 +111,5 @@ export const keyWords = {
   setup: "setup",
   ls: "ls",
   exec: "exec",
-  versions: "versions",
+  check: "check",
 };

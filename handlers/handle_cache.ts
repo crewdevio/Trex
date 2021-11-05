@@ -29,19 +29,16 @@ export const delay = (time: number) =>
  * @param {string} hash
  * @returns string
  */
-
 function getCachePath(protocol: string, hostname: string, hash: string) {
   const user = Deno.env.get("USERNAME")! || Deno.env.get("HOME")!;
   protocol = protocol.includes(":") ? protocol.replace(":", "") : protocol;
 
   if (Deno.build.os === "windows") {
     return `C:\\Users\\${user}\\AppData\\Local\\deno\\deps\\${protocol}\\${hostname}\\${hash}`;
-  }
-  // * for any linux distro
+  } // * for any linux distro
   else if (Deno.build.os === "linux") {
     return `${user}/.cache/deno/deps/${protocol}/${hostname}/${hash}`;
-  }
-  // * for macOs deno cache deps path
+  } // * for macOs deno cache deps path
   else {
     return `${user}/Library/Caches/deno/deps/${protocol}/${hostname}/${hash}`;
   }
@@ -51,16 +48,14 @@ function getCachePath(protocol: string, hostname: string, hash: string) {
  * detect if a package is installed
  * @param {string} packageUrl
  */
-
 export async function isCachePackage(packageUrl: string) {
   if (!(packageUrl.includes("http://") || packageUrl.includes("https://"))) {
     throw new Error(
       red(
-        "this is not a valid package url, only http or https urls are allowed"
-      )
+        "this is not a valid package url, only http or https urls are allowed",
+      ),
     ).message;
-  }
-  // * get file path
+  } // * get file path
   else {
     const { hostname, protocol, pathname, search } = new URL(packageUrl);
     const toHash = createHash("sha256")
@@ -81,23 +76,24 @@ export async function isCachePackage(packageUrl: string) {
  * @param {string} pkgUrl - package url.
  * @return void
  */
-
-async function cached(pkgName: string, pkgUrl: string, show = true) {
+export async function cached(pkgName: string, pkgUrl: string, show = true) {
   let process: Deno.Process;
 
   const { hostname } = new URL(pkgUrl);
 
   const loading = LoadingSpinner(
-    green(` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`),
-    show
+    green(
+      ` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`,
+    ),
+    show,
   );
   const CMD = [ResolveDenoPath(), "cache", "-q", "--unstable"];
 
   const target = needProxy(pkgName)
     ? Proxy(pkgName)
     : `${
-        pkgUrl.startsWith("https://deno.land/std") ? `${pkgUrl}mod.ts` : pkgUrl
-      }`;
+      pkgUrl.startsWith("https://deno.land/std") ? `${pkgUrl}mod.ts` : pkgUrl
+    }`;
 
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({
@@ -115,9 +111,7 @@ async function cached(pkgName: string, pkgUrl: string, show = true) {
 
     process.close();
     loading?.stop();
-  }
-
-  // * install standard package by default use mod.ts
+  } // * install standard package by default use mod.ts
   else if (STD.includes(pkgName)) {
     process = Deno.run({
       cmd: [...CMD, target],
@@ -132,9 +126,7 @@ async function cached(pkgName: string, pkgUrl: string, show = true) {
 
     process.close();
     loading?.stop();
-  }
-
-  // * install third party package
+  } // * install third party package
   else if ((await denoApidb(pkgName)).length) {
     process = Deno.run({
       cmd: [...CMD, pkgUrl],
@@ -148,9 +140,7 @@ async function cached(pkgName: string, pkgUrl: string, show = true) {
 
     process.close();
     loading?.stop();
-  }
-
-  // * log error if package is not found
+  } // * log error if package is not found
   else if (!STD.includes(pkgName) && !(await denoApidb(pkgName)).length) {
     throw new Error(red("package not found.")).message;
   }

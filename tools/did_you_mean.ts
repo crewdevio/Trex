@@ -85,14 +85,11 @@ export const leven = (left: string, right: string) => {
       temp2 = bCharCode === charCodeCache[i] ? temp : temp + 1;
       temp = array[i];
 
-      result = array[i] =
-        temp > result
-          ? temp2 > result
-            ? result + 1
-            : temp2
-          : temp2 > temp
-          ? temp + 1
-          : temp2;
+      result = array[i] = temp > result
+        ? temp2 > result ? result + 1 : temp2
+        : temp2 > temp
+        ? temp + 1
+        : temp2;
     }
   }
 
@@ -112,6 +109,6 @@ export const didYouMean = (word: string, commands: string[], command = "") => {
   return best.length === 0
     ? ""
     : best.length === 1
-      ? `\n ${yellow("Did you mean this?")}\n\n${best[0]}`
-      : `\nDid you mean one of these?\n${best.slice(0, 3).join("\n")}\n`;
+    ? `\n ${yellow("Did you mean this?")}\n\n${best[0]}`
+    : `\nDid you mean one of these?\n${best.slice(0, 3).join("\n")}\n`;
 };
