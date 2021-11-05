@@ -275,7 +275,7 @@ async function Main() {
     }
   } // * displays help information
   else {
-    CommandNotFound({
+    return CommandNotFound({
       commands: [
         keyWords.purge,
         keyWords.run,

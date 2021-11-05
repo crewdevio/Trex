@@ -15,8 +15,10 @@ export const URI_X = "https://deno.land/x/";
 
 export const STD = [
   "_util",
+  "_wasm_crypto",
   "fs",
   "http",
+  "crypto",
   "archive",
   "async",
   "bytes",
@@ -40,7 +42,7 @@ export const STD = [
   "collections",
 ];
 
-export const VERSION = { VERSION: "v1.9.1" };
+export const VERSION = { VERSION: "v1.10.0" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
