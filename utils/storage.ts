@@ -33,11 +33,15 @@ const ghFallBack = join(Deno.cwd(), commonDir);
 export async function JsonStorage() {
   const hash = createHash("sha256").update(Deno.cwd()).toString();
 
+  const linuxHome = join(env.get("HOME")!, ".deno", `${commonDir}/`);
+  
   const storagePath = isGH
     ? ghFallBack
     : build.os === "windows"
     ? join("C:", "Users", env.get("USERNAME")!, ".deno", `${commonDir}\\`)
-    : join(env.get("HOME")!, ".deno", `${commonDir}/`);
+    : exists(linuxHome)
+    ? join(env.get("DENO_DIR")!, "../", "../", `${commonDir}/`)
+    : linuxHome;
 
   const currentStorage = join(storagePath, `${hash}.json`);
 
