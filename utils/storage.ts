@@ -39,7 +39,7 @@ export async function JsonStorage() {
     ? ghFallBack
     : build.os === "windows"
     ? join("C:", "Users", env.get("USERNAME")!, ".deno", `${commonDir}\\`)
-    : exists(linuxHome)
+    : (await exists(linuxHome))
     ? join(env.get("DENO_DIR")!, "../", "../", `${commonDir}/`)
     : linuxHome;
 
