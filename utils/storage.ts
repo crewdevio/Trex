@@ -40,8 +40,8 @@ export async function JsonStorage() {
     : build.os === "windows"
     ? join("C:", "Users", env.get("USERNAME")!, ".deno", `${commonDir}\\`)
     : (await exists(linuxHome))
-    ? join(env.get("DENO_DIR")!, "../", "../", `${commonDir}/`)
-    : linuxHome;
+    ? linuxHome
+    : join(env.get("DENO_DIR")!, "../", "../", `${commonDir}/`);
 
   const currentStorage = join(storagePath, `${hash}.json`);
 
