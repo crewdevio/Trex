@@ -42,7 +42,7 @@ export const STD = [
   "collections",
 ];
 
-export const VERSION = { VERSION: "v1.10.0" };
+export const VERSION = { VERSION: "v1.11.0" };
 
 export const helpsInfo = [
   green("advanced package management for deno, based on import_map.json\n"),
