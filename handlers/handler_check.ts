@@ -48,7 +48,7 @@ export async function checkDepsUpdates(): Promise<void> {
         const [, version, name] = pathname.split("/");
         const moduleVersion = version.replace("std@", "")?.trim();
 
-        const latest = await stdLatest();
+        const latest = (await stdLatest())!;
 
         if (latest !== moduleVersion) {
           toUpdate.push({
@@ -134,11 +134,11 @@ export async function checkDepsUpdates(): Promise<void> {
 
 async function stdLatest() {
   const response = await fetch(
-    "https://api.github.com/repos/denoland/deno_std/releases/latest",
+    "https://raw.githubusercontent.com/denoland/dotland/main/versions.json",
   );
-  const { name = "" } = await response.json();
+  const { std = [] } = await response.json();
 
-  return (name as string)?.trim();
+  return (std as string[])?.at(0)?.trim();
 }
 
 const toURL = (url: string) => new URL(url);
