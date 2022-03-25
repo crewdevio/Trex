@@ -687,7 +687,7 @@ Trex is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
 	  <img src="https://cdn.discordapp.com/attachments/656976424778989602/735587312448176132/favicon_light.svg" width="85" height="85">
        </a>
        <a href="https://deno.land/">
-	  <img src="https://raw.githubusercontent.com/denoland/deno_website2/master/public/logo.svg" width="85" height="85">
+	  <img src="https://deno.land/logo.svg" width="85" height="85">
        </a>
        <a href="https://denopkg.com/">
 	  <img src="https://raw.githubusercontent.com/denopkg/denopkg.com/master/public/denopkg.png" width="90" height="90">
