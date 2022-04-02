@@ -3,7 +3,6 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
  */
 
 import { bold, cyan, green, red, yellow } from "fmt/colors.ts";
@@ -132,7 +131,7 @@ export async function checkDepsUpdates(): Promise<void> {
   }
 }
 
-async function stdLatest() {
+export async function stdLatest() {
   const response = await fetch(
     "https://raw.githubusercontent.com/denoland/dotland/main/versions.json",
   );
@@ -145,6 +144,17 @@ const toURL = (url: string) => new URL(url);
 
 const version = (module: string) =>
   `https://cdn.deno.land/${module}/meta/versions.json`;
+
+export async function xLatest(name: string) {
+  const response = await fetch(version(name));
+
+  const data = (await response.json()) as {
+    latest: string;
+    versions: string[];
+  };
+
+  return data.latest;
+}
 
 async function getAllVersion(module: string): Promise<string> {
   const response = await fetch(version(module));

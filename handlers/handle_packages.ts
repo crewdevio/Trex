@@ -3,7 +3,6 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
  */
 
 import {
@@ -17,6 +16,7 @@ import { isLocalFile, LoadingSpinner } from "../tools/logs.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
 import { flags, STD, URI_STD, URI_X } from "../utils/info.ts";
 import { getMainFile } from "../utils/file_resolver.ts";
+import { stdLatest, xLatest } from "./handler_check.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import { denoApidb } from "../utils/db.ts";
@@ -53,10 +53,20 @@ async function detectVersion(pkgName: string): Promise<string> {
   const versionSuffix = maybeVersion ? `@${maybeVersion}` : "";
 
   if (STD.includes(name)) {
-    return `${URI_STD}${versionSuffix}/${name}/`;
+    const latest = await stdLatest();
+
+    return `${URI_STD}${
+      versionSuffix === "" ? `@${latest ? latest : ""}` : versionSuffix
+    }/${name}/`;
   } else if ((await denoApidb(name)).length) {
-    const target = await getMainFile(name, maybeVersion) as { file: string };
-    return `${URI_X}${name}${versionSuffix}/${target.file}`;
+    const [target, latest] = await Promise.all([
+      (await getMainFile(name, maybeVersion)) as { file: string },
+      await xLatest(name),
+    ]);
+
+    return `${URI_X}${name}${
+      versionSuffix === "" ? `@${latest ? latest : ""}` : versionSuffix
+    }/${target.file}`;
   }
 
   throw new Error(
@@ -172,9 +182,13 @@ export async function installPackages(
             console.log(
               colors.white(
                 `\nthe generated hash does not match the package "${
-                  colors.green(pkg)
+                  colors.green(
+                    pkg,
+                  )
                 }",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${
-                  colors.red("=>")
+                  colors.red(
+                    "=>",
+                  )
                 } ${colors.cyan("https://github.com/crewdevio/Trex")}`,
               ),
             );
