@@ -9,10 +9,10 @@ import { isLocalFile, newVersion } from "../tools/logs.ts";
 import { KillProcess } from "../tools/kill_process.ts";
 import { writeJson } from "../temp_deps/writeJson.ts";
 import type { objectGen } from "../utils/types.ts";
+import { createHash } from "../utils/storage.ts";
 import { LogPackages } from "../utils/logs.ts";
-import { createHash } from "hash/mod.ts";
+import { exists } from "../temp_deps/exist.ts";
 import Store from "./handler_storage.ts";
-import { exists } from "fs/mod.ts";
 
 /**
  * takes the import map file and returns its information.
@@ -66,7 +66,7 @@ export async function createPackage(map: objectGen, log?: Boolean) {
   await writeJson(
     "./import_map.json",
     { imports: sortedPackage(map) },
-    { spaces: 2 },
+    { spaces: 2 }
   );
 
   if (log) {
@@ -103,9 +103,8 @@ async function readURLContent(path: string) {
  * @param url string
  */
 export async function generateHash(url: string) {
-  const hash = createHash("sha256");
-  hash.update((await readURLContent(url)) + url);
-  return hash.toString();
+  const hash = await createHash("SHA-256", (await readURLContent(url)) + url);
+  return hash;
 }
 
 /**
@@ -120,7 +119,7 @@ export async function validateHash(url: string, hash: string) {
 
   if (!isNew) return true;
 
-  const _hash = createHash("sha256");
-  _hash.update((await readURLContent(url)) + url);
+  const _hash = await createHash("SHA-256", (await readURLContent(url)) + url);
+
   return _hash.toString() === hash;
 }

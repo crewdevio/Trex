@@ -6,9 +6,9 @@
  */
 
 import { readJson, writeJson } from "../temp_deps/writeJson.ts";
+import { exists } from "../temp_deps/exist.ts";
 import type { DefaultStore } from "./types.ts";
-import { createHash } from "hash/mod.ts";
-import { exists } from "fs/mod.ts";
+import { crypto } from "crypto/mod.ts";
 import { join } from "path/mod.ts";
 
 const { env, remove, mkdir, build } = Deno;
@@ -17,7 +17,8 @@ const commonDir = "trex_storage";
 /**
  * detect if is runnig on gh action workflow
  */
-export const isGH = !!env.get("GITHUB_ACTIONS")! ||
+export const isGH =
+  !!env.get("GITHUB_ACTIONS")! ||
   !!env.get("GITHUB_WORKFLOW")! ||
   !!env.get("GITHUB_JOB")!;
 
@@ -30,7 +31,7 @@ const ghFallBack = join(Deno.cwd(), commonDir);
  * create a persistent json storage per CWD.
  */
 export async function JsonStorage() {
-  const hash = createHash("sha256").update(Deno.cwd()).toString();
+  const hash = await createHash("SHA-256", Deno.cwd());
 
   const storagePath = isGH
     ? ghFallBack
@@ -102,4 +103,16 @@ export async function JsonStorage() {
       throw new Error("storage was removed").message;
     },
   };
+}
+
+export async function createHash(algorithm: "SHA-256", text: string) {
+  const toHexString = (bytes: ArrayBuffer): string =>
+    new Uint8Array(bytes).reduce(
+      (str, byte) => str + byte.toString(16).padStart(2, "0"),
+      ""
+    );
+
+  return toHexString(
+    await crypto.subtle.digest(algorithm, new TextEncoder().encode("test1"))
+  );
 }

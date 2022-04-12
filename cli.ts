@@ -28,8 +28,8 @@ import { packageTreeInfo } from "./tools/logs.ts";
 import type { importMap } from "./utils/types.ts";
 import { LoadingSpinner } from "./tools/logs.ts";
 import { Run, Scripts } from "./commands/run.ts";
+import { exists } from "./temp_deps/exist.ts";
 import * as colors from "fmt/colors.ts";
-import { exists } from "fs/mod.ts";
 import { Spinner } from "wait";
 
 const { bold, green, yellow } = colors;

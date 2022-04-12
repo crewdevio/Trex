@@ -9,10 +9,10 @@ import { createPackage, getImportMap } from "./handle_files.ts";
 import { haveVersion } from "./handle_delete_package.ts";
 import { existImports } from "./handle_packages.ts";
 import type { importMap } from "../utils/types.ts";
+import { exists } from "../temp_deps/exist.ts";
 import Store from "./handler_storage.ts";
 import * as colors from "fmt/colors.ts";
 import { STD } from "../utils/info.ts";
-import { exists } from "fs/mod.ts";
 
 const { red } = colors;
 

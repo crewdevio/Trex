@@ -19,11 +19,11 @@ import { getMainFile } from "../utils/file_resolver.ts";
 import { stdLatest, xLatest } from "./handler_check.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
+import { exists } from "../temp_deps/exist.ts";
 import { denoApidb } from "../utils/db.ts";
 import Store from "./handler_storage.ts";
 import * as colors from "fmt/colors.ts";
 import cache from "./handle_cache.ts";
-import { exists } from "fs/mod.ts";
 
 const { yellow, red, green, bold } = colors;
 /**

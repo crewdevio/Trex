@@ -9,9 +9,9 @@ import { parseToYaml } from "../tools/parse_to_yaml.ts";
 import { readJson } from "../temp_deps/writeJson.ts";
 import { Match } from "../utils/file_resolver.ts";
 import type { runJson } from "../utils/types.ts";
+import { exists } from "../temp_deps/exist.ts";
 import { isGH } from "../utils/storage.ts";
 import * as colors from "fmt/colors.ts";
-import { exists } from "fs/mod.ts";
 import { join } from "path/mod.ts";
 
 const { red, yellow, green } = colors;
