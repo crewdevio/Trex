@@ -10,6 +10,7 @@ import { haveVersion } from "./handle_delete_package.ts";
 import { existImports } from "./handle_packages.ts";
 import type { importMap } from "../utils/types.ts";
 import { exists } from "../temp_deps/exist.ts";
+import { Config } from "./global_configs.ts";
 import Store from "./handler_storage.ts";
 import * as colors from "fmt/colors.ts";
 import { STD } from "../utils/info.ts";
@@ -21,7 +22,7 @@ const { red } = colors;
  * @param {string} toDelete
  */
 export async function deletepackage(toDelete: string) {
-  if (await exists("./import_map.json")) {
+  if (await exists(`./${Config.getConfig("importMap")}`)) {
     try {
       const pkg: string = toDelete?.trim();
       const Packages = (await getImportMap<importMap>())!;
@@ -42,20 +43,25 @@ export async function deletepackage(toDelete: string) {
         return console.clear();
       }
 
-      throw new Error(red("'imports' key not found in import_map.json"))
-        .message;
+      throw new Error(
+        red(`'imports' key not found in ${Config.getConfig("importMap")}`),
+      ).message;
     } catch (exception) {
       console.log(exception);
       throw new Error(
         red(
           exception instanceof TypeError
-            ? "add the name of the package to remove"
-            : "the import_map.json file does not have a valid format.",
+            ? "add the name of the package to remove."
+            : `the ${
+              Config.getConfig(
+                "importMap",
+              )
+            } file does not have a valid format.`,
         ),
       ).message;
     }
   } else {
-    console.error(red("import_map.json"));
+    console.error(red(Config.getConfig("importMap")));
     return;
   }
 }

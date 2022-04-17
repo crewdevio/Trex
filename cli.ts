@@ -23,6 +23,7 @@ import { flags, helpsInfo, keyWords, VERSION } from "./utils/info.ts";
 import { checkDepsUpdates } from "./handlers/handler_check.ts";
 import { deletepackage } from "./handlers/delete_package.ts";
 import { execution } from "./handlers/handle_execution.ts";
+import { Config } from "./handlers/global_configs.ts";
 import { purge } from "./handlers/purge_package.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
 import type { importMap } from "./utils/types.ts";
@@ -65,7 +66,7 @@ async function Main() {
       });
     }
 
-    if (await exists("./import_map.json")) {
+    if (await exists(`./${Config.getConfig("importMap")}`)) {
       try {
         const data = (await getImportMap()) as any;
         const oldPackage = existImports(data);
@@ -123,7 +124,9 @@ async function Main() {
     for (const pkg of pkgs) {
       // @ts-ignore
       loading = LoadingSpinner(
-        green(`Removing ${bold(yellow(pkg))} from import_map.json`),
+        green(
+          `Removing ${bold(yellow(pkg))} from ${Config.getConfig("importMap")}`,
+        ),
       )!;
       await deletepackage(pkg);
       loading?.stop();
@@ -272,6 +275,36 @@ async function Main() {
     } else {
       await checkDepsUpdates();
     }
+  } // * set globals config
+  else if (Args[0] === keyWords.globalConfig) {
+    if (flags.help.includes(Args[1])) {
+      HelpCommand({
+        command: {
+          alias: [keyWords.globalConfig],
+          description: "set and get global configurations",
+        },
+        flags: [
+          {
+            alias: ["--importMap="],
+            description: "set import map default name",
+          },
+          {
+            alias: ["--getImportMap"],
+            description: "get current import map name configuration",
+          },
+        ],
+      });
+    } else {
+      const flag = Args[1].trim();
+
+      if (/(--importMap=\w*).(\w*)/gim.test(flag)) {
+        const [, value] = flag.split("=");
+
+        Config.setConfig("importMap", value.trim());
+      } else if (/--getImportMap/) {
+        console.log(Config.getConfig("importMap"));
+      }
+    }
   } // * displays help information
   else {
     return CommandNotFound({
@@ -288,6 +321,7 @@ async function Main() {
         keyWords.ls,
         keyWords.exec,
         keyWords.check,
+        keyWords.globalConfig,
       ],
       flags: [],
     });

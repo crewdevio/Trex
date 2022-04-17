@@ -12,6 +12,7 @@ import type { objectGen } from "../utils/types.ts";
 import { createHash } from "../utils/storage.ts";
 import { LogPackages } from "../utils/logs.ts";
 import { exists } from "../temp_deps/exist.ts";
+import { Config } from "./global_configs.ts";
 import Store from "./handler_storage.ts";
 
 /**
@@ -20,11 +21,11 @@ import Store from "./handler_storage.ts";
  */
 
 export async function getImportMap<T extends any>(): Promise<T | undefined> {
-  if (await exists("./import_map.json")) {
+  if (await exists(`./${Config.getConfig("importMap")}`)) {
     const decoder = new TextDecoder("utf-8");
 
     // * get data from import_map and return data
-    const Package = await Deno.readFile("./import_map.json");
+    const Package = await Deno.readFile(`./${Config.getConfig("importMap")}`);
 
     return JSON.parse(decoder.decode(Package)) as T;
   }
@@ -59,14 +60,14 @@ export async function createPackage(map: objectGen, log?: Boolean) {
   }
 
   // * create import_map.json
-  const create = await Deno.create("./import_map.json");
+  const create = await Deno.create(`./${Config.getConfig("importMap")}`);
   create.close();
 
   // * write import config inside import_map.json
   await writeJson(
-    "./import_map.json",
+    `./${Config.getConfig("importMap")}`,
     { imports: sortedPackage(map) },
-    { spaces: 2 }
+    { spaces: 2 },
   );
 
   if (log) {

@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { Config } from "../handlers/global_configs.ts";
 import * as colors from "fmt/colors.ts";
 
 const { green, yellow } = colors;
@@ -39,12 +40,20 @@ export const STD = [
   "ws",
   "wasi",
   "collections",
+  "dotenv",
+  "streams",
 ];
 
 export const VERSION = { VERSION: "v1.11.0" };
 
 export const helpsInfo = [
-  green("advanced package management for deno, based on import_map.json\n"),
+  green(
+    `advanced package management for deno, based on ${
+      Config.getConfig(
+        "importMap",
+      )
+    }\n`,
+  ),
 
   green("\nUSAGE:\n"),
   `   trex ${yellow("[OPTIONS]")} ${yellow("[SUBCOMMAND]")}\n`,
@@ -80,8 +89,12 @@ export const helpsInfo = [
   `   ${yellow("exec")}            execute any cli tool without install\n`,
 
   `   ${
-    yellow("check")
+    yellow(
+      "check",
+    )
   }           check deno.land [std/x] dependencies updates\n`,
+
+  `   ${yellow("global-config")}   set and get global configurations\n`,
 
   green(
     "\nyou can see the different options available for each command using:\n",
@@ -111,4 +124,5 @@ export const keyWords = {
   ls: "ls",
   exec: "exec",
   check: "check",
+  globalConfig: "global-config",
 };

@@ -17,8 +17,7 @@ const commonDir = "trex_storage";
 /**
  * detect if is runnig on gh action workflow
  */
-export const isGH =
-  !!env.get("GITHUB_ACTIONS")! ||
+export const isGH = !!env.get("GITHUB_ACTIONS")! ||
   !!env.get("GITHUB_WORKFLOW")! ||
   !!env.get("GITHUB_JOB")!;
 
@@ -109,10 +108,10 @@ export async function createHash(algorithm: "SHA-256", text: string) {
   const toHexString = (bytes: ArrayBuffer): string =>
     new Uint8Array(bytes).reduce(
       (str, byte) => str + byte.toString(16).padStart(2, "0"),
-      ""
+      "",
     );
 
   return toHexString(
-    await crypto.subtle.digest(algorithm, new TextEncoder().encode("test1"))
+    await crypto.subtle.digest(algorithm, new TextEncoder().encode("test1")),
   );
 }

@@ -393,7 +393,7 @@ a limitation of watch mode is that they do not restart the processes that never
 end as http servers, in those cases we recommend other alternatives such as
 [denon](https://deno.land/x/denon)
 
-### Virtual cli tool execution (experimental)
+### Virtual cli tool execution
 
 trex exec allows you to run many cli tools hosted at `deno.land/x`
 
@@ -466,6 +466,57 @@ this functionality is heavily inspired by
 [npx](https://docs.npmjs.com/cli/v7/commands/npx) and
 [land](https://deno.land/x/land). if you need another alternative to `trex exec`
 to use in `deno`, [land](https://deno.land/x/land) this is a great option.
+
+### Local configuration and global configuration (experimental)
+
+When you work with import maps trex by default will handle everything using an
+import_map.json file, but what if I want to use an import-map.json or an
+importMap.json instead?
+
+That's what the global settings are for, basically it allows you to change the
+behavior of trex with respect to the file where the dependencies will be
+handled.
+
+`example`
+
+```console
+trex global-config --importMap=import-map.json
+```
+
+this will change the default name from import_map.json to import-map.json. to
+obtain the name or format used you must execute the following command.
+
+```console
+trex global-config --getImportMap
+```
+
+But what happens if I am working with several people on the same project and we
+have different configurations? for these cases there is the local configuration
+or local configuration file. `trex.config.json`
+
+`example`
+
+```json
+{
+  "importMap": "importMap.json"
+}
+```
+
+this will tell trex that the format for the import map will be the one dictated
+by the config file. this allows that there are no problems with the different
+local configurations of each developer since the configuration file only affects
+the scope of the project.
+
+> **note**: the file `trex.config.json` must be at the same level(scope) as the
+> import map for trex to detect it.
+
+the hierarchy that trex respects with the configurations is the following:
+
+```mermaid
+graph TD
+trex.config.json --> LocalGlobalConfig
+LocalGlobalConfig --> defaultTrexConfig
+```
 
 ### Purge a package or URL
 

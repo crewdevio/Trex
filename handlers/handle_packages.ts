@@ -20,6 +20,7 @@ import { stdLatest, xLatest } from "./handler_check.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
 import { exists } from "../temp_deps/exist.ts";
+import { Config } from "./global_configs.ts";
 import { denoApidb } from "../utils/db.ts";
 import Store from "./handler_storage.ts";
 import * as colors from "fmt/colors.ts";
@@ -38,8 +39,13 @@ export function existImports(map: importMap): objectGen {
     return map.imports;
   }
 
-  throw new Error(red("the import map.json file does not have the imports key"))
-    .message;
+  throw new Error(
+    red(
+      `the ${
+        Config.getConfig("importMap")
+      } file does not have the imports key.`,
+    ),
+  ).message;
 }
 
 /**
@@ -199,7 +205,7 @@ export async function installPackages(
       }
     } catch (_) {
       // show message
-      console.log(red("import_map.json file not found"));
+      console.log(red(`${Config.getConfig("importMap")} file not found`));
     }
   }
 
@@ -261,7 +267,7 @@ export async function customPackage(
   }
 
   // * if import_map exists update it
-  if (await exists("./import_map.json")) {
+  if (await exists(`./${Config.getConfig("importMap")}`)) {
     try {
       const data = (await getImportMap<importMap>())!;
       const oldPackage = existImports(data);
@@ -271,7 +277,13 @@ export async function customPackage(
       loading?.stop();
       process.close();
       throw new Error(
-        red("the import_map.json file does not have a valid format."),
+        red(
+          `the ${
+            Config.getConfig(
+              "importMap",
+            )
+          } file does not have a valid format.`,
+        ),
       ).message;
     }
   } else {

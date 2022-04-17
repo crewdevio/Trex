@@ -7,6 +7,7 @@
 
 import { getImportMap } from "../handlers/handle_files.ts";
 import { offLine, Somebybroken } from "../utils/logs.ts";
+import { Config } from "../handlers/global_configs.ts";
 import type { importMap } from "../utils/types.ts";
 import { STD, VERSION } from "../utils/info.ts";
 import { createGraph } from "deno_graph";
@@ -67,8 +68,9 @@ export async function packageTreeInfo(
       }
     }
   } catch (_) {
-    throw new Error("the import_map.json file does not have a valid format")
-      .message;
+    throw new Error(
+      `the ${Config.getConfig("importMap")} file does not have a valid format`,
+    ).message;
   }
 }
 

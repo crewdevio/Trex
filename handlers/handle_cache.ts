@@ -51,15 +51,15 @@ export async function isCachePackage(packageUrl: string) {
   if (!(packageUrl.includes("http://") || packageUrl.includes("https://"))) {
     throw new Error(
       red(
-        "this is not a valid package url, only http or https urls are allowed"
-      )
+        "this is not a valid package url, only http or https urls are allowed",
+      ),
     ).message;
   } // * get file path
   else {
     const { hostname, protocol, pathname, search } = new URL(packageUrl);
     const toHash = await createHash(
       "SHA-256",
-      `${pathname}${search ? `?${search}` : ""}`
+      `${pathname}${search ? `?${search}` : ""}`,
     );
     const filePath = getCachePath(protocol, hostname, toHash);
 
@@ -83,17 +83,17 @@ export async function cached(pkgName: string, pkgUrl: string, show = true) {
 
   const loading = LoadingSpinner(
     green(
-      ` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`
+      ` Installing ${bold(yellow(pkgName))} from ${bold(yellow(hostname))}`,
     ),
-    show
+    show,
   );
   const CMD = [ResolveDenoPath(), "cache", "-q", "--unstable"];
 
   const target = needProxy(pkgName)
     ? Proxy(pkgName)
     : `${
-        pkgUrl.startsWith("https://deno.land/std") ? `${pkgUrl}mod.ts` : pkgUrl
-      }`;
+      pkgUrl.startsWith("https://deno.land/std") ? `${pkgUrl}mod.ts` : pkgUrl
+    }`;
 
   if (STD.includes(pkgName) && (await denoApidb(pkgName)).length) {
     process = Deno.run({

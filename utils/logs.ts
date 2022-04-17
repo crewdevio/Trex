@@ -47,7 +47,7 @@ export async function updateTrex(): Promise<void> {
   // * get the latest release
   const repoVersion = (await response.json()) as { tag_name: string };
 
-  const isCanary = Deno.args[1] === "--canary";
+  const isCanary = Deno.args[1].trim() === "--canary";
   const canaryURL = "https://denopkg.com/crewdevio/trex@dev";
   const standarURL = `https://deno.land/x/trex@${repoVersion.tag_name}`;
   // check if is a canary update
