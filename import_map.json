@@ -5,6 +5,7 @@
     "encoding/": "https://deno.land/std@0.134.0/encoding/",
     "exist": "https://denopkg.com/crewdevio/tools@main/fs/exist.ts",
     "fmt/": "https://deno.land/std@0.134.0/fmt/",
+    "merlin": "https://deno.land/x/merlin@v1.0.7/mod.ts",
     "path/": "https://deno.land/std@0.134.0/path/",
     "proxy": "https://denopkg.com/crewdevio/Trex@proxy/proxy/proxy.ts",
     "semver": "https://deno.land/x/semver@v1.4.0/mod.ts",
