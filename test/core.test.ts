@@ -36,6 +36,7 @@ Test.assertEqual("install dinoenv@v1.1.0 package from deno.land", {
   toBe() {
     return { dinoenv: "https://deno.land/x/dinoenv@v1.1.0/mod.ts" };
   },
+  ignore: true,
   Ops: false,
   Resources: false,
 });
