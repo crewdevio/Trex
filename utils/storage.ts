@@ -112,6 +112,6 @@ export async function createHash(algorithm: "SHA-256", text: string) {
     );
 
   return toHexString(
-    await crypto.subtle.digest(algorithm, new TextEncoder().encode("test1")),
+    await crypto.subtle.digest(algorithm, new TextEncoder().encode(text)),
   );
 }
