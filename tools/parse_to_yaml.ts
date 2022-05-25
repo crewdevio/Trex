@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { exists } from "../temp_deps/exist.ts";
+import { exists } from "exist";
 import { runJson } from "../utils/types.ts";
 import * as yaml from "encoding/yaml.ts";
 
