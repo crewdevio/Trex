@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { exists } from "exist";
 import { runJson } from "../utils/types.ts";
 import * as yaml from "encoding/yaml.ts";
+import { exists } from "tools-fs";
 
 /**
  * parse .yaml file to javascript json

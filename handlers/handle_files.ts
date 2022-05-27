@@ -7,11 +7,10 @@
 
 import { isLocalFile, newVersion } from "../tools/logs.ts";
 import { KillProcess } from "../tools/kill_process.ts";
-import { writeJson } from "writeJson";
 import type { objectGen } from "../utils/types.ts";
 import { createHash } from "../utils/storage.ts";
 import { LogPackages } from "../utils/logs.ts";
-import { exists } from "exist";
+import { writeJson, exists } from "tools-fs";
 import { Config } from "./global_configs.ts";
 import Store from "./handler_storage.ts";
 

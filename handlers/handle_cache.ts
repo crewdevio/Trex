@@ -9,7 +9,7 @@ import { ResolveDenoPath } from "../commands/run.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
 import { createHash } from "../utils/storage.ts";
-import { exists } from "exist";
+import { exists } from "tools-fs";
 import { denoApidb } from "../utils/db.ts";
 import { needProxy, Proxy } from "proxy";
 import * as colors from "fmt/colors.ts";

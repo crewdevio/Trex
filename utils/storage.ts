@@ -5,8 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { readJson, writeJson } from "writeJson";
-import { exists } from "exist";
+import { exists, readJson, writeJson } from "tools-fs";
 import type { DefaultStore } from "./types.ts";
 import { crypto } from "crypto/mod.ts";
 import { join } from "path/mod.ts";

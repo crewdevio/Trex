@@ -5,8 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { readJson } from "writeJson";
-import { exists } from "exist";
+import { readJson, exists } from "tools-fs";
 import { join } from "path/mod.ts";
 
 const defaults = Object.freeze({
