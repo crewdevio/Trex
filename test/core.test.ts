@@ -30,7 +30,10 @@ Test.assertEqual("install custom package from raw github link", {
 
 Test.assertEqual("install dinoenv@v1.1.0 package from deno.land", {
   async expect() {
-    const pkg = await installPackages(["install", "--map", "dinoenv@v1.1.0"], false);
+    const pkg = await installPackages(
+      ["install", "--map", "dinoenv@v1.1.0"],
+      false,
+    );
     return pkg;
   },
   toBe() {

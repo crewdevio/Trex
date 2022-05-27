@@ -46,7 +46,7 @@ export async function Run(command: string) {
     ((await exists("./run.yaml")) || (await exists("./run.yml")))
   ) {
     throw new Error(
-      red(`: ${yellow("use a single format run.json or run.yaml file")}`)
+      red(`: ${yellow("use a single format run.json or run.yaml file")}`),
     ).message;
   } else {
     async function Thread() {
@@ -56,17 +56,17 @@ export async function Run(command: string) {
         if (!runJsonFile?.scripts) {
           throw new Error(
             red(
-              `: ${yellow(`the 'scripts' key not found in run.${prefix} file`)}`
-            )
+              `: ${
+                yellow(`the 'scripts' key not found in run.${prefix} file`)
+              }`,
+            ),
           ).message;
         }
 
         const scripts = Object.keys(runJsonFile.scripts);
 
         const toRun = scripts
-          .map((key) =>
-            key === command ? runJsonFile.scripts[key] : undefined
-          )
+          .map((key) => key === command ? runJsonFile.scripts[key] : undefined)
           .filter((el) => !!el) as string[];
 
         if (!toRun.length) {
@@ -84,9 +84,7 @@ export async function Run(command: string) {
           .Value() as string;
 
         // get path to deno scripts
-        const scriptPath = isGH
-          ? ghFallBack
-          : Deno.build.os === "windows"
+        const scriptPath = isGH ? ghFallBack : Deno.build.os === "windows"
           ? // to windows base
             join(
               "C:",
@@ -94,7 +92,7 @@ export async function Run(command: string) {
               env.get("USERNAME")!,
               ".deno",
               "bin",
-              runnerCommand[0]
+              runnerCommand[0],
             )
           : // to unix base
             join(env.get("HOME")!, ".deno", "bin", runnerCommand[0]);
@@ -127,7 +125,7 @@ export async function Run(command: string) {
         // prevent circular call
         if (currentCMD === toCompare) {
           throw new EvalError(
-            `${yellow("Circular call found in: ")}${red(toRun[0])}`
+            `${yellow("Circular call found in: ")}${red(toRun[0])}`,
           ).message;
         }
 
@@ -151,22 +149,20 @@ export async function Run(command: string) {
         throw new Error(
           err instanceof SyntaxError
             ? red(
-                `the ${yellow(`'run.${prefix}'`)} file not have a valid syntax`
-              )
+              `the ${yellow(`'run.${prefix}'`)} file not have a valid syntax`,
+            )
             : err instanceof Deno.errors.NotFound
             ? red(err.message)
-            : yellow(err.message ?? `${err}`)
+            : yellow(err.message ?? `${err}`),
         ).message;
       }
     }
 
-    const filesToWatch =
-      prefix === "json"
-        ? ((await readJson("./run.json")) as runJson)
-        : await parseToYaml();
+    const filesToWatch = prefix === "json"
+      ? ((await readJson("./run.json")) as runJson)
+      : await parseToYaml();
 
-    const watchFlags =
-      Deno.args[2] === "--watch" ||
+    const watchFlags = Deno.args[2] === "--watch" ||
       Deno.args[2] === "-w" ||
       Deno.args[2] === "-wv";
 
@@ -186,22 +182,22 @@ export async function Run(command: string) {
             `[#] exit using ctrl+c \n ${
               filesToWatch?.files?.length
                 ? filesToWatch.files
-                    .map((file: string) => {
-                      console.log(" |- ", yellow(join(file)));
-                      return "";
-                    })
-                    .join("")
+                  .map((file: string) => {
+                    console.log(" |- ", yellow(join(file)));
+                    return "";
+                  })
+                  .join("")
                 : (console.log(
-                    ` |- ${yellow("all files [ .* ]")}`
-                  ) as undefined) ?? ""
-            } `
-          )
+                  ` |- ${yellow("all files [ .* ]")}`,
+                ) as undefined) ?? ""
+            } `,
+          ),
         );
         if (Deno.args[2] === "-wv" && verbose) {
           console.log(
             green(` ╭─ Verbose output ${yellow("-wv")}:\n`),
             green(`│- Event Kind: ${yellow(verbose?.kind)}\n`),
-            green(`╰─ Path: ${yellow(verbose?.paths.join(""))}\n`)
+            green(`╰─ Path: ${yellow(verbose?.paths.join(""))}\n`),
           );
         }
       }
@@ -228,10 +224,9 @@ export async function Run(command: string) {
  */
 export async function Scripts() {
   let prefix = (await exists("./run.json")) ? "json" : "yaml";
-  const runJsonFile =
-    prefix === "json"
-      ? ((await readJson("./run.json")) as runJson)
-      : await parseToYaml();
+  const runJsonFile = prefix === "json"
+    ? ((await readJson("./run.json")) as runJson)
+    : await parseToYaml();
 
   return runJsonFile;
 }
