@@ -24,7 +24,7 @@ const { yellow, green, bold } = colors;
 
 export async function nestPackageUrl(
   pkgName: string,
-  version: string,
+  version: string
 ): Promise<string> {
   if (STD.includes(pkgName)) {
     return needProxy(pkgName)
@@ -40,7 +40,7 @@ export async function nestPackageUrl(
           "Accept-Encoding": "gzip, deflate, br",
           Connection: "keep-alive",
         },
-      },
+      }
     ).catch((_) => offLine())) as Response;
 
     const data: NestResponse = await response.json();
@@ -57,15 +57,15 @@ export async function nestPackageUrl(
 
 export async function cacheNestpackage(
   url: string,
-  show = true,
+  show = true
 ): Promise<void> {
   const { hostname } = new URL(url);
 
   const loading = LoadingSpinner(
     green(
-      ` Installing ${bold(yellow("package"))} from ${bold(yellow(hostname))}`,
+      ` Installing ${bold(yellow("package"))} from ${bold(yellow(hostname))}`
     ),
-    show,
+    show
   );
 
   const process = Deno.run({

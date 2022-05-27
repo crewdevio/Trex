@@ -33,7 +33,7 @@ import * as colors from "fmt/colors.ts";
 import { exists } from "tools-fs";
 import { Spinner } from "wait";
 
-const { bold, green, yellow } = colors;
+const { bold, green, yellow, red } = colors;
 
 async function Main() {
   const Args = Deno.args;
@@ -167,7 +167,7 @@ async function Main() {
     }
 
     if (!Args[1]) {
-      throw new Error(colors.red("you need to pass a package name")).message;
+      throw new Error(red("you need to pass a package name")).message;
     }
 
     await packageTreeInfo(...Args);

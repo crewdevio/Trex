@@ -19,11 +19,11 @@ const { cyan, red, green, yellow } = colors;
  */
 export function Version(version: string) {
   console.log(
-    `${colors.green("trex:")}\n ${colors.yellow(version)} \n${
-      colors.green(
+    `${green("trex:")}\n ${yellow(version)} \n${
+      green(
         "Deno:",
       )
-    }\n ${colors.yellow(`v${Deno.version.deno}`)}`,
+    }\n ${yellow(`v${Deno.version.deno}`)}`,
   );
 }
 

@@ -26,7 +26,7 @@ import * as colors from "fmt/colors.ts";
 import cache from "./handle_cache.ts";
 import { exists } from "tools-fs";
 
-const { yellow, red, green, bold } = colors;
+const { yellow, red, green, bold, white, cyan } = colors;
 /**
  * verify that the imports key exists in the import map file.
  * @param {object} map - the import map json object.
@@ -186,16 +186,16 @@ export async function installPackages(
             }
           } else {
             console.log(
-              colors.white(
+              white(
                 `\nthe generated hash does not match the package "${
-                  colors.green(
+                  green(
                     pkg,
                   )
                 }",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${
-                  colors.red(
+                  red(
                     "=>",
                   )
-                } ${colors.cyan("https://github.com/crewdevio/Trex")}`,
+                } ${cyan("https://github.com/crewdevio/Trex")}`,
               ),
             );
 
