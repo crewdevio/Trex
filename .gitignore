@@ -4,3 +4,4 @@ lock.json
 test/bench.test.ts
 run.yaml
 test.ts
+.vim
