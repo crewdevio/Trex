@@ -10,7 +10,7 @@ import { join } from "path/mod.ts";
 
 const defaults = Object.freeze({
   configFileRoute: join(Deno.cwd(), "trex.config.json"),
-  importMap: "import_map.json",
+  importMap: "import_map.json" as string,
 });
 
 type GetKeys<T extends {}> = T;
