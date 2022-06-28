@@ -194,7 +194,9 @@ async function Main() {
     }
 
     // ignore '--watch' and '-w' in injected args
-    const runArgs = Args[2]?.match(/^(--watch|-w|-wv)$/) ? Args.slice(3) : Args.slice(2);
+    const runArgs = Args[2]?.match(/^(--watch|-w|-wv)$/)
+      ? Args.slice(3)
+      : Args.slice(2);
 
     await Run(Args[1], runArgs);
   } // * purge command

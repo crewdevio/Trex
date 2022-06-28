@@ -127,13 +127,13 @@ export async function Run(command: string, runArgs: string[] = []) {
               ? ResolveDenoPath()
               : command
           ),
-          stderr: "piped", stdout: "inherit",
+          stderr: "piped",
+          stdout: "inherit",
           env: env.toObject(),
           cwd: Deno.cwd(),
         });
-        const [status ] = await Promise.all([
+        const [status] = await Promise.all([
           process.status(),
-
         ]);
 
         if (!(await process.status()).success) {
