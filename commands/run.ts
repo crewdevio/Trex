@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-inner-declarations
 /**
  * Copyright (c) Crew Dev.
  *
@@ -136,9 +137,14 @@ export async function Run(command: string) {
               ? ResolveDenoPath()
               : command
           ),
+          stderr: "piped", stdout: "inherit",
           env: env.toObject(),
           cwd: Deno.cwd(),
         });
+        const [status ] = await Promise.all([
+          process.status(),
+
+        ]);
 
         if (!(await process.status()).success) {
           Deno.close(process.rid);
