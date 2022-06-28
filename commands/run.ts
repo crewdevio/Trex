@@ -15,22 +15,13 @@ import * as colors from "fmt/colors.ts";
 import { join } from "path/mod.ts";
 
 const { red, yellow, green } = colors;
-const { env, run, args } = Deno;
-
-// run args command
-let [, , ...runArgs] = args;
-const [, ...Args] = runArgs;
-// ignore '--watch' and '-w' in injected args
-runArgs =
-  runArgs[0] === "--watch" || runArgs[0] === "-w" || runArgs[0] === "-wv"
-    ? [...Args]
-    : [...runArgs];
+const { env, run } = Deno;
 
 /**
  * execute subprocess script
  * @param command
  */
-export async function Run(command: string) {
+export async function Run(command: string, runArgs: string[] = []) {
   let prefix = (await exists("./run.json")) ? "json" : "yaml";
 
   if (
