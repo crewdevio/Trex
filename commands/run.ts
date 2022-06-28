@@ -130,7 +130,6 @@ export async function Run(command: string) {
           ).message;
         }
 
-        // FIXME: postinstall script throws Bad resource ID here.
         const process = run({
           cmd: [...runnerCommand, ...runArgs].map((command, index) =>
             command === "deno" && (index === 0 || index === 1)
