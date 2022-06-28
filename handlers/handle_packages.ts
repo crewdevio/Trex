@@ -132,6 +132,11 @@ export async function installPackages(
 
   const beforeTime = Date.now();
 
+  const runJson = await Scripts();
+
+  // preinstall hook
+  if (runJson?.scripts?.preinstall) await Run("preinstall");
+
   if (flags.map.includes(args[1]) || flags.nest.includes(args[1])) {
     for (let index = 2; index < args.length; index++) {
       // * install packages hosted on deno.land
@@ -158,10 +163,6 @@ export async function installPackages(
   else {
     try {
       const importmap = (await getImportMap<importMap>())!;
-      const runJson = await Scripts();
-
-      // preinstall hook
-      if (runJson?.scripts?.preinstall) await Run("preinstall");
 
       for (const pkg in importmap?.imports) {
         const url = importmap.imports[pkg];
