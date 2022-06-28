@@ -82,7 +82,7 @@ async function Main() {
 
     const runJson = await Scripts();
     // post install hook
-    if (runJson?.scripts?.preinstall) await Run("postinstall");
+    if (runJson?.scripts?.postinstall) await Run("postinstall");
   } // * display trex version
   else if (flags.version.includes(Args[0])) {
     Version(VERSION.VERSION);
