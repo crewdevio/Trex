@@ -1,11 +1,11 @@
 {
   "imports": {
-    "crypto/": "https://deno.land/std@0.141.0/crypto/",
-    "deno_graph": "https://deno.land/x/deno_graph@0.27.0/mod.ts",
-    "encoding/": "https://deno.land/std@0.141.0/encoding/",
-    "fmt/": "https://deno.land/std@0.141.0/fmt/",
+    "crypto/": "https://deno.land/std@0.147.0/crypto/",
+    "deno_graph": "https://deno.land/x/deno_graph@0.28.0/mod.ts",
+    "encoding/": "https://deno.land/std@0.147.0/encoding/",
+    "fmt/": "https://deno.land/std@0.147.0/fmt/",
     "merlin": "https://deno.land/x/merlin@v1.0.7/mod.ts",
-    "path/": "https://deno.land/std@0.141.0/path/",
+    "path/": "https://deno.land/std@0.147.0/path/",
     "proxy": "https://denopkg.com/crewdevio/Trex@proxy/proxy/proxy.ts",
     "semver": "https://deno.land/x/semver@v1.4.0/mod.ts",
     "tools-fs": "https://denopkg.com/crewdevio/tools@main/fs/mod.ts",
