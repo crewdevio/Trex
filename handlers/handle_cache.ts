@@ -3,18 +3,17 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
  */
 
 import { ResolveDenoPath } from "../commands/run.ts";
 import { ErrorInstalling } from "../utils/logs.ts";
 import { LoadingSpinner } from "../tools/logs.ts";
+import { createHash } from "../utils/storage.ts";
+import { exists } from "tools-fs";
 import { denoApidb } from "../utils/db.ts";
 import { needProxy, Proxy } from "proxy";
-import { createHash } from "hash/mod.ts";
 import * as colors from "fmt/colors.ts";
 import { STD } from "../utils/info.ts";
-import { exists } from "fs/mod.ts";
 
 const { red, yellow, green, bold } = colors;
 
@@ -58,9 +57,10 @@ export async function isCachePackage(packageUrl: string) {
   } // * get file path
   else {
     const { hostname, protocol, pathname, search } = new URL(packageUrl);
-    const toHash = createHash("sha256")
-      .update(`${pathname}${search ? `?${search}` : ""}`)
-      .toString();
+    const toHash = await createHash(
+      "SHA-256",
+      `${pathname}${search ? `?${search}` : ""}`,
+    );
     const filePath = getCachePath(protocol, hostname, toHash);
 
     return {

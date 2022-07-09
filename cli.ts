@@ -3,7 +3,6 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
  */
 
 import {
@@ -24,16 +23,17 @@ import { flags, helpsInfo, keyWords, VERSION } from "./utils/info.ts";
 import { checkDepsUpdates } from "./handlers/handler_check.ts";
 import { deletepackage } from "./handlers/delete_package.ts";
 import { execution } from "./handlers/handle_execution.ts";
+import { Config } from "./handlers/global_configs.ts";
 import { purge } from "./handlers/purge_package.ts";
 import { packageTreeInfo } from "./tools/logs.ts";
 import type { importMap } from "./utils/types.ts";
 import { LoadingSpinner } from "./tools/logs.ts";
 import { Run, Scripts } from "./commands/run.ts";
 import * as colors from "fmt/colors.ts";
-import { exists } from "fs/mod.ts";
+import { exists } from "tools-fs";
 import { Spinner } from "wait";
 
-const { bold, green, yellow } = colors;
+const { bold, green, yellow, red } = colors;
 
 async function Main() {
   const Args = Deno.args;
@@ -66,7 +66,7 @@ async function Main() {
       });
     }
 
-    if (await exists("./import_map.json")) {
+    if (await exists(`./${Config.getConfig("importMap")}`)) {
       try {
         const data = (await getImportMap()) as any;
         const oldPackage = existImports(data);
@@ -82,7 +82,7 @@ async function Main() {
 
     const runJson = await Scripts();
     // post install hook
-    if (runJson?.scripts?.preinstall) await Run("postinstall");
+    if (runJson?.scripts?.postinstall) await Run("postinstall");
   } // * display trex version
   else if (flags.version.includes(Args[0])) {
     Version(VERSION.VERSION);
@@ -124,7 +124,9 @@ async function Main() {
     for (const pkg of pkgs) {
       // @ts-ignore
       loading = LoadingSpinner(
-        green(`Removing ${bold(yellow(pkg))} from import_map.json`),
+        green(
+          `Removing ${bold(yellow(pkg))} from ${Config.getConfig("importMap")}`,
+        ),
       )!;
       await deletepackage(pkg);
       loading?.stop();
@@ -165,7 +167,7 @@ async function Main() {
     }
 
     if (!Args[1]) {
-      throw new Error(colors.red("you need to pass a package name")).message;
+      throw new Error(red("you need to pass a package name")).message;
     }
 
     await packageTreeInfo(...Args);
@@ -191,7 +193,12 @@ async function Main() {
       });
     }
 
-    await Run(Args[1]);
+    // ignore '--watch' and '-w' in injected args
+    const runArgs = Args[2]?.match(/^(--watch|-w|-wv)$/)
+      ? Args.slice(3)
+      : Args.slice(2);
+
+    await Run(Args[1], runArgs);
   } // * purge command
   else if (Args[0] === keyWords.purge) {
     if (flags.help.includes(Args[1])) {
@@ -273,6 +280,36 @@ async function Main() {
     } else {
       await checkDepsUpdates();
     }
+  } // * set globals config
+  else if (Args[0] === keyWords.globalConfig) {
+    if (flags.help.includes(Args[1])) {
+      HelpCommand({
+        command: {
+          alias: [keyWords.globalConfig],
+          description: "set and get global configurations",
+        },
+        flags: [
+          {
+            alias: ["--importMap="],
+            description: "set import map default name",
+          },
+          {
+            alias: ["--getImportMap"],
+            description: "get current import map name configuration",
+          },
+        ],
+      });
+    } else {
+      const flag = Args[1].trim();
+
+      if (/(--importMap=\w*).(\w*)/gim.test(flag)) {
+        const [, value] = flag.split("=");
+
+        Config.setConfig("importMap", value.trim());
+      } else if (/--getImportMap/) {
+        console.log(Config.getConfig("importMap"));
+      }
+    }
   } // * displays help information
   else {
     return CommandNotFound({
@@ -289,6 +326,7 @@ async function Main() {
         keyWords.ls,
         keyWords.exec,
         keyWords.check,
+        keyWords.globalConfig,
       ],
       flags: [],
     });

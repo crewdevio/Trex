@@ -3,7 +3,6 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
  */
 
 import type { CommandNotFoundParams, HelpCommandParams } from "./types.ts";
@@ -20,11 +19,11 @@ const { cyan, red, green, yellow } = colors;
  */
 export function Version(version: string) {
   console.log(
-    `${colors.green("trex:")}\n ${colors.yellow(version)} \n${
-      colors.green(
+    `${green("trex:")}\n ${yellow(version)} \n${
+      green(
         "Deno:",
       )
-    }\n ${colors.yellow(`v${Deno.version.deno}`)}`,
+    }\n ${yellow(`v${Deno.version.deno}`)}`,
   );
 }
 
@@ -48,7 +47,7 @@ export async function updateTrex(): Promise<void> {
   // * get the latest release
   const repoVersion = (await response.json()) as { tag_name: string };
 
-  const isCanary = Deno.args[1] === "--canary";
+  const isCanary = Deno.args[1].trim() === "--canary";
   const canaryURL = "https://denopkg.com/crewdevio/trex@dev";
   const standarURL = `https://deno.land/x/trex@${repoVersion.tag_name}`;
   // check if is a canary update

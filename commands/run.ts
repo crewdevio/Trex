@@ -1,41 +1,32 @@
+// deno-lint-ignore-file no-inner-declarations
 /**
  * Copyright (c) Crew Dev.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
  */
 
 import { parseToYaml } from "../tools/parse_to_yaml.ts";
-import { readJson } from "../temp_deps/writeJson.ts";
 import { Match } from "../utils/file_resolver.ts";
 import type { runJson } from "../utils/types.ts";
+import { exists, readJson } from "tools-fs";
 import { isGH } from "../utils/storage.ts";
 import * as colors from "fmt/colors.ts";
-import { exists } from "fs/mod.ts";
 import { join } from "path/mod.ts";
 
 const { red, yellow, green } = colors;
-const { env, run, args } = Deno;
-
-// run args command
-let [, , ...runArgs] = args;
-const [, ...Args] = runArgs;
-// ignore '--watch' and '-w' in injected args
-runArgs =
-  runArgs[0] === "--watch" || runArgs[0] === "-w" || runArgs[0] === "-wv"
-    ? [...Args]
-    : [...runArgs];
+const { env, run } = Deno;
 
 /**
  * execute subprocess script
  * @param command
  */
-export async function Run(command: string) {
+export async function Run(command: string, runArgs: string[] = []) {
   let prefix = (await exists("./run.json")) ? "json" : "yaml";
 
   if (
-    !(await exists("./run.json")) && !(await exists("./run.yaml")) &&
+    !(await exists("./run.json")) &&
+    !(await exists("./run.yaml")) &&
     !(await exists("./run.yml"))
   ) {
     throw new Error(red(`: ${yellow("run.json or run.yaml not found")}`))
@@ -43,8 +34,8 @@ export async function Run(command: string) {
   }
 
   if (
-    await exists("./run.json") &&
-    (await exists("./run.yaml") || (await exists("./run.yml")))
+    (await exists("./run.json")) &&
+    ((await exists("./run.yaml")) || (await exists("./run.yml")))
   ) {
     throw new Error(
       red(`: ${yellow("use a single format run.json or run.yaml file")}`),
@@ -131,15 +122,19 @@ export async function Run(command: string) {
         }
 
         const process = run({
-          cmd: [...runnerCommand, ...runArgs]
-            .map((command, index) =>
-              command === "deno" && (index === 0 || index === 1)
-                ? ResolveDenoPath()
-                : command
-            ),
+          cmd: [...runnerCommand, ...runArgs].map((command, index) =>
+            command === "deno" && (index === 0 || index === 1)
+              ? ResolveDenoPath()
+              : command
+          ),
+          stderr: "piped",
+          stdout: "inherit",
           env: env.toObject(),
           cwd: Deno.cwd(),
         });
+        const [status] = await Promise.all([
+          process.status(),
+        ]);
 
         if (!(await process.status()).success) {
           Deno.close(process.rid);
@@ -150,23 +145,19 @@ export async function Run(command: string) {
       } catch (err) {
         throw new Error(
           err instanceof SyntaxError
-            ? colors.red(
-              `the ${
-                colors.yellow(
-                  `'run.${prefix}'`,
-                )
-              } file not have a valid syntax`,
+            ? red(
+              `the ${yellow(`'run.${prefix}'`)} file not have a valid syntax`,
             )
             : err instanceof Deno.errors.NotFound
-            ? colors.red(err.message)
-            : colors.yellow(err.message ?? `${err}`),
+            ? red(err.message)
+            : yellow(err.message ?? `${err}`),
         ).message;
       }
     }
 
     const filesToWatch = prefix === "json"
-      ? (await readJson("./run.json")) as runJson
-      : (await parseToYaml());
+      ? ((await readJson("./run.json")) as runJson)
+      : await parseToYaml();
 
     const watchFlags = Deno.args[2] === "--watch" ||
       Deno.args[2] === "-w" ||

@@ -3,13 +3,11 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
  */
 
-import { readJson, writeJson } from "../temp_deps/writeJson.ts";
+import { exists, readJson, writeJson } from "tools-fs";
 import type { DefaultStore } from "./types.ts";
-import { createHash } from "hash/mod.ts";
-import { exists } from "fs/mod.ts";
+import { crypto } from "crypto/mod.ts";
 import { join } from "path/mod.ts";
 
 const { env, remove, mkdir, build } = Deno;
@@ -31,7 +29,7 @@ const ghFallBack = join(Deno.cwd(), commonDir);
  * create a persistent json storage per CWD.
  */
 export async function JsonStorage() {
-  const hash = createHash("sha256").update(Deno.cwd()).toString();
+  const hash = await createHash("SHA-256", Deno.cwd());
 
   const storagePath = isGH
     ? ghFallBack
@@ -103,4 +101,16 @@ export async function JsonStorage() {
       throw new Error("storage was removed").message;
     },
   };
+}
+
+export async function createHash(algorithm: "SHA-256", text: string) {
+  const toHexString = (bytes: ArrayBuffer): string =>
+    new Uint8Array(bytes).reduce(
+      (str, byte) => str + byte.toString(16).padStart(2, "0"),
+      "",
+    );
+
+  return toHexString(
+    await crypto.subtle.digest(algorithm, new TextEncoder().encode(text)),
+  );
 }

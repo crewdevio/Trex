@@ -3,7 +3,6 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
  */
 
 import {
@@ -17,15 +16,17 @@ import { isLocalFile, LoadingSpinner } from "../tools/logs.ts";
 import type { importMap, objectGen } from "../utils/types.ts";
 import { flags, STD, URI_STD, URI_X } from "../utils/info.ts";
 import { getMainFile } from "../utils/file_resolver.ts";
+import { stdLatest, xLatest } from "./handler_check.ts";
 import { validateHash } from "./handle_files.ts";
 import { Somebybroken } from "../utils/logs.ts";
+import { Config } from "./global_configs.ts";
 import { denoApidb } from "../utils/db.ts";
 import Store from "./handler_storage.ts";
 import * as colors from "fmt/colors.ts";
 import cache from "./handle_cache.ts";
-import { exists } from "fs/mod.ts";
+import { exists } from "tools-fs";
 
-const { yellow, red, green, bold } = colors;
+const { yellow, red, green, bold, white, cyan } = colors;
 /**
  * verify that the imports key exists in the import map file.
  * @param {object} map - the import map json object.
@@ -38,8 +39,13 @@ export function existImports(map: importMap): objectGen {
     return map.imports;
   }
 
-  throw new Error(red("the import map.json file does not have the imports key"))
-    .message;
+  throw new Error(
+    red(
+      `the ${
+        Config.getConfig("importMap")
+      } file does not have the imports key.`,
+    ),
+  ).message;
 }
 
 /**
@@ -53,10 +59,20 @@ async function detectVersion(pkgName: string): Promise<string> {
   const versionSuffix = maybeVersion ? `@${maybeVersion}` : "";
 
   if (STD.includes(name)) {
-    return `${URI_STD}${versionSuffix}/${name}/`;
+    const latest = await stdLatest();
+
+    return `${URI_STD}${
+      versionSuffix === "" ? `@${latest ? latest : ""}` : versionSuffix
+    }/${name}/`;
   } else if ((await denoApidb(name)).length) {
-    const target = await getMainFile(name, maybeVersion) as { file: string };
-    return `${URI_X}${name}${versionSuffix}/${target.file}`;
+    const [target, latest] = await Promise.all([
+      (await getMainFile(name, maybeVersion)) as { file: string },
+      await xLatest(name),
+    ]);
+
+    return `${URI_X}${name}${
+      versionSuffix === "" ? `@${latest ? latest : ""}` : versionSuffix
+    }/${target.file}`;
   }
 
   throw new Error(
@@ -116,6 +132,11 @@ export async function installPackages(
 
   const beforeTime = Date.now();
 
+  const runJson = await Scripts();
+
+  // preinstall hook
+  if (runJson?.scripts?.preinstall) await Run("preinstall");
+
   if (flags.map.includes(args[1]) || flags.nest.includes(args[1])) {
     for (let index = 2; index < args.length; index++) {
       // * install packages hosted on deno.land
@@ -142,10 +163,6 @@ export async function installPackages(
   else {
     try {
       const importmap = (await getImportMap<importMap>())!;
-      const runJson = await Scripts();
-
-      // preinstall hook
-      if (runJson?.scripts?.preinstall) await Run("preinstall");
 
       for (const pkg in importmap?.imports) {
         const url = importmap.imports[pkg];
@@ -170,12 +187,16 @@ export async function installPackages(
             }
           } else {
             console.log(
-              colors.white(
+              white(
                 `\nthe generated hash does not match the package "${
-                  colors.green(pkg)
+                  green(
+                    pkg,
+                  )
                 }",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${
-                  colors.red("=>")
-                } ${colors.cyan("https://github.com/crewdevio/Trex")}`,
+                  red(
+                    "=>",
+                  )
+                } ${cyan("https://github.com/crewdevio/Trex")}`,
               ),
             );
 
@@ -185,7 +206,7 @@ export async function installPackages(
       }
     } catch (_) {
       // show message
-      console.log(red("import_map.json file not found"));
+      console.log(red(`${Config.getConfig("importMap")} file not found`));
     }
   }
 
@@ -247,7 +268,7 @@ export async function customPackage(
   }
 
   // * if import_map exists update it
-  if (await exists("./import_map.json")) {
+  if (await exists(`./${Config.getConfig("importMap")}`)) {
     try {
       const data = (await getImportMap<importMap>())!;
       const oldPackage = existImports(data);
@@ -257,7 +278,13 @@ export async function customPackage(
       loading?.stop();
       process.close();
       throw new Error(
-        red("the import_map.json file does not have a valid format."),
+        red(
+          `the ${
+            Config.getConfig(
+              "importMap",
+            )
+          } file does not have a valid format.`,
+        ),
       ).message;
     }
   } else {

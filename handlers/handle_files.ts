@@ -3,17 +3,16 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
  */
 
 import { isLocalFile, newVersion } from "../tools/logs.ts";
 import { KillProcess } from "../tools/kill_process.ts";
-import { writeJson } from "../temp_deps/writeJson.ts";
 import type { objectGen } from "../utils/types.ts";
+import { createHash } from "../utils/storage.ts";
 import { LogPackages } from "../utils/logs.ts";
-import { createHash } from "hash/mod.ts";
+import { exists, writeJson } from "tools-fs";
+import { Config } from "./global_configs.ts";
 import Store from "./handler_storage.ts";
-import { exists } from "fs/mod.ts";
 
 /**
  * takes the import map file and returns its information.
@@ -21,11 +20,11 @@ import { exists } from "fs/mod.ts";
  */
 
 export async function getImportMap<T extends any>(): Promise<T | undefined> {
-  if (await exists("./import_map.json")) {
+  if (await exists(`./${Config.getConfig("importMap")}`)) {
     const decoder = new TextDecoder("utf-8");
 
     // * get data from import_map and return data
-    const Package = await Deno.readFile("./import_map.json");
+    const Package = await Deno.readFile(`./${Config.getConfig("importMap")}`);
 
     return JSON.parse(decoder.decode(Package)) as T;
   }
@@ -60,12 +59,12 @@ export async function createPackage(map: objectGen, log?: Boolean) {
   }
 
   // * create import_map.json
-  const create = await Deno.create("./import_map.json");
+  const create = await Deno.create(`./${Config.getConfig("importMap")}`);
   create.close();
 
   // * write import config inside import_map.json
   await writeJson(
-    "./import_map.json",
+    `./${Config.getConfig("importMap")}`,
     { imports: sortedPackage(map) },
     { spaces: 2 },
   );
@@ -104,9 +103,8 @@ async function readURLContent(path: string) {
  * @param url string
  */
 export async function generateHash(url: string) {
-  const hash = createHash("sha256");
-  hash.update((await readURLContent(url)) + url);
-  return hash.toString();
+  const hash = await createHash("SHA-256", (await readURLContent(url)) + url);
+  return hash;
 }
 
 /**
@@ -121,7 +119,7 @@ export async function validateHash(url: string, hash: string) {
 
   if (!isNew) return true;
 
-  const _hash = createHash("sha256");
-  _hash.update((await readURLContent(url)) + url);
+  const _hash = await createHash("SHA-256", (await readURLContent(url)) + url);
+
   return _hash.toString() === hash;
 }

@@ -3,12 +3,11 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
  */
 
 import { runJson } from "../utils/types.ts";
 import * as yaml from "encoding/yaml.ts";
-import { exists } from "fs/mod.ts";
+import { exists } from "tools-fs";
 
 /**
  * parse .yaml file to javascript json
