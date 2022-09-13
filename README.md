@@ -394,6 +394,8 @@ end as http servers, in those cases we recommend other alternatives such as
 [denon](https://deno.land/x/denon)
 
 ### Virtual cli tool execution
+> Trex will auto detect cli file in the order of **"cli.ts", "cli.js", "%pacakge-name%.ts", "%package-name%.js", "main.ts", "main.js", "mod.ts", "mod.js", "index.ts", "index.js"**. 
+> If you want to publish a cli package, name your cli file as either of above(e.g. `cli.ts`) in your root package.
 
 trex exec allows you to run many cli tools hosted at `deno.land/x`
 
