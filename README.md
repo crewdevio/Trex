@@ -62,17 +62,17 @@ For more information about the import maps in deno see
 deno install -A --unstable --import-map=https://deno.land/x/trex/import_map.json -n trex --no-check https://deno.land/x/trex/cli.ts
 ```
 
-> **note**: Works with deno >= 1.10.2
+> **Note**: Works with deno >= 1.10.2
 
-**we shorten the install command so it's not that long**
+**We shorten the install command so it's not that long**
 
 The permissions that Trex uses are:
 
-- --allow-net
-- --allow-read
-- --allow-write
-- --allow-run
-- --allow-env
+- `--allow-net`
+- `--allow-read`
+- `--allow-write`
+- `--allow-run`
+- `--allow-env`
 
 You can give those permissions explicitly.
 
@@ -90,8 +90,9 @@ Or use the `upgrade` command:
 trex upgrade
 ```
 
-> **note**: available for versions 0.2.0 or higher. **note**: if you want to try
-> the latest features before release you can use -the `--canary` flag.
+> **Note**: available for versions 0.2.0 or higher.   
+
+> **Note**: to try the latest pre-release features, use the `--canary` flag.
 
 Verify the installation of Trex:
 
@@ -99,7 +100,7 @@ Verify the installation of Trex:
 trex --version
 ```
 
-and the console should print the Trex version.
+The console should print the Trex version.  
 
 For help on the commands that Trex provides, use:
 
@@ -111,30 +112,37 @@ trex --help
 
 ### Installing from deno.land
 
-Install the `fs`, `http` and `fmt` modules from std:
+Use the `--map` flag to install packages from the [Standard Library](https://deno.land/std) (`std`) and those hosted at `deno.land/x`.
+
+#### Example
+
+Install the `fs`, `http` and `fmt` modules from `std`:
 
 ```console
 trex install --map fs http fmt
 ```
 
-> **note**: you can use `trex i --map fs http fmt`
-
-`--map` installs packages from the standard library and those hosted at
-`deno.land/x`
+> **Note**: you can also use the shorthand `i`, as in: `trex i --map fs http fmt`
 
 ### Installing from nest.land
 
-Install a package hosted on [nest.land](https://nest.land/gallery):
+Use the `--nest` flag and **specify an explicit version** to install packages hosted on [nest.land](https://nest.land/gallery).
+
+```console
+trex install --nest [pkg]@[version]
+```
+
+#### Examples
 
 ```console
 trex install --nest opine@0.13.0
 ```
 
-> **note**: if you want to install a package using nest.land you must specify a
-> version explicitly as above
+```console
+trex i --nest etag@0.0.2
+```
 
-You can install packages from std hosted in nest.land by specifying the package
-and the version:
+You can install `std` packages from `nest.land` by specifying the package and version:
 
 ```console
 trex install --nest fs@0.61.0
@@ -146,20 +154,20 @@ trex install --nest fs@0.61.0
 trex install --pkg [user]/[repo or repo@tag/branch]/[path/to/file] [packageName]
 ```
 
-Example:
+#### Example
 
 ```console
 trex install --pkg oakserver/oak@main/mod.ts oak
 ```
 
-> **note**: In the event that the repository uses a branch other than master as
-> the main branch, this must be specified
+> **Warning**: In the event that the repository uses a branch other than master as
+> the main branch, this **must be specified**!
 
 The above downloads oak directly from its repository.
 
 ### Example import map
 
-All installation methods produce an import_map.json file:
+All installation methods produce an `import_map.json` file:
 
 ```json
 {
@@ -188,9 +196,8 @@ Install a package from a custom URL source:
 trex --custom React=https://dev.jspm.io/react/index.js
 ```
 
-`import_map.json`:
-
-```json
+```jsonc
+// import_map.json
 {
   "imports": {
     "http/": "https://deno.land/std/http/",
@@ -213,9 +220,8 @@ Remove a specific version from the cache and the `import_map.json` file:
 trex delete fs@0.52.0
 ```
 
-`import_map.json`:
-
-```json
+```jsonc
+// import_map.json
 {
   "imports": {
     "fs/": "https://deno.land/std/fs/",
@@ -226,10 +232,9 @@ trex delete fs@0.52.0
 }
 ```
 
-Removing from cache only works with standard packages and those installed from
-`deno.land/x`
+> **Note**: Removing from cache only works with packages from `std` and `deno.land/x`
 
-### Selecting a specific version of a package
+### Installing an explicit version of a package
 
 Specify a package's version:
 
@@ -237,9 +242,8 @@ Specify a package's version:
 trex install --map fs@0.54.0
 ```
 
-`import_map.json`
-
-```json
+```jsonc
+// import_map.json
 {
   "imports": {
     "fs/": "https://deno.land/std@0.54.0/fs/"
@@ -247,28 +251,21 @@ trex install --map fs@0.54.0
 }
 ```
 
-> **note**: can be used with third party packages.
+> **Note**: can be used with third party packages.
 
-### Check if a dependencie is outdate
-
-if you want to check if one or more dependencies are out of date, only run trex
-check command.
+### Checking for outdated dependencies
 
 ```console
 trex check
 ```
+> **Warning**: Currently limited to packages from [`deno.land/std`](https://deno.land/std) and [`deno.land/x`](https://deno.land/x),
+> in future versions this will support third party registries and CDN sources as well.
 
-this checks the dependencies and if there are updates for that dependency.
+### Run Scripts with `run.json`
 
-for now only works for [`deno.land/std`](https://deno.land/std) and
-[`deno.land/x`](https://deno.land/x) but eventually should work with many
-registers an cdn
+You can create command aliases, similar to `deno task` or [`npm run`](https://docs.npmjs.com/cli-commands/run-script.html).  
 
-### Run Scripts
-
-now you can create command aliases similar to
-[npm run](https://docs.npmjs.com/cli-commands/run-script.html), you just have to
-create a run.json file with the following structure:
+Simply create a **`run.json`** file with the following structure:
 
 ```json
 {
@@ -278,34 +275,45 @@ create a run.json file with the following structure:
 }
 ```
 
-> **note**: to run command aliases you must use the command `trex run <aliases>`
+#### Aliasing external commands
 
-now you can call a command within another or call a deno script like `denopack`
-or `eggs` within a command alias
+You can call a command from within another, or call a script like `denopack`
+or `eggs update` from within a command alias:
 
-```json
+```jsonc
+// run.json
 {
   "scripts": {
     "start": "trex run welcome",
     "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
     "dev": "denon run ./app.ts",
-    "build": "aleph build"
+    "build": "aleph build",
+		"update": "eggs update"
   }
 }
 ```
 
+Then, for example, to update your dependencies:
+
+```console
+trex run update
+```
+> This will execute `eggs update`
+
+
 #### Installation life cycle
 
-when the command `trex install` or `trex i` executed, you can perform actions
+When the command `trex install` or `trex i` executed, you can perform actions
 before and after the execution of `trex install`.
 
-**execution order**:
+**Execution order**:
 
-- preinstall
-- install
-- postinstall
+1. `preinstall`
+2. `install`
+3. `postinstall`
 
-```json
+```jsonc
+// run.json
 {
   "scripts": {
     "start": "trex run welcome",
@@ -318,12 +326,16 @@ before and after the execution of `trex install`.
 }
 ```
 
-> **note**: you can use the --watch flag to monitor the changes and rerun the
+> **Note**: you can use the --watch flag to monitor the changes and rerun the
 > script, example:
-> `deno run --watch --unstable https://deno.land/std@0.71.0/examples/welcome.ts`
 
-you can pass arguments in the command alias and these will be resisted by the
-file to execute
+```sh
+deno run --watch --unstable https://deno.land/std@0.71.0/examples/welcome.ts
+```
+
+#### Passing arguments to aliases
+
+You can provide arguments when calling the command alias. These will be passed to the file to execute:
 
 ```console
 trex run start --port=3000 --env
@@ -333,21 +345,21 @@ trex run start --port=3000 --env
 console.log(Deno.args); // ["--port=3000", "--env"]
 ```
 
-#### **Reboot script alias protocol (rsap)**
+#### Reboot Script Alias Protocol (or _RSAP_)
 
-with trex you can create script aliases that are reloaded every time a file is
-changed, this can be done using deno's `--watch` flag. If you would like to have
-this same functionality but with any command alias you want, you can use trex
-reboot script protocol which reruns the command alias every time changes are
-detected in the files and folders you specify
+With trex you can create script aliases that reload every time a file is
+changed, similar to running deno with the `--watch` flag.
 
-`example:`
+The Reboot Script Alias Protocol (RSAP) provides this same functionality.
+Just add a `files` property to your `run.json` file, specifying an array
+of files that will be watched. When changes are detected in those files,
+your script aliases will be restarted immediately.
 
-```json
+```jsonc
+// run.json
 {
   "scripts": {
     "start": "trex run welcome",
-    "welcome": "deno run https://deno.land/std@0.71.0/examples/welcome.ts",
     "dev": "denon run ./app.ts",
     "build": "aleph build"
   },
@@ -359,12 +371,8 @@ You only have to add the `files` option in the `run.json` file and it will only
 observe the files and folders that you specify, if you leave the array empty it
 will observe all the files.
 
-for the script alias to use `rsap` you just need to add the `--watch` or `-w`
-flag to the end of the command alias.
-
-`example:`
-
-```json
+```jsonc
+// run.json
 {
   "scripts": {
     "dev": "go build"
@@ -373,29 +381,33 @@ flag to the end of the command alias.
 }
 ```
 
+For the script alias to use `rsap` you just need to add the `--watch` or `-w`
+flag to the end of the command alias:
+
 ```console
-trex run dev --watch ...args
+trex run dev --watch [...args]
 ```
 
-and of course it can be used with any cli tool, compiler or interpreter.
+It can be used with any CLI tool, compiler or interpreter.
 
-> **note**: you can create the run file in yaml format
+#### YAML is also acceptable (`run.yml` or `run.yaml`)
 
 ```yaml
 - scripts:
     dev: go build
-
 - files:
     - ./main.go
 ```
 
-a limitation of watch mode is that they do not restart the processes that never
-end as http servers, in those cases we recommend other alternatives such as
-[denon](https://deno.land/x/denon)
+#### Limitations
+
+A limitation of watch mode is that they **do not** restart the processes that never
+end (such as http servers). In those cases we recommend other alternatives, such as
+[denon](https://deno.land/x/denon).
 
 ### Virtual cli tool execution
 
-trex exec allows you to run many cli tools hosted at `deno.land/x`
+`trex exec` allows you to run many cli tools hosted at `deno.land/x`
 
 ```console
 trex exec aleph init hello_world
@@ -408,16 +420,14 @@ trex will fetch aleph's cli and run without installing it locally using
 trex exec aleph@v0.2.28 init hello_world
 ```
 
-You can also specify the permissions that the cli will use
+#### Permissions (perms)
+
+You can also specify the permissions that the cli will use. 
+Just pass the `--perms` flag followed by comma-separated permissions:
 
 ```console
 trex exec --perms env,read,write,net denon run ./app.ts
 ```
-
-you just have to pass the `--perms` flag followed by the permissions separated
-by commas
-
-**perms**
 
 - `env`: --allow-env
 - `write`: --allow-write
@@ -429,14 +439,11 @@ by commas
 - `hrtime`: --allow-hrtime
 - `A`: --allow-all
 
-> **note**: if you don't specify the permissions, they are all automatically
-> granted to you
+> **Warning**: if you don't specify the permissions, they are **all** automatically granted to you
 
-you can also use this combined with the command alias
+You can also combine this with the command alias:
 
-`example`
-
-```javascript
+```jsonc
 // run.json
 {
   "scripts": {
@@ -450,21 +457,21 @@ you can also use this combined with the command alias
 trex run denon ./app.ts
 ```
 
-and yes you can do this:
+And yes, you can do this:
 
 ```console
 trex exec trex exec trex exec ....
 ```
 
-even this:
+Even this:
 
 ```console
 trex exec land trex exec land trex exec ....
 ```
 
-this functionality is heavily inspired by
+This functionality is heavily inspired by
 [npx](https://docs.npmjs.com/cli/v7/commands/npx) and
-[land](https://deno.land/x/land). if you need another alternative to `trex exec`
+[land](https://deno.land/x/land). If you need another alternative to `trex exec`
 to use in `deno`, [land](https://deno.land/x/land) this is a great option.
 
 ### Local configuration and global configuration (experimental)
@@ -473,17 +480,17 @@ When you work with import maps trex by default will handle everything using an
 import_map.json file, but what if I want to use an import-map.json or an
 importMap.json instead?
 
-That's what the global settings are for, basically it allows you to change the
-behavior of trex with respect to the file where the dependencies will be
+That's what the global settings are for! Basically it allows you to change the
+behavior of trex, with respect to the file where the dependencies will be
 handled.
 
-`example`
+#### Example
 
 ```console
 trex global-config --importMap=import-map.json
 ```
 
-this will change the default name from import_map.json to import-map.json. to
+This will change the default name from import_map.json to import-map.json. to
 obtain the name or format used you must execute the following command.
 
 ```console
@@ -491,26 +498,25 @@ trex global-config --getImportMap
 ```
 
 But what happens if I am working with several people on the same project and we
-have different configurations? for these cases there is the local configuration
-or local configuration file. `trex.config.json`
+have different configurations? For these cases there is the local configuration
+or local configuration file - `trex.config.json`:
 
-`example`
-
-```json
+```jsonc
+// trex.config.json
 {
   "importMap": "importMap.json"
 }
 ```
 
-this will tell trex that the format for the import map will be the one dictated
-by the config file. this allows that there are no problems with the different
+This will tell trex that the format for the import map will be the one dictated
+by the config file. This allows that there are no problems with the different
 local configurations of each developer since the configuration file only affects
 the scope of the project.
 
-> **note**: the file `trex.config.json` must be at the same level(scope) as the
+> **Note**: the file `trex.config.json` must be at the same level(scope) as the
 > import map for trex to detect it.
 
-the hierarchy that trex respects with the configurations is the following:
+Thee hierarchy that trex respects with the configurations is the following:
 
 ```mermaid
 graph TD
@@ -520,23 +526,21 @@ LocalGlobalConfig --> defaultTrexConfig
 
 ### Purge a package or URL
 
-if you want delete a package or url package from cache memory in deno, you can
-use the purge command to remove from cache memory.
-
-example:
+If you want delete a package or url package from cache memory in deno, you can
+use the `purge` command to remove from cache memory.
 
 ```console
 trex purge oak
 ```
 
-this finds the oak package in the `import_map.json` file and removes it from the
+This finds the `oak` package in the `import_map.json`, and removes it from the
 cache.
+
+#### Purging with full URL specifiers
 
 ```console
 trex purge https://deno.land/x/oak@v6.3.1/mod.ts
 ```
-
-also can be used with urls
 
 ### Checking a package's dependency tree
 
@@ -576,43 +580,8 @@ https://deno.land/std/fs/mod.ts
   │     ├── https://deno.land/std/path/mod.ts
   │     └── https://deno.land/std/_util/assert.ts
   ├─┬ https://deno.land/std/fs/ensure_dir.ts
-  │ └─┬ https://deno.land/std/fs/_util.ts
-  │   └── https://deno.land/std/path/mod.ts
-  ├─┬ https://deno.land/std/fs/ensure_file.ts
-  │ ├── https://deno.land/std/path/mod.ts
-  │ ├── https://deno.land/std/fs/ensure_dir.ts
-  │ └── https://deno.land/std/fs/_util.ts
-  ├─┬ https://deno.land/std/fs/ensure_link.ts
-  │ ├── https://deno.land/std/path/mod.ts
-  │ ├── https://deno.land/std/fs/ensure_dir.ts
-  │ ├── https://deno.land/std/fs/exists.ts
-  │ └── https://deno.land/std/fs/_util.ts
-  ├─┬ https://deno.land/std/fs/ensure_symlink.ts
-  │ ├── https://deno.land/std/path/mod.ts
-  │ ├── https://deno.land/std/fs/ensure_dir.ts
-  │ ├── https://deno.land/std/fs/exists.ts
-  │ └── https://deno.land/std/fs/_util.ts
-  ├── https://deno.land/std/fs/exists.ts
-  ├─┬ https://deno.land/std/fs/expand_glob.ts
-  │ ├── https://deno.land/std/path/mod.ts
-  │ ├─┬ https://deno.land/std/fs/walk.ts
-  │ │ ├── https://deno.land/std/_util/assert.ts
-  │ │ └── https://deno.land/std/path/mod.ts
-  │ └── https://deno.land/std/_util/assert.ts
-  ├─┬ https://deno.land/std/fs/move.ts
-  │ ├── https://deno.land/std/fs/exists.ts
-  │ └── https://deno.land/std/fs/_util.ts
-  ├─┬ https://deno.land/std/fs/copy.ts
-  │ ├── https://deno.land/std/path/mod.ts
-  │ ├── https://deno.land/std/fs/ensure_dir.ts
-  │ ├── https://deno.land/std/fs/_util.ts
-  │ └── https://deno.land/std/_util/assert.ts
-  ├── https://deno.land/std/fs/read_file_str.ts
-  ├── https://deno.land/std/fs/write_file_str.ts
-  ├── https://deno.land/std/fs/read_json.ts
-  ├── https://deno.land/std/fs/write_json.ts
-  ├── https://deno.land/std/fs/walk.ts
-  └── https://deno.land/std/fs/eol.ts
+	
+# ... full response was truncated for brevity
 ```
 
 ### Integrity checking & lock files
@@ -647,15 +616,15 @@ for more info.
 
 ## Complete example
 
-### A simple std server
+### Simple std server
 
-Install `http` and `fmt`:
+#### Install `http` and `fmt`:
 
 ```console
 trex install --map http fmt
 ```
 
-Create a simple server:
+#### Create a simple server
 
 ```typescript
 // server.ts
@@ -670,19 +639,17 @@ for await (const req of server) {
 }
 ```
 
-Run the server:
+#### Start the server
 
 ```console
 deno run --allow-net --import-map=import_map.json --unstable server.ts
 ```
 
-> **note**: it is important to use **--import-map=import_map.json --unstable**
+> **Warning**: it is important to use **--import-map=import_map.json --unstable**
 
-### Adding third party packages
+### Adding third-party packages: Example using [oak](https://deno.land/x/oak)
 
-Example using [oak](https://deno.land/x/oak)
-
-Add the master version of oak:
+#### Install the master version of `oak`
 
 ```console
 trex i --map oak
@@ -700,7 +667,9 @@ This adds `oak` to the `import_map.json` file:
 }
 ```
 
-Then create an oak application. Note the `import` statement.
+#### Then create an oak application. 
+
+Note the `import` statement, thanks to the `import_map.json` addition:
 
 ```typescript
 // app.ts
@@ -715,11 +684,13 @@ app.use((ctx) => {
 await app.listen({ port: 8000 });
 ```
 
-Run the server:
+#### Run the server
 
 ```console
 deno run --allow-net --import-map=import_map.json --unstable app.ts
 ```
+
+> **Warning**: it is important to use **--import-map=import_map.json --unstable**
 
 ## Contributing
 
@@ -741,7 +712,7 @@ Trex is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
 	  <img src="https://deno.land/logo.svg" width="85" height="85">
        </a>
        <a href="https://denopkg.com/">
-	  <img src="https://raw.githubusercontent.com/denopkg/denopkg.com/master/public/denopkg.png" width="90" height="90">
+	  <img src="https://denopkg.com/denopkg.png" width="90" height="90">
        </a>
     </p>
   </p>
