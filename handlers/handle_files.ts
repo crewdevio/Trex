@@ -52,9 +52,10 @@ function sortedPackage(map: any): objectGen {
  * @return void
  */
 
-export async function createPackage(map: objectGen, log?: Boolean) {
+export async function createPackage(map: objectGen, log?: boolean) {
   // add virtual lock hash
   for (const [pkg, url] of Object.entries(map)) {
+    if (url.startsWith("npm:")) continue;
     await Store.setItem(`internal__trex__hash:${pkg}`, await generateHash(url));
   }
 

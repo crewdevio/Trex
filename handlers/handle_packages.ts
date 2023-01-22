@@ -167,41 +167,44 @@ export async function installPackages(
       for (const pkg in importmap?.imports) {
         const url = importmap.imports[pkg];
 
+        // skip packages that are npm:
+        if (url.startsWith("npm:")) continue;
+
         // skip packages that are local files
-        if (!isLocalFile(url)) {
-          // check virtual lock hash
-          if (
-            await validateHash(
-              url,
-              await Store.getItem(`internal__trex__hash:${pkg}`),
-            )
-          ) {
-            if (url?.includes("deno.land")) {
-              const mod = pkg.split("/").join("");
-              await cache(mod, await detectVersion(mod));
+        if (!isLocalFile(url)) continue;
 
-              map[(await getNamePkg(mod)).toLowerCase()] = url;
-            } else {
-              await cacheNestpackage(importmap?.imports[pkg]!);
-              map[pkg.toLowerCase()] = importmap?.imports[pkg]!;
-            }
-          } else {
-            console.log(
-              white(
-                `\nthe generated hash does not match the package "${
-                  green(
-                    pkg,
-                  )
-                }",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${
-                  red(
-                    "=>",
-                  )
-                } ${cyan("https://github.com/crewdevio/Trex")}`,
-              ),
-            );
+        // check virtual lock hash
+        if (
+          !await validateHash(
+            url,
+            await Store.getItem(`internal__trex__hash:${pkg}`),
+          )
+        ) {
+          console.log(
+            white(
+              `\nthe generated hash does not match the package "${
+                green(
+                  pkg,
+                )
+              }",\nmaybe you are using an unversioned dependency or the file content or url has been changed.\n\nIf you want to know more information about the hash generation for the packages,\n visit ${
+                red(
+                  "=>",
+                )
+              } ${cyan("https://github.com/crewdevio/Trex")}`,
+            ),
+          );
 
-            Deno.exit(0);
-          }
+          Deno.exit(0);
+        }
+
+        if (url?.includes("deno.land")) {
+          const mod = pkg.split("/").join("");
+          await cache(mod, await detectVersion(mod));
+
+          map[(await getNamePkg(mod)).toLowerCase()] = url;
+        } else {
+          await cacheNestpackage(importmap?.imports[pkg]!);
+          map[pkg.toLowerCase()] = importmap?.imports[pkg]!;
         }
       }
     } catch (_) {

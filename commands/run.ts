@@ -77,17 +77,17 @@ export async function Run(command: string, runArgs: string[] = []) {
 
         // get path to deno scripts
         const scriptPath = isGH ? ghFallBack : Deno.build.os === "windows"
-          ? // to windows base
-            join(
-              "C:",
-              "Users",
-              env.get("USERNAME")!,
-              ".deno",
-              "bin",
-              runnerCommand[0],
-            )
-          : // to unix base
-            join(env.get("HOME")!, ".deno", "bin", runnerCommand[0]);
+          // to windows base
+          ? join(
+            "C:",
+            "Users",
+            env.get("USERNAME")!,
+            ".deno",
+            "bin",
+            runnerCommand[0],
+          )
+          // to unix base
+          : join(env.get("HOME")!, ".deno", "bin", runnerCommand[0]);
 
         // prevent deno scrips not found error
         if ((await exists(scriptPath)) || (await exists(`${scriptPath}.cmd`))) {
