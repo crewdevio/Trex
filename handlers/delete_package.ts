@@ -29,13 +29,13 @@ export async function deletepackage(toDelete: string) {
       const packageNames = Object.keys(Packages.imports)
       const pack = packageNames.find(p => p.includes(toDelete))
       const haveSlash = pack?.includes("/")
+      const includesVersion = STD.includes(haveVersion(pkg))
 
       if (Packages.imports) {
+        if (includesVersion) toDelete = `${haveVersion(pkg)}/`
 
         if (haveSlash) {
-          toDelete = STD.includes(haveVersion(pkg))
-            ? `${haveVersion(pkg)}/`
-            : haveVersion(pkg);
+
           const key = toDelete.includes("/")
             ? toDelete
             : `${toDelete}/`
