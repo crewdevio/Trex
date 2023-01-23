@@ -32,17 +32,23 @@ export async function deletepackage(toDelete: string) {
       const includesVersion = STD.includes(haveVersion(pkg))
 
       if (Packages.imports) {
-        if (includesVersion) toDelete = `${haveVersion(pkg)}/`
+        toDelete = STD.includes(haveVersion(pkg))
+          ? `${haveVersion(pkg)}/`
+          : haveVersion(pkg);
 
+        let key = toDelete
         if (haveSlash) {
-
-          const key = toDelete.includes("/")
-            ? toDelete
-            : `${toDelete}/`
+          if (!toDelete.includes("/")) {
+            key = `${toDelete}/`
+          }
 
           delete Packages.imports[key];
         } else {
-          delete Packages.imports[toDelete];
+          if (toDelete.includes("/")) {
+            key = toDelete.slice(0, -1)
+          }
+
+          delete Packages.imports[key];
         }
 
         // delete virtual lock hash
