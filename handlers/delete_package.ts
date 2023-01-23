@@ -26,13 +26,26 @@ export async function deletepackage(toDelete: string) {
     try {
       const pkg: string = toDelete?.trim();
       const Packages = (await getImportMap<importMap>())!;
+      const packageNames = Object.keys(Packages.imports)
+      const pack = packageNames.find(p => p.includes(toDelete))
+      const haveSlash = pack?.includes("/")
 
       if (Packages.imports) {
-        const toDelete = STD.includes(haveVersion(pkg))
+        toDelete = STD.includes(haveVersion(pkg))
           ? `${haveVersion(pkg)}/`
           : haveVersion(pkg);
 
-        delete Packages.imports[toDelete];
+        if (haveSlash) {
+          const key = toDelete.includes("/")
+            ? toDelete
+            : `${toDelete}/`
+
+          delete Packages.imports[key];
+        } else {
+          delete Packages.imports[toDelete];
+        }
+
+
 
         // delete virtual lock hash
         await Store.deleteItem(`internal__trex__hash:${toDelete}`);
