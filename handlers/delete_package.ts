@@ -26,13 +26,29 @@ export async function deletepackage(toDelete: string) {
     try {
       const pkg: string = toDelete?.trim();
       const Packages = (await getImportMap<importMap>())!;
-
+      const packageNames = Object.keys(Packages.imports)
+      const pack = packageNames.find(p => p.includes(toDelete))
+      const haveSlash = pack?.includes("/")
+      
       if (Packages.imports) {
-        const toDelete = STD.includes(haveVersion(pkg))
+        toDelete = STD.includes(haveVersion(pkg))
           ? `${haveVersion(pkg)}/`
           : haveVersion(pkg);
 
-        delete Packages.imports[toDelete];
+        let key = toDelete
+        if (haveSlash) {
+          if (!toDelete.includes("/")) {
+            key = `${toDelete}/`
+          }
+
+          delete Packages.imports[key];
+        } else {
+          if (toDelete.includes("/")) {
+            key = toDelete.slice(0, -1)
+          }
+
+          delete Packages.imports[key];
+        }
 
         // delete virtual lock hash
         await Store.deleteItem(`internal__trex__hash:${toDelete}`);
@@ -52,10 +68,9 @@ export async function deletepackage(toDelete: string) {
         red(
           exception instanceof TypeError
             ? "add the name of the package to remove."
-            : `the ${
-              Config.getConfig(
-                "importMap",
-              )
+            : `the ${Config.getConfig(
+              "importMap",
+            )
             } file does not have a valid format.`,
         ),
       ).message;
