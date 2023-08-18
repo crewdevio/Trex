@@ -44,7 +44,7 @@ export const STD = [
   "streams",
 ];
 
-export const VERSION = { VERSION: "v1.12.1" };
+export const VERSION = { VERSION: "v1.13.1" };
 
 export const helpsInfo = [
   green(
